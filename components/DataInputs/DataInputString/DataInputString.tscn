@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://gf4tsoprrt22"]
 
-[ext_resource type="Script" uid="uid://bclcgx8ya56gh" path="res://components/DataInputs/DataInputString/DataInputString.gd" id="1_ao17a"]
+[ext_resource type="Script" uid="uid://ifecefhoqn2l" path="res://modules/Vertex/components/DataInputs/DataInputString/DataInputString.gd" id="1_jl6kc"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_vrvg8"]
 
 [node name="DataInputString" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
-script = ExtResource("1_ao17a")
+script = ExtResource("1_jl6kc")
 
 [node name="HBox" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -33,5 +33,4 @@ grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/panel = ExtResource("2_vrvg8")
 
-[connection signal="text_changed" from="HBox/LineEdit" to="." method="_make_unsaved" unbinds=1]
 [connection signal="text_submitted" from="HBox/LineEdit" to="." method="_on_line_edit_text_submitted"]

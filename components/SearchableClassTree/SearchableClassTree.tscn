@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dvu1pq6kvuc3t"]
 
-[ext_resource type="Script" uid="uid://cwiijy8rjasu8" path="res://components/SearchableClassTree/SearchableClassTree.gd" id="1_qrq43"]
+[ext_resource type="Script" uid="uid://c3dka6m08sjkx" path="res://modules/Vertex/components/SearchableClassTree/SearchableClassTree.gd" id="1_i1ig3"]
 
 [node name="SearchableClassTree" type="PanelContainer" node_paths=PackedStringArray("inheritance_tree", "searchable_inheritance_tree", "searchable_tree", "object_tree")]
 anchors_preset = 15
@@ -9,7 +9,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
-script = ExtResource("1_qrq43")
+script = ExtResource("1_i1ig3")
 inheritance_tree = NodePath("InheritanceTree")
 searchable_inheritance_tree = NodePath("SearchableInheritanceTree")
 searchable_tree = NodePath("SearchableTree")

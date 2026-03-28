@@ -7,19 +7,19 @@ class_name CoreUIDB extends Node
 
 
 ## File path for all UIPanels
-const UI_PANEL_LOCATION: String = "res://panels/"
+const UI_PANEL_LOCATION: String = "res://modules/Vertex/panels/"
 
 ## File path for all UIPanels
-const UI_POPUP_LOCATION: String = "res://panels/popups/"
+const UI_POPUP_LOCATION: String = "res://modules/Vertex/panels/popups/"
 
 ## File path for all UIComponents
-const UI_COMPONENT_LOCATION: String = "res://components/"
+const UI_COMPONENT_LOCATION: String = "res://modules/Vertex/components/"
 
 ## File path for all UIPanels
-const DATA_INPUT_LOCATION: String = "res://components/DataInputs/"
+const DATA_INPUT_LOCATION: String = "res://modules/Vertex/components/DataInputs/"
 
 ## File path for all UIPanels
-const ICON_LOCATION: String = "res://assets/icons/"
+const ICON_LOCATION: String = "res://modules/Vertex/assets/icons/"
 
 
 ## All UIPanels
@@ -45,7 +45,7 @@ var _popups: Dictionary[String, PackedScene] = {
 ## All UIComponents
 var _components: Dictionary[String, PackedScene] = {
 	"ComponentButton":			load(_c("ComponentButton")),
-	"SearchableClassTree":				load(_c("SearchableClassTree")),
+	"SearchableClassTree":		load(_c("SearchableClassTree")),
 	"SelectBox":				load(_c("SelectBox")),
 	"SettingsManagerMultiView":	load(_c("SettingsManagerMultiView")),
 	"SettingsManagerView":		load(_c("SettingsManagerView")),
@@ -69,6 +69,10 @@ var _data_inputs: Dictionary[Data.Type, Variant] = {
 	Data.Type.IP:				load(_d("DataInputIPAddr")),
 	Data.Type.SETTINGSMANAGER:	load(_d("DataInputSettingsManager")),
 	Data.Type.ACTION:			load(_d("DataInputAction")),
+	Data.Type.PACKEDSCENE: 		{
+		Data.Sub.Type.NULL:						load(_d("DataInputCustomPanel")),
+		Data.Sub.Type.PACKEDSCENE_UIPANEL:		load(_d("DataInputUIPanel")),
+	}
 }
 
 
@@ -146,6 +150,36 @@ func get_component_scene(p_component_class: String) -> PackedScene:
 ## Returns the PackedScene for a DataInput
 func get_data_input_scene(p_data_type: Data.Type) -> PackedScene:
 	return _data_inputs.get(p_data_type, null)
+
+
+## Returns all panels
+func get_panels() -> Dictionary[String, PackedScene]:
+	return _panels.duplicate(true)
+
+
+## Returns all popups
+func get_popups() -> Dictionary[String, PackedScene]:
+	return _popups.duplicate(true)
+
+
+## Returns all components
+func get_components() -> Dictionary[String, PackedScene]:
+	return _components.duplicate(true)
+
+
+## Returns all data inputs by DataType
+func get_data_inputs() -> Dictionary[Data.Type, Variant]:
+	return _data_inputs.duplicate(true)
+
+
+## Returns all panels sorted by category
+func get_panels_by_category() -> Dictionary[String, Array]:
+	return _panels_by_category.duplicate(true)
+
+
+## Returns all class icons
+func get_class_icons() -> Dictionary[String, Texture2D]:
+	return _class_icons.duplicate(true)
 
 
 ## Creates a new instance of a UIPanel

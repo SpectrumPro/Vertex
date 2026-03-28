@@ -1,9 +1,9 @@
 [gd_scene load_steps=20 format=3 uid="uid://bf3cbsyaotnnq"]
 
-[ext_resource type="Script" uid="uid://hmhku2rcmd4j" path="res://components/Table/Table.gd" id="1_bfqnh"]
-[ext_resource type="Script" uid="uid://cqqewrymh5k55" path="res://components/Table/TableTitleButton.gd" id="2_xi7fw"]
-[ext_resource type="PackedScene" uid="uid://b6eijsxlis7r3" path="res://components/SelectBox/SelectBox.tscn" id="3_6x34v"]
-[ext_resource type="Script" uid="uid://dpc71qwv7h4un" path="res://components/Table/TableSideBarButton.gd" id="3_iqbhn"]
+[ext_resource type="Script" uid="uid://bj1pr3vtvr11u" path="res://modules/Vertex/components/Table/Table.gd" id="1_bfqnh"]
+[ext_resource type="Script" uid="uid://dk54djvowcfpt" path="res://modules/Vertex/components/Table/TableTitleButton.gd" id="2_xi7fw"]
+[ext_resource type="PackedScene" uid="uid://b6eijsxlis7r3" path="res://modules/Vertex/components/SelectBox/SelectBox.tscn" id="3_6x34v"]
+[ext_resource type="Script" uid="uid://1vvl87unopnh" path="res://modules/Vertex/components/Table/TableSideBarButton.gd" id="3_iqbhn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gp3vw"]
 content_margin_left = 0.0
@@ -340,7 +340,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="SelectBox" parent="Control/SelectContainer" node_paths=PackedStringArray("event_control") instance=ExtResource("3_6x34v")]
+[node name="SelectBox" parent="Control/SelectContainer" instance=ExtResource("3_6x34v")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -356,7 +356,6 @@ offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-event_control = NodePath("..")
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/PanelContainer2/DeSelectAll" to="." method="deselect_all"]
@@ -374,6 +373,3 @@ event_control = NodePath("..")
 [connection signal="multi_selected" from="HBoxContainer/HSplitContainer/CoreTreeContainer/CoreTree" to="." method="_handle_item_selected"]
 [connection signal="nothing_selected" from="HBoxContainer/HSplitContainer/CoreTreeContainer/CoreTree" to="." method="_on_tree_nothing_selected"]
 [connection signal="resized" from="HBoxContainer/HSplitContainer/CoreTreeContainer/CoreTree" to="." method="_on_core_tree_resized"]
-[connection signal="pressed" from="Control/SelectContainer/SelectBox" to="." method="_on_select_box_pressed"]
-[connection signal="released" from="Control/SelectContainer/SelectBox" to="." method="_on_select_box_released"]
-[connection signal="selection_updated" from="Control/SelectContainer/SelectBox" to="." method="_on_select_box_selection_updated"]

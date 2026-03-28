@@ -485,7 +485,9 @@ func _deselect_all_in(p_tree: Tree) -> void:
 
 ## Updates the min size on the next frame
 func _update_column_min_size_next_frame() -> void:
-	await get_tree().process_frame
+	if is_inside_tree():
+		await get_tree().process_frame
+	
 	_update_column_min_size.call_deferred()
 
 

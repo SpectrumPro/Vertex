@@ -84,5 +84,5 @@ func _on_confirm_button_pressed() -> void:
 	var dont_show_again: bool = dont_show_again_button.is_pressed()
 	closing.emit(dont_show_again)
 	
-	Interface.config().notice_dont_show_again(_notice.get_notice_id())
+	Interface.Config.set_notice_can_show(_notice.get_notice_id(), false)
 	Interface.fade_and_hide(self, queue_free)

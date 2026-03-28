@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cnfq2son0bjyp"
-path="res://.godot/imported/UnfoldLess.svg-4ab1d5f33b61759a0c6b1e265ce5f770.ctex"
+path="res://.godot/imported/UnfoldLess.svg-a6bd2610d6990b21998fa03442708760.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/UnfoldLess.svg"
-dest_files=["res://.godot/imported/UnfoldLess.svg-4ab1d5f33b61759a0c6b1e265ce5f770.ctex"]
+source_file="res://modules/Vertex/assets/icons/UnfoldLess.svg"
+dest_files=["res://.godot/imported/UnfoldLess.svg-a6bd2610d6990b21998fa03442708760.ctex"]
 
 [params]
 

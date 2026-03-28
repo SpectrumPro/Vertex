@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bruqlneow3y33"]
 
-[ext_resource type="StyleBox" path="res://assets/styles/UIPanelBase.tres" id="1_sp5qm"]
-[ext_resource type="Script" uid="uid://5edq1bxl2trx" path="res://panels/popups/UIPopupDialog/UIPopupDialog.gd" id="2_8bghr"]
-[ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://panels/UIPanel/PanelMenuBar.tscn" id="3_jdxiq"]
-[ext_resource type="Texture2D" uid="uid://bjx5d0xt0q7te" path="res://assets/icons/Menu.svg" id="4_sp5qm"]
+[ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://assets/styles/UIPanelBase.tres" id="1_sp5qm"]
+[ext_resource type="Script" uid="uid://cs4qtbx520r60" path="res://modules/Vertex/panels/popups/UIPopupDialog/UIPopupDialog.gd" id="2_8bghr"]
+[ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="3_jdxiq"]
+[ext_resource type="Texture2D" uid="uid://bjx5d0xt0q7te" path="res://modules/Vertex/assets/icons/Menu.svg" id="4_sp5qm"]
 
 [node name="UIPopupDialog" type="PanelContainer" node_paths=PackedStringArray("container", "title_button", "edit_controls", "menu_bar")]
 anchors_preset = 8

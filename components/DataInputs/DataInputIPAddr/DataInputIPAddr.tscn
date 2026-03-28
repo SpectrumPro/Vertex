@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://dw7b02ptu2u2i"]
 
-[ext_resource type="Script" uid="uid://b87nshm7m56rx" path="res://components/DataInputs/DataInputIPAddr/DataInputIPAddr.gd" id="1_2lokj"]
+[ext_resource type="Script" uid="uid://cgrnc12akdcru" path="res://modules/Vertex/components/DataInputs/DataInputIPAddr/DataInputIPAddr.gd" id="1_pmrpa"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_mysae"]
 
 [node name="DataInputIPAddr" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
-script = ExtResource("1_2lokj")
+script = ExtResource("1_pmrpa")
 
 [node name="HBox" type="HBoxContainer" parent="."]
 layout_mode = 2

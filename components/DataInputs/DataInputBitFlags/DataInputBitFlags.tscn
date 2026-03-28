@@ -1,14 +1,14 @@
 [gd_scene load_steps=4 format=3 uid="uid://bqpg0ue4l0dma"]
 
-[ext_resource type="Script" uid="uid://d01fix2uj1nx1" path="res://components/DataInputs/DataInputBitFlags/DataInputBitFlags.gd" id="1_dbi2m"]
+[ext_resource type="Script" uid="uid://dljvnleo8cfh2" path="res://modules/Vertex/components/DataInputs/DataInputBitFlags/DataInputBitFlags.gd" id="1_edcki"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_4v1rf"]
-[ext_resource type="Texture2D" uid="uid://bicofj1suwdeb" path="res://assets/icons/UnfoldMore.svg" id="3_4qght"]
+[ext_resource type="Texture2D" uid="uid://bicofj1suwdeb" path="res://modules/Vertex/assets/icons/UnfoldMore.svg" id="3_4qght"]
 
 [node name="DataInputBitFlags" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 354.0
 offset_bottom = 59.0
-script = ExtResource("1_dbi2m")
+script = ExtResource("1_edcki")
 
 [node name="Outline" type="Panel" parent="."]
 modulate = Color(1, 1, 1, 0)

@@ -1,14 +1,14 @@
 [gd_scene load_steps=10 format=3 uid="uid://banja33qhwb5b"]
 
-[ext_resource type="PackedScene" uid="uid://bojo5mnmadf4j" path="res://panels/popups/UIPanelSelector/UIPanelSelector.tscn" id="1_if4f4"]
-[ext_resource type="PackedScene" uid="uid://bfdb7diyn2pub" path="res://panels/popups/UIObjectSelector/UIObjectSelector.tscn" id="2_0h5oi"]
-[ext_resource type="PackedScene" uid="uid://cgkb6rh0joakn" path="res://panels/UIPanelSettings/UIPanelSettings.tscn" id="3_jcwaf"]
-[ext_resource type="PackedScene" uid="uid://bgos7cwjodq8j" path="res://panels/popups/UICommandPalette/UICommandPalette.tscn" id="4_jcqk3"]
-[ext_resource type="PackedScene" uid="uid://dbindagv7rpfp" path="res://panels/UIWindowManager/UIWindowManager.tscn" id="5_gdu1o"]
-[ext_resource type="PackedScene" uid="uid://k0p6c6xe8xmi" path="res://panels/popups/UIWindowID/UIWindowID.tscn" id="6_tyrqo"]
-[ext_resource type="PackedScene" uid="uid://dpbusafl685o6" path="res://panels/popups/UINetworkSelector/UINetworkSelector.tscn" id="7_cbeyb"]
-[ext_resource type="PackedScene" uid="uid://g5qrmeqkxr26" path="res://panels/UISettingsManager/UISettingsManager.tscn" id="8_cxd05"]
-[ext_resource type="PackedScene" uid="uid://b1kltq456o7pj" path="res://panels/popups/UIPopupSettingsModule/UIPopupSettingsModule.tscn" id="9_3o6tu"]
+[ext_resource type="PackedScene" uid="uid://bojo5mnmadf4j" path="res://modules/Vertex/panels/popups/UIPanelSelector/UIPanelSelector.tscn" id="1_if4f4"]
+[ext_resource type="PackedScene" uid="uid://bfdb7diyn2pub" path="res://modules/Vertex/panels/popups/UIObjectSelector/UIObjectSelector.tscn" id="2_0h5oi"]
+[ext_resource type="PackedScene" uid="uid://cgkb6rh0joakn" path="res://modules/Vertex/panels/UIPanelSettings/UIPanelSettings.tscn" id="3_jcwaf"]
+[ext_resource type="PackedScene" uid="uid://bgos7cwjodq8j" path="res://modules/Vertex/panels/popups/UICommandPalette/UICommandPalette.tscn" id="4_jcqk3"]
+[ext_resource type="PackedScene" uid="uid://dbindagv7rpfp" path="res://modules/Vertex/panels/UIWindowManager/UIWindowManager.tscn" id="5_gdu1o"]
+[ext_resource type="PackedScene" uid="uid://k0p6c6xe8xmi" path="res://modules/Vertex/panels/popups/UIWindowID/UIWindowID.tscn" id="6_tyrqo"]
+[ext_resource type="PackedScene" uid="uid://dpbusafl685o6" path="res://modules/Vertex/panels/popups/UINetworkSelector/UINetworkSelector.tscn" id="7_cbeyb"]
+[ext_resource type="PackedScene" uid="uid://g5qrmeqkxr26" path="res://modules/Vertex/panels/UISettingsManager/UISettingsManager.tscn" id="8_cxd05"]
+[ext_resource type="PackedScene" uid="uid://b1kltq456o7pj" path="res://modules/Vertex/panels/popups/UIPopupSettingsModule/UIPopupSettingsModule.tscn" id="9_3o6tu"]
 
 [node name="WindowPopups" type="Control"]
 layout_mode = 3
@@ -24,7 +24,7 @@ visible = false
 layout_mode = 1
 offset_top = -170.0
 offset_bottom = 170.0
-display_mode = 1
+script = null
 
 [node name="UIObjectSelector" parent="." instance=ExtResource("2_0h5oi")]
 visible = false
@@ -40,7 +40,7 @@ offset_right = 302.0
 offset_bottom = 180.0
 grow_horizontal = 2
 grow_vertical = 2
-display_mode = 1
+script = null
 
 [node name="UIPanelSettings" parent="." instance=ExtResource("3_jcwaf")]
 visible = false
@@ -54,7 +54,7 @@ offset_left = -416.0
 offset_top = -235.0
 offset_right = 416.0
 offset_bottom = 235.0
-display_mode = 1
+script = null
 
 [node name="UICommandPalette" parent="." instance=ExtResource("4_jcqk3")]
 visible = false
@@ -70,6 +70,7 @@ offset_right = 302.0
 offset_bottom = 190.0
 grow_horizontal = 2
 grow_vertical = 2
+script = null
 
 [node name="UIWindowManager" parent="." instance=ExtResource("5_gdu1o")]
 visible = false
@@ -83,7 +84,7 @@ offset_left = -452.0
 offset_top = -254.0
 offset_right = 452.0
 offset_bottom = 254.0
-display_mode = 1
+script = null
 
 [node name="UIWindowID" parent="." instance=ExtResource("6_tyrqo")]
 visible = false
@@ -92,7 +93,7 @@ offset_left = -263.0
 offset_top = -140.0
 offset_right = 263.0
 offset_bottom = 140.0
-display_mode = 1
+script = null
 
 [node name="UINetworkSelector" parent="." instance=ExtResource("7_cbeyb")]
 visible = false
@@ -106,7 +107,7 @@ offset_left = -159.0
 offset_top = -228.0
 offset_right = 159.0
 offset_bottom = 228.0
-display_mode = 1
+script = null
 
 [node name="UISettingsManager" parent="." instance=ExtResource("8_cxd05")]
 visible = false
@@ -120,7 +121,7 @@ offset_left = -458.0
 offset_top = -262.0
 offset_right = 458.0
 offset_bottom = 262.0
-display_mode = 1
+script = null
 
 [node name="UIPopupSettingsModule" parent="." instance=ExtResource("9_3o6tu")]
 visible = false
@@ -136,4 +137,4 @@ offset_right = 108.5
 offset_bottom = 35.0
 grow_horizontal = 2
 grow_vertical = 2
-display_mode = 1
+script = null

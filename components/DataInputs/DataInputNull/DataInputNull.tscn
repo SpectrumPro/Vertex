@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://cva4naeuvb2wk"]
 
-[ext_resource type="Script" uid="uid://bkp5lnrcco7cq" path="res://components/DataInputs/DataInputNull/DataInputNull.gd" id="1_byb86"]
+[ext_resource type="Script" uid="uid://b3s7eut4t3w0j" path="res://modules/Vertex/components/DataInputs/DataInputNull/DataInputNull.gd" id="1_rk5jp"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_sywd1"]
 
 [node name="DataInputNull" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
-script = ExtResource("1_byb86")
+script = ExtResource("1_rk5jp")
 
 [node name="Outline" type="Panel" parent="."]
 modulate = Color(1, 1, 1, 0)

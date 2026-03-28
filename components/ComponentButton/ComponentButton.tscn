@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bbpvsnjbak1p3"]
 
-[ext_resource type="Script" uid="uid://dwvce37h5unaw" path="res://components/ComponentButton/ComponentButton.gd" id="2_g0d4m"]
+[ext_resource type="Script" uid="uid://cqo73g57e2ntd" path="res://modules/Vertex/components/ComponentButton/ComponentButton.gd" id="2_g0d4m"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_u8n0x"]
 load_path = "res://.godot/imported/Component.svg-72fee1a8c5508e56dd4dce5f8b8533ca.ctex"

@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://xhm2xxafybeb"]
 
-[ext_resource type="Script" uid="uid://dyf0g380y4wtj" path="res://components/DataInputs/DataInputFloat/DataInputFloat.gd" id="1_3grei"]
+[ext_resource type="Script" uid="uid://drfjssrbwyg8x" path="res://modules/Vertex/components/DataInputs/DataInputFloat/DataInputFloat.gd" id="1_kjvtv"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_vglwc"]
 
 [node name="DataInputFloat" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
-script = ExtResource("1_3grei")
+script = ExtResource("1_kjvtv")
 
 [node name="HBox" type="HBoxContainer" parent="."]
 layout_mode = 2

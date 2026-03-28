@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://cutx4gwibhjde"]
 
-[ext_resource type="Script" uid="uid://cbowaxk00psc5" path="res://components/DataInputs/DataInputEnum/DataInputEnum.gd" id="1_wev66"]
+[ext_resource type="Script" uid="uid://owo6o3rq1qdr" path="res://modules/Vertex/components/DataInputs/DataInputEnum/DataInputEnum.gd" id="1_xc2yg"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_eke06"]
 
 [node name="DataInputEnum" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
-script = ExtResource("1_wev66")
+script = ExtResource("1_xc2yg")
 
 [node name="HBox" type="HBoxContainer" parent="."]
 layout_mode = 2

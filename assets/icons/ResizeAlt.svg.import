@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b4uwxy1weyuta"
-path="res://.godot/imported/ResizeAlt.svg-7edafc4ca1ccd4873289a5dd719091b0.ctex"
+path="res://.godot/imported/ResizeAlt.svg-b2a54f1e8eb86971185252a48b37d23d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/ResizeAlt.svg"
-dest_files=["res://.godot/imported/ResizeAlt.svg-7edafc4ca1ccd4873289a5dd719091b0.ctex"]
+source_file="res://modules/Vertex/assets/icons/ResizeAlt.svg"
+dest_files=["res://.godot/imported/ResizeAlt.svg-b2a54f1e8eb86971185252a48b37d23d.ctex"]
 
 [params]
 

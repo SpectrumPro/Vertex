@@ -129,6 +129,14 @@ func _init() -> void:
 	Config.load_config("res://InterfaceConfig.gd")
 	Config.load_user_config()
 	
+	_window_popup_config.merge(Config.window_popup_config)
+	
+	for entry: CommandPaletteEntry in Config.command_palette_default_items:
+		add_command_palette_entry(entry)
+	
+	for script: Script in Config.object_picker_default_items:
+		_object_picker_index[script] = Config.object_picker_default_items[script]
+	
 	## TODO
 	#_settings.register_control("OpenMainMenu", Data.Type.ACTION, set_popup_visable.bind(WindowPopup.MAIN_MENU, self, true), Callable(), [])
 	#_settings.register_control("OpenSettings", Data.Type.ACTION, set_popup_visable.bind(WindowPopup.SETTINGS, self, true), Callable(), [])
@@ -153,12 +161,6 @@ func _ready() -> void:
 	
 	set_save_ui_on_quit(Config.save_ui_on_quit)
 	set_scale_factor(Config.scale_factor)
-	
-	for entry: CommandPaletteEntry in Config.command_palette_default_items:
-		add_command_palette_entry(entry)
-	
-	for script: Script in Config.object_picker_default_items:
-		_object_picker_index[script] = Config.object_picker_default_items[script]
 	
 	(func () -> void:
 		load_ui()
@@ -445,7 +447,7 @@ func show_and_fade(p_control: Control, p_callback: Callable = Callable(), p_time
 
 ## Fades and hides a control
 func fade_and_hide(p_control: Control, p_callback: Callable = Callable(), p_time: float = ThemeManager.Constants.Times.InterfaceFadeTime) -> void:
-	if not p_control.visible and not is_fading(p_control, "modulate"):
+	if not is_instance_valid(p_control) or not p_control.visible and not is_fading(p_control, "modulate"):
 		return
 	
 	p_control.modulate = Color.WHITE
@@ -762,6 +764,19 @@ class Config:
 			return user_config_file_location + user_config_file_name
 		else:
 			return user_config_file_location + "/" + user_config_file_name
+	
+	
+	## Returns true if a notice can be shown
+	static func can_show_notice(p_notice_id: String) -> bool:
+		return notices_dont_show_again.has(p_notice_id)
+	
+	
+	## Sets if a notice can be shown again
+	static func set_notice_can_show(p_notice_id: String, p_can_show) -> void:
+		if p_can_show:
+			notices_dont_show_again.erase(p_notice_id)
+		elif not notices_dont_show_again.has(p_notice_id):
+			notices_dont_show_again.append(p_notice_id)
 
 
 ## Stores configuration for a WindowPopup instance

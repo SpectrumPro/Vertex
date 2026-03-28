@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://b0npgfg4cqny6"
-path="res://.godot/imported/RubikMonoOne-Regular.ttf-c7f4828edaadf3b5c6cd2be6c789052c.fontdata"
+path="res://.godot/imported/RubikMonoOne-Regular.ttf-61e70ed7d212c394e9577c8f4c58edf0.fontdata"
 
 [deps]
 
-source_file="res://assets/font/RubikMonoOne-Regular.ttf"
-dest_files=["res://.godot/imported/RubikMonoOne-Regular.ttf-c7f4828edaadf3b5c6cd2be6c789052c.fontdata"]
+source_file="res://modules/Vertex/assets/font/RubikMonoOne-Regular.ttf"
+dest_files=["res://.godot/imported/RubikMonoOne-Regular.ttf-61e70ed7d212c394e9577c8f4c58edf0.fontdata"]
 
 [params]
 

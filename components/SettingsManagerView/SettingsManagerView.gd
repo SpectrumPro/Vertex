@@ -41,7 +41,7 @@ func set_manager(p_manager: SettingsManager) -> void:
 	_manager = p_manager
 	
 	for classname: String in _manager.get_inheritance_list():
-		var view: SettingsManagerModuleView = preload("res://components/SettingsManagerView/ModuleView/SettingsManagerModuleView.tscn").instantiate()
+		var view: SettingsManagerModuleView = preload("res://modules/Vertex/components/SettingsManagerView/ModuleView/SettingsManagerModuleView.tscn").instantiate()
 		
 		view.set_title(classname)
 		view.set_disabled(true)

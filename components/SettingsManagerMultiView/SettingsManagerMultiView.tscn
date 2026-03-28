@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://bobrutb83r27e"]
 
-[ext_resource type="Script" uid="uid://dklysmwy1heo2" path="res://components/SettingsManagerMultiView/SettingsManagerMultiView.gd" id="1_kje12"]
-[ext_resource type="PackedScene" uid="uid://bf3cbsyaotnnq" path="res://components/Table/Table.tscn" id="2_0b5xi"]
-[ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://components/SettingsManagerView/SettingsManagerView.tscn" id="3_h5qm2"]
+[ext_resource type="Script" uid="uid://cv7a3xtevftpm" path="res://modules/Vertex/components/SettingsManagerMultiView/SettingsManagerMultiView.gd" id="1_fmitj"]
+[ext_resource type="PackedScene" uid="uid://bf3cbsyaotnnq" path="res://modules/Vertex/components/Table/Table.tscn" id="2_0b5xi"]
+[ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerView/SettingsManagerView.tscn" id="3_h5qm2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kje12"]
 content_margin_left = 5.0
@@ -22,7 +22,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_kje12")
-script = ExtResource("1_kje12")
+script = ExtResource("1_fmitj")
 table = NodePath("HSplitContainer/Table")
 settings_manager_view = NodePath("HSplitContainer/ScrollContainer/SettingsManagerView")
 
@@ -42,5 +42,3 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[connection signal="selection_changed" from="HSplitContainer/Table" to="." method="_on_table_selection_changed"]

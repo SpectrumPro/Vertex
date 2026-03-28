@@ -1,4 +1,4 @@
-class_name DataConfig extends Object
+#class_name DataConfig extends Object
 
 
 ## Class to store SubType keys

@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bwkkeg4iicguk"]
 
-[ext_resource type="StyleBox" path="res://assets/styles/UIPanelPopup.tres" id="1_ddcup"]
-[ext_resource type="Script" uid="uid://dwpvecletju6e" path="res://components/StartUpNoticeContainer/StartUpNoticeContainer.gd" id="2_03egk"]
-[ext_resource type="StyleBox" path="res://assets/styles/PanelMenuBar.tres" id="2_qlvgm"]
-[ext_resource type="Texture2D" uid="uid://cs51jwtt25epd" path="res://assets/icons/OpenInNew.svg" id="3_03egk"]
+[ext_resource type="StyleBox" uid="uid://drpfuhk8y61xk" path="res://assets/styles/UIPanelPopup.tres" id="1_ddcup"]
+[ext_resource type="Script" uid="uid://f0gvkaeqmstu" path="res://modules/Vertex/components/StartUpNoticeContainer/StartUpNoticeContainer.gd" id="2_n2he5"]
+[ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://assets/styles/PanelMenuBar.tres" id="2_qlvgm"]
+[ext_resource type="Texture2D" uid="uid://cs51jwtt25epd" path="res://modules/Vertex/assets/icons/OpenInNew.svg" id="3_03egk"]
 
 [node name="StartUpNoticeContainer" type="PanelContainer" node_paths=PackedStringArray("rich_text_label", "link_button", "confirm_button", "dont_show_again_button")]
 anchors_preset = 8
@@ -20,7 +20,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("1_ddcup")
-script = ExtResource("2_03egk")
+script = ExtResource("2_n2he5")
 rich_text_label = NodePath("VBoxContainer/MarginContainer/RichTextLabel")
 link_button = NodePath("VBoxContainer/PanelContainer/LinkButton")
 confirm_button = NodePath("VBoxContainer/PanelContainer/ConfirmButton")

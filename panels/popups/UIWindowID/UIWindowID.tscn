@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://k0p6c6xe8xmi"]
 
-[ext_resource type="Script" uid="uid://0pg60tu1btmd" path="res://panels/popups/UIWindowID/UIWindowID.gd" id="1_bekwe"]
+[ext_resource type="Script" uid="uid://b8bp6xa63rjc5" path="res://modules/Vertex/panels/popups/UIWindowID/UIWindowID.gd" id="1_hqi6e"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bdglm"]
 bg_color = Color(0.1728327, 0.17283267, 0.17283267, 1)
@@ -30,7 +30,7 @@ offset_bottom = 209.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bdglm")
-script = ExtResource("1_bekwe")
+script = ExtResource("1_hqi6e")
 label = NodePath("Label")
 
 [node name="Label" type="Label" parent="."]

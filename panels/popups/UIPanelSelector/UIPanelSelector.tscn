@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://bojo5mnmadf4j"]
 
-[ext_resource type="Script" uid="uid://bvdp5eir5pi2" path="res://panels/popups/UIPanelSelector/UIPanelSelector.gd" id="2_ktnxn"]
-[ext_resource type="StyleBox" path="res://assets/styles/UIPanelBase.tres" id="2_xgsr8"]
-[ext_resource type="Texture2D" uid="uid://bioo1soykuvdm" path="res://assets/icons/Panel.svg" id="3_kjule"]
-[ext_resource type="Script" uid="uid://dyye8vfwnqi5h" path="res://classes/TaggedLineEdit.gd" id="4_lx25v"]
-[ext_resource type="PackedScene" uid="uid://dfu5s8fjy0ex4" path="res://panels/UIPanel/EditControls/EditControls.tscn" id="5_xgsr8"]
+[ext_resource type="Script" uid="uid://d4dsdaciau43e" path="res://modules/Vertex/panels/popups/UIPanelSelector/UIPanelSelector.gd" id="2_ktnxn"]
+[ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://assets/styles/UIPanelBase.tres" id="2_xgsr8"]
+[ext_resource type="Texture2D" uid="uid://bioo1soykuvdm" path="res://modules/Vertex/assets/icons/Panel.svg" id="3_kjule"]
+[ext_resource type="Script" uid="uid://c6lkkp6akoipw" path="res://modules/Vertex/classes/TaggedLineEdit.gd" id="4_lx25v"]
+[ext_resource type="PackedScene" uid="uid://dfu5s8fjy0ex4" path="res://modules/Vertex/panels/UIPanel/EditControls/EditControls.tscn" id="5_xgsr8"]
 
 [node name="UIPanelSelector" type="PanelContainer" node_paths=PackedStringArray("categorised_tree", "panel_tree", "search_bar", "edit_controls")]
 custom_minimum_size = Vector2(0, 60)

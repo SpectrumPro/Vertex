@@ -1,24 +1,26 @@
 [gd_scene load_steps=9 format=3 uid="uid://dpbusafl685o6"]
 
-[ext_resource type="StyleBox" path="res://assets/styles/UIPanelBase.tres" id="1_plg1g"]
-[ext_resource type="Script" uid="uid://clcg8142rdons" path="res://panels/popups/UINetworkSelector/UINetworkSelector.gd" id="2_pqqrg"]
-[ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://panels/UIPanel/PanelMenuBar.tscn" id="3_smya7"]
-[ext_resource type="Texture2D" uid="uid://1bdb5cggw6rd" path="res://assets/icons/IPAddr.svg" id="4_2vgsc"]
-[ext_resource type="Texture2D" uid="uid://b7petc8y34bds" path="res://assets/icons/Refresh.svg" id="5_aud0g"]
-[ext_resource type="StyleBox" path="res://assets/styles/PanelMenuBar.tres" id="6_njcgw"]
-[ext_resource type="Texture2D" uid="uid://deii2wkil5fsl" path="res://assets/icons/Close.svg" id="7_014e3"]
-[ext_resource type="Texture2D" uid="uid://l2fe8lfskprv" path="res://assets/icons/Check.svg" id="8_k3eag"]
+[ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://assets/styles/UIPanelBase.tres" id="1_plg1g"]
+[ext_resource type="Script" uid="uid://bouqbt1fe70wi" path="res://modules/Vertex/panels/popups/UINetworkSelector/UINetworkSelector.gd" id="2_41xxg"]
+[ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="3_smya7"]
+[ext_resource type="Texture2D" uid="uid://1bdb5cggw6rd" path="res://modules/Vertex/assets/icons/IPAddr.svg" id="4_2vgsc"]
+[ext_resource type="Texture2D" uid="uid://b7petc8y34bds" path="res://modules/Vertex/assets/icons/Refresh.svg" id="5_aud0g"]
+[ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://assets/styles/PanelMenuBar.tres" id="6_njcgw"]
+[ext_resource type="Texture2D" uid="uid://deii2wkil5fsl" path="res://modules/Vertex/assets/icons/Close.svg" id="7_014e3"]
+[ext_resource type="Texture2D" uid="uid://l2fe8lfskprv" path="res://modules/Vertex/assets/icons/Check.svg" id="8_k3eag"]
 
-[node name="UINetworkSelector" type="PanelContainer" node_paths=PackedStringArray("interface_tree", "confirm_button")]
+[node name="UINetworkSelector" type="PanelContainer" node_paths=PackedStringArray("interface_tree", "confirm_button", "edit_controls", "menu_bar")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = ExtResource("1_plg1g")
-script = ExtResource("2_pqqrg")
+script = ExtResource("2_41xxg")
 interface_tree = NodePath("VBoxContainer/InterfaceTree")
 confirm_button = NodePath("VBoxContainer/PanelContainer/HBoxContainer/Confirm")
+edit_controls = NodePath("VBoxContainer/PanelMenuBar/HBoxContainer/EditControls")
+menu_bar = NodePath("VBoxContainer/PanelMenuBar")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
