@@ -1,0 +1,76 @@
+[gd_scene load_steps=9 format=3 uid="uid://dpbusafl685o6"]
+
+[ext_resource type="StyleBox" path="res://assets/styles/UIPanelBase.tres" id="1_plg1g"]
+[ext_resource type="Script" uid="uid://clcg8142rdons" path="res://panels/popups/UINetworkSelector/UINetworkSelector.gd" id="2_pqqrg"]
+[ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://panels/UIPanel/PanelMenuBar.tscn" id="3_smya7"]
+[ext_resource type="Texture2D" uid="uid://1bdb5cggw6rd" path="res://assets/icons/IPAddr.svg" id="4_2vgsc"]
+[ext_resource type="Texture2D" uid="uid://b7petc8y34bds" path="res://assets/icons/Refresh.svg" id="5_aud0g"]
+[ext_resource type="StyleBox" path="res://assets/styles/PanelMenuBar.tres" id="6_njcgw"]
+[ext_resource type="Texture2D" uid="uid://deii2wkil5fsl" path="res://assets/icons/Close.svg" id="7_014e3"]
+[ext_resource type="Texture2D" uid="uid://l2fe8lfskprv" path="res://assets/icons/Check.svg" id="8_k3eag"]
+
+[node name="UINetworkSelector" type="PanelContainer" node_paths=PackedStringArray("interface_tree", "confirm_button")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("1_plg1g")
+script = ExtResource("2_pqqrg")
+interface_tree = NodePath("VBoxContainer/InterfaceTree")
+confirm_button = NodePath("VBoxContainer/PanelContainer/HBoxContainer/Confirm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="PanelMenuBar" parent="VBoxContainer" instance=ExtResource("3_smya7")]
+layout_mode = 2
+
+[node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="0"]
+text = "InterfaceSelector"
+icon = ExtResource("4_2vgsc")
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="Reload" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/PanelContainer"]
+layout_mode = 2
+icon = ExtResource("5_aud0g")
+
+[node name="InterfaceTree" type="Tree" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+hide_folding = true
+hide_root = true
+select_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_njcgw")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Cancel" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+icon = ExtResource("7_014e3")
+
+[node name="Confirm" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Confirm"
+icon = ExtResource("8_k3eag")
+
+[connection signal="pressed" from="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/PanelContainer/Reload" to="." method="reload"]
+[connection signal="item_activated" from="VBoxContainer/InterfaceTree" to="." method="_confirm_selected"]
+[connection signal="item_selected" from="VBoxContainer/InterfaceTree" to="." method="_on_interface_tree_item_selected"]
+[connection signal="nothing_selected" from="VBoxContainer/InterfaceTree" to="." method="_on_interface_tree_nothing_selected"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/Cancel" to="." method="cancel"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/Confirm" to="." method="_confirm_selected"]
+
+[editable path="VBoxContainer/PanelMenuBar"]

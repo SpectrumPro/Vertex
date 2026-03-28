@@ -1,0 +1,60 @@
+[gd_scene load_steps=6 format=3 uid="uid://bfdb7diyn2pub"]
+
+[ext_resource type="StyleBox" path="res://assets/styles/PanelMenuBar.tres" id="1_153al"]
+[ext_resource type="Script" uid="uid://dlxjko72ewn11" path="res://panels/popups/UIObjectSelector/UIObjectSelector.gd" id="2_2b4al"]
+[ext_resource type="Texture2D" uid="uid://cqet7mmbb000e" path="res://assets/icons/Search.svg" id="3_1cpnu"]
+[ext_resource type="Script" uid="uid://dyye8vfwnqi5h" path="res://classes/TaggedLineEdit.gd" id="4_ijqba"]
+[ext_resource type="PackedScene" uid="uid://dfu5s8fjy0ex4" path="res://panels/UIPanel/EditControls/EditControls.tscn" id="5_ujykt"]
+
+[node name="UIObjectSelector" type="PanelContainer" node_paths=PackedStringArray("search_bar", "index_container", "edit_controls")]
+custom_minimum_size = Vector2(0, 60)
+offset_right = 604.0
+offset_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_styles/panel = ExtResource("1_153al")
+script = ExtResource("2_2b4al")
+search_bar = NodePath("VBoxContainer/HBoxContainer/ScrollContainer/LineEdit")
+index_container = NodePath("VBoxContainer/IndexContainer")
+edit_controls = NodePath("VBoxContainer/HBoxContainer/EditControls")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("3_1cpnu")
+flat = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+placeholder_text = "Object Picker"
+select_all_on_focus = true
+script = ExtResource("4_ijqba")
+
+[node name="EditControls" parent="VBoxContainer/HBoxContainer" instance=ExtResource("5_ujykt")]
+layout_mode = 2
+show_back = true
+show_edit = false
+show_settings = false
+show_close = true
+
+[node name="IndexContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="gui_input" from="VBoxContainer/HBoxContainer/ScrollContainer/LineEdit" to="." method="_on_line_edit_gui_input"]
+[connection signal="tag_removed" from="VBoxContainer/HBoxContainer/ScrollContainer/LineEdit" to="." method="_on_line_edit_tag_removed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/ScrollContainer/LineEdit" to="." method="search_for"]
+[connection signal="text_submitted" from="VBoxContainer/HBoxContainer/ScrollContainer/LineEdit" to="." method="_on_line_edit_text_submitted"]
