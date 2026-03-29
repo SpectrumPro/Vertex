@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://gf4tsoprrt22"]
 
 [ext_resource type="Script" uid="uid://ifecefhoqn2l" path="res://modules/Vertex/components/DataInputs/DataInputString/DataInputString.gd" id="1_jl6kc"]
-[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_vrvg8"]
+[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_vrvg8"]
 
 [node name="DataInputString" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 50)

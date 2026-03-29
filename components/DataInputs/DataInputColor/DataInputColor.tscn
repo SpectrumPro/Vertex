@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://rac2xe1lsdhe"]
 
 [ext_resource type="Script" uid="uid://ctyuidciyhwrw" path="res://modules/Vertex/components/DataInputs/DataInputColor/DataInputColor.gd" id="1_tfo30"]
-[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_v7583"]
+[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_v7583"]
 
 [node name="DataInputColor" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 50)

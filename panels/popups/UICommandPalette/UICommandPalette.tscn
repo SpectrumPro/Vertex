@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://bgos7cwjodq8j"]
 
-[ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://assets/styles/PanelMenuBar.tres" id="1_hucp2"]
+[ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://modules/Vertex/assets/styles/PanelMenuBar.tres" id="1_hucp2"]
 [ext_resource type="Script" uid="uid://dufng2l6kp0bo" path="res://modules/Vertex/panels/popups/UICommandPalette/UICommandPalette.gd" id="2_hucp2"]
-[ext_resource type="Texture2D" uid="uid://yuexgjjw6k0v" path="res://modules/Vertex/assets/icons/Component.svg" id="3_v07wq"]
+[ext_resource type="Texture2D" uid="uid://c8ia6s2pwy1wm" path="res://modules/Vertex/assets/icons/Component.svg" id="3_v07wq"]
 [ext_resource type="PackedScene" uid="uid://dfu5s8fjy0ex4" path="res://modules/Vertex/panels/UIPanel/EditControls/EditControls.tscn" id="4_2ap7d"]
 [ext_resource type="Script" uid="uid://c6lkkp6akoipw" path="res://modules/Vertex/classes/TaggedLineEdit.gd" id="4_blvx6"]
 

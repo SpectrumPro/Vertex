@@ -47,15 +47,15 @@ class Colors:
 
 ## Stylebox 
 class StyleBoxes:
-	static var UIPanelBase				= preload("res://assets/styles/UIPanelBase.tres") ## Base style for all UIPanels
-	static var UIPanelPopup				= preload("res://assets/styles/UIPanelPopup.tres") ## Popup style for UIPanels
-	static var UIPanelImbed				= preload("res://assets/styles/UIPanelImbed.tres") ## Imbed style for UIPanels
-	static var PanelMenuBarBase			= preload("res://assets/styles/PanelMenuBar.tres") ## Popup style for PanelManuBar
-	static var PanelMenuBarPopup		= preload("res://assets/styles/PanelMenuBarPopup.tres") ## Popup style for PanelManuBar Popup mode
-	static var SelectBoxBackground		= preload("res://assets/styles/SelectBoxBackground.tres") ## Stylebox for the SelectBox component
-	static var GridPoint				= preload("res://assets/styles/GridPoint.tres") ## Stylebox for the grid Point
-	static var ResolveBoxStyle			= preload("res://assets/styles/ResolveBox.tres") ## Stylebox for the ResolveBoxStyle
-	static var ResolveBoxBGLess			= preload("res://assets/styles/ResolveBoxNoBG.tres") ## Stylebox for the ResolveBox Background less
+	static var UIPanelBase				= preload("res://modules/Vertex/assets/styles/UIPanelBase.tres") ## Base style for all UIPanels
+	static var UIPanelPopup				= preload("res://modules/Vertex/assets/styles/UIPanelPopup.tres") ## Popup style for UIPanels
+	static var UIPanelImbed				= preload("res://modules/Vertex/assets/styles/UIPanelImbed.tres") ## Imbed style for UIPanels
+	static var PanelMenuBarBase			= preload("res://modules/Vertex/assets/styles/PanelMenuBar.tres") ## Popup style for PanelManuBar
+	static var PanelMenuBarPopup		= preload("res://modules/Vertex/assets/styles/PanelMenuBarPopup.tres") ## Popup style for PanelManuBar Popup mode
+	static var SelectBoxBackground		= preload("res://modules/Vertex/assets/styles/SelectBoxBackground.tres") ## Stylebox for the SelectBox component
+	static var GridPoint				= preload("res://modules/Vertex/assets/styles/GridPoint.tres") ## Stylebox for the grid Point
+	static var ResolveBoxStyle			= preload("res://modules/Vertex/assets/styles/ResolveBox.tres") ## Stylebox for the ResolveBoxStyle
+	static var ResolveBoxBGLess			= preload("res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres") ## Stylebox for the ResolveBox Background less
 
 
 ## Constants
@@ -80,4 +80,4 @@ class Strings:
 
 ## Fonts
 class Fonts:
-	static var RubikMono: FontFile		= preload("res://assets/font/RubikMonoOne-Regular.ttf")
+	static var RubikMono: FontFile		= preload("res://modules/Vertex/assets/font/RubikMonoOne-Regular.ttf")

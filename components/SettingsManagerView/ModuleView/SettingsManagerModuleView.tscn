@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://dwbgitej5f6yc"]
 
 [ext_resource type="Theme" uid="uid://cyua45ur0ijqo" path="res://modules/Vertex/assets/themes/Main.theme" id="1_0arna"]
-[ext_resource type="StyleBox" uid="uid://bxwylw4uk8cyk" path="res://assets/styles/ClassSettingsBG.tres" id="2_5gjfr"]
+[ext_resource type="StyleBox" uid="uid://bxwylw4uk8cyk" path="res://modules/Vertex/assets/styles/ClassSettingsBG.tres" id="2_5gjfr"]
 [ext_resource type="Script" uid="uid://bshd73mg03j0j" path="res://modules/Vertex/components/SettingsManagerView/ModuleView/SettingsManagerModuleView.gd" id="3_1rgix"]
-[ext_resource type="Texture2D" uid="uid://cnfq2son0bjyp" path="res://modules/Vertex/assets/icons/UnfoldLess.svg" id="4_1gck8"]
+[ext_resource type="Texture2D" uid="uid://dj7k0od8o16ok" path="res://modules/Vertex/assets/icons/UnfoldLess.svg" id="4_1gck8"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_hbu47"]
 font_size = 18

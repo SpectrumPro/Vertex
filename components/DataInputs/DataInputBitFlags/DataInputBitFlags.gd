@@ -83,5 +83,5 @@ func _on_button_toggled(p_toggled_on: bool, p_mask: int) -> void:
 
 ## Called when the expand button is pressed
 func _on_expand_toggled(p_toggled_on: bool) -> void:
-	_expand_button.set_button_icon(preload("res://assets/icons/UnfoldLess.svg") if p_toggled_on else preload("res://assets/icons/UnfoldMore.svg"))
+	_expand_button.set_button_icon(preload("res://modules/Vertex/assets/icons/UnfoldLess.svg") if p_toggled_on else preload("res://modules/Vertex/assets/icons/UnfoldMore.svg"))
 	_button_container.set_visible(p_toggled_on)

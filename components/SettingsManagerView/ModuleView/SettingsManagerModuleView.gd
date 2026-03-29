@@ -43,4 +43,4 @@ func show_module(p_module: SettingsModule) -> void:
 ## Called when the ExpandHide button is toggled
 func _on_expand_hide_toggled(toggled_on: bool) -> void:
 	_settings_container.visible = not toggled_on
-	_expand_hide_button.icon = preload("res://assets/icons/UnfoldMore.svg") if toggled_on else preload("res://assets/icons/UnfoldLess.svg") 
+	_expand_hide_button.icon = preload("res://modules/Vertex/assets/icons/UnfoldMore.svg") if toggled_on else preload("res://modules/Vertex/assets/icons/UnfoldLess.svg") 

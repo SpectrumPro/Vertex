@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bco281crc32wf"]
 
 [ext_resource type="Script" uid="uid://e1d8bxcgh6tx" path="res://modules/Vertex/components/DataInputs/DataInputCustomPanel/DataInputCustomPanel.gd" id="1_bil8u"]
-[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="3_xplwq"]
+[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="3_xplwq"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qyj0o"]
 

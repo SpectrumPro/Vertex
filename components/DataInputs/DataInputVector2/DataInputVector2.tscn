@@ -1,7 +1,7 @@
 [gd_scene load_steps=20 format=3 uid="uid://cxbqxm3fqcfn0"]
 
 [ext_resource type="Script" uid="uid://cdvs0gwuejx8j" path="res://modules/Vertex/components/DataInputs/DataInputVector2/DataInputVector2.gd" id="1_62qn1"]
-[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_n355l"]
+[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_n355l"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p4wjb"]
 

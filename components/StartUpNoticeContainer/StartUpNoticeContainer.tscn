@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bwkkeg4iicguk"]
 
-[ext_resource type="StyleBox" uid="uid://drpfuhk8y61xk" path="res://assets/styles/UIPanelPopup.tres" id="1_ddcup"]
+[ext_resource type="StyleBox" uid="uid://drpfuhk8y61xk" path="res://modules/Vertex/assets/styles/UIPanelPopup.tres" id="1_ddcup"]
 [ext_resource type="Script" uid="uid://f0gvkaeqmstu" path="res://modules/Vertex/components/StartUpNoticeContainer/StartUpNoticeContainer.gd" id="2_n2he5"]
-[ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://assets/styles/PanelMenuBar.tres" id="2_qlvgm"]
-[ext_resource type="Texture2D" uid="uid://cs51jwtt25epd" path="res://modules/Vertex/assets/icons/OpenInNew.svg" id="3_03egk"]
+[ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://modules/Vertex/assets/styles/PanelMenuBar.tres" id="2_qlvgm"]
+[ext_resource type="Texture2D" uid="uid://oojb1425vofd" path="res://modules/Vertex/assets/icons/OpenInNew.svg" id="3_03egk"]
 
 [node name="StartUpNoticeContainer" type="PanelContainer" node_paths=PackedStringArray("rich_text_label", "link_button", "confirm_button", "dont_show_again_button")]
 anchors_preset = 8

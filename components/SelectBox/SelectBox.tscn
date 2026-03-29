@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b6eijsxlis7r3"]
 
-[ext_resource type="StyleBox" uid="uid://c8yok5m0yjrby" path="res://assets/styles/SelectBoxBackground.tres" id="1_6ybll"]
+[ext_resource type="StyleBox" uid="uid://c8yok5m0yjrby" path="res://modules/Vertex/assets/styles/SelectBoxBackground.tres" id="1_6ybll"]
 [ext_resource type="Script" uid="uid://b1u0wof2x2ams" path="res://modules/Vertex/components/SelectBox/SelectBox.gd" id="1_k5fpn"]
 
 [node name="SelectBox" type="PanelContainer"]

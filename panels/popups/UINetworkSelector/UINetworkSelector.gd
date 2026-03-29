@@ -53,7 +53,7 @@ func _create_interface_item(p_interface: Dictionary) -> void:
 	var interface_item: TreeItem = interface_tree.create_item()
 	
 	interface_item.set_text(0, p_interface.name)
-	interface_item.set_icon(0, preload("res://assets/icons/Ethernet.svg"))
+	interface_item.set_icon(0, preload("res://modules/Vertex/assets/icons/Ethernet.svg"))
 	
 	interface_item.set_custom_color(1, Color(0x919191ff))
 	interface_item.set_text(1, "Interface")
@@ -68,9 +68,9 @@ func _create_address_item(p_address: String, p_interface_item: TreeItem) -> void
 	address_item.set_text(0, p_address)
 	
 	if p_address.contains(":"):
-		address_item.set_icon(0, preload("res://assets/icons/IPAddrV6.svg"))
+		address_item.set_icon(0, preload("res://modules/Vertex/assets/icons/IPAddrV6.svg"))
 	else:
-		address_item.set_icon(0, preload("res://assets/icons/IPAddrV4.svg"))
+		address_item.set_icon(0, preload("res://modules/Vertex/assets/icons/IPAddrV4.svg"))
 	
 	address_item.set_custom_color(1, Color(0x919191ff))
 	address_item.set_text(1, "Address")

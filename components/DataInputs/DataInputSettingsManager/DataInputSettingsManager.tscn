@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cc2owlvb1xdlq" path="res://modules/Vertex/components/DataInputs/DataInputSettingsManager/DataInputSettingsManager.gd" id="1_k757h"]
 [ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerView/SettingsManagerView.tscn" id="2_43kj3"]
-[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="3_2t263"]
+[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="3_2t263"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qyj0o"]
 

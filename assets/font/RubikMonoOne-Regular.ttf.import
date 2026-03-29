@@ -2,7 +2,7 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b0npgfg4cqny6"
+uid="uid://crlak6jhg5jy2"
 path="res://.godot/imported/RubikMonoOne-Regular.ttf-61e70ed7d212c394e9577c8f4c58edf0.fontdata"
 
 [deps]
@@ -23,14 +23,20 @@ allow_system_fallback=true
 force_autohinter=false
 modulate_color_glyphs=false
 hinting=1
-subpixel_positioning=4
+subpixel_positioning=1
 keep_rounding_remainders=true
-oversampling=0.0
+oversampling=5.0
 Fallbacks=null
 fallbacks=[]
 Compress=null
 compress=true
-preload=[]
+preload=[{
+"chars": [],
+"glyphs": [],
+"name": "New Configuration",
+"size": Vector2i(16, 0),
+&"variation_embolden": 0.0
+}]
 language_support={}
 script_support={}
 opentype_features={}

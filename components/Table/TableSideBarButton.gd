@@ -11,10 +11,10 @@ signal right_clicked()
 
 
 ## Icon to display when the row is folded
-var _folded_icon: Texture2D = preload("res://assets/icons/Unfold.svg")
+var _folded_icon: Texture2D = preload("res://modules/Vertex/assets/icons/Unfold.svg")
 
 ## Icon to display when the row is unfolded
-var _unfolded_icon: Texture2D = preload("res://assets/icons/Fold.svg")
+var _unfolded_icon: Texture2D = preload("res://modules/Vertex/assets/icons/Fold.svg")
 
 
 ## The folded state of this button

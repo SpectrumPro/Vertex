@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://g5qrmeqkxr26"]
 
-[ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://assets/styles/UIPanelBase.tres" id="1_xoj2f"]
+[ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://modules/Vertex/assets/styles/UIPanelBase.tres" id="1_xoj2f"]
 [ext_resource type="Script" uid="uid://dc73bkt0aa0q6" path="res://modules/Vertex/panels/UISettingsManager/UISettingsManager.gd" id="2_0dwd5"]
 [ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="3_0u21v"]
-[ext_resource type="Texture2D" uid="uid://boa17dwrorgtd" path="res://modules/Vertex/assets/icons/Settings.svg" id="4_8058h"]
+[ext_resource type="Texture2D" uid="uid://c6xnsmttojanx" path="res://modules/Vertex/assets/icons/Settings.svg" id="4_8058h"]
 [ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerView/SettingsManagerView.tscn" id="5_x432d"]
 
 [node name="UISettingsManager" type="PanelContainer" node_paths=PackedStringArray("component_button", "settings_manager_view", "edit_controls", "menu_bar")]

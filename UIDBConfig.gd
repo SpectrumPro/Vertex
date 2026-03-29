@@ -15,7 +15,7 @@ static var data_inputs: Dictionary[Data.Type, Variant] = {
 }
 
 ## All user defined UIPanels
-static var class_icons: Dictionary[String, PackedScene]
+static var class_icons: Dictionary[String, Texture2D]
 
 ## Categorys of the user defined panels
 static var panels_by_category: Dictionary[String, Dictionary]

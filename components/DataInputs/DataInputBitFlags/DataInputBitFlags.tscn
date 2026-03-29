@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bqpg0ue4l0dma"]
 
 [ext_resource type="Script" uid="uid://dljvnleo8cfh2" path="res://modules/Vertex/components/DataInputs/DataInputBitFlags/DataInputBitFlags.gd" id="1_edcki"]
-[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://assets/styles/ResolveBoxNoBG.tres" id="2_4v1rf"]
-[ext_resource type="Texture2D" uid="uid://bicofj1suwdeb" path="res://modules/Vertex/assets/icons/UnfoldMore.svg" id="3_4qght"]
+[ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_4v1rf"]
+[ext_resource type="Texture2D" uid="uid://cauhar0guyod0" path="res://modules/Vertex/assets/icons/UnfoldMore.svg" id="3_4qght"]
 
 [node name="DataInputBitFlags" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 50)

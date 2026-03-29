@@ -1,13 +1,13 @@
 [gd_scene load_steps=9 format=3 uid="uid://dfu5s8fjy0ex4"]
 
 [ext_resource type="Theme" uid="uid://cyua45ur0ijqo" path="res://modules/Vertex/assets/themes/Main.theme" id="1_bsx7u"]
-[ext_resource type="Texture2D" uid="uid://r2tw7r3p5k7r" path="res://modules/Vertex/assets/icons/Edit.svg" id="1_x4jel"]
-[ext_resource type="Texture2D" uid="uid://boa17dwrorgtd" path="res://modules/Vertex/assets/icons/Settings.svg" id="2_1xcge"]
+[ext_resource type="Texture2D" uid="uid://rqf8w11gk6ud" path="res://modules/Vertex/assets/icons/Edit.svg" id="1_x4jel"]
+[ext_resource type="Texture2D" uid="uid://c6xnsmttojanx" path="res://modules/Vertex/assets/icons/Settings.svg" id="2_1xcge"]
 [ext_resource type="Script" uid="uid://bn273n1kmkgbr" path="res://modules/Vertex/panels/UIPanel/EditControls/EditControls.gd" id="2_6g6dh"]
 [ext_resource type="Texture2D" uid="uid://v3c2jt7t1eo" path="res://modules/Vertex/assets/icons/ArrowBack.svg" id="3_aen3s"]
-[ext_resource type="Texture2D" uid="uid://b4uwxy1weyuta" path="res://modules/Vertex/assets/icons/ResizeAlt.svg" id="3_vg853"]
+[ext_resource type="Texture2D" uid="uid://bqdebneaw8anq" path="res://modules/Vertex/assets/icons/ResizeAlt.svg" id="3_vg853"]
 [ext_resource type="Texture2D" uid="uid://deii2wkil5fsl" path="res://modules/Vertex/assets/icons/Close.svg" id="5_x6bqw"]
-[ext_resource type="StyleBox" uid="uid://yvrvbisemb20" path="res://assets/styles/ResolveBox.tres" id="7_q35ym"]
+[ext_resource type="StyleBox" uid="uid://yvrvbisemb20" path="res://modules/Vertex/assets/styles/ResolveBox.tres" id="7_q35ym"]
 
 [node name="EditControls" type="PanelContainer" node_paths=PackedStringArray("back_button", "edit_button", "settings_button", "close_button", "move_resize_handle", "resolve_box")]
 custom_minimum_size = Vector2(25, 50)
