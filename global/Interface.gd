@@ -5,9 +5,9 @@
 class_name CoreInterface extends Node
 ## Main script for the Spectrum Lighting Controller UI interface
 
-#
-### Emitted when a resolve request is required
-#signal resolve_requested(type: ResolveType, hint: ResolveHint, classname: String, color_hint: Color)
+
+## Emitted when a resolve request is required
+signal resolve_requested(type: Data.Type, sub_type: int, hint: ResolveHint, classname: String, color_hint: Color)
 
 ## Emitted when a window is added
 signal window_added(window: UIWindow)
@@ -24,56 +24,50 @@ signal save_ui_on_quit_changed(save_ui: bool)
 ## Emitted before the program is exited
 signal program_closing()
 
-## TODO
-### Enum for ResolveTypes
-#enum ResolveType {
-	#NONE,				## Disables resolve mode
-	#ANY,				## Resolves anything
-	#COMPONENT,			## Resolves an EngineComponent
-	#UIPANEL				## Resolves a UIPanel
-#}
 
+## Enum for ResolveHint
+enum ResolveHint {
+	NONE,				## Default state
+	SELECT,				## Requests to select a component
+	ASSIGN,				## Requests to assign into
+	STORE,				## Requests to store into
+	EDIT,				## Requests to edit
+	RENAME,				## Requests to rename a component
+	EXECUTE,			## Requests to execute a function
+	STOP,				## Requests to stop a function
+	DELETE				## Requests to delete a component
+}
 
-### Enum for ResolveHint
-#enum ResolveHint {
-	#NONE,				## Default state
-	#SELECT,				## Requests to select a component
-	#ASSIGN,				## Requests to assign into
-	#STORE,				## Requests to store into
-	#EDIT,				## Requests to edit
-	#RENAME,				## Requests to rename a component
-	#EXECUTE,			## Requests to execute a function
-	#STOP,				## Requests to stop a function
-	#DELETE				## Requests to delete a component
-#}
+## The current resolve hint, if any
+var _current_resolve_hint: ResolveHint = ResolveHint.NONE
 
-### The current resolve hint, if any
-#var _current_resolve_hint: ResolveHint = ResolveHint.NONE
-#
-### The current resolve mode, if any
-#var _current_resolve_type: ResolveType = ResolveType.NONE
+## The current resolve mode, if any
+var _current_resolve_type: Data.Type = Data.Type.NULL
 
-### The current resolve classname
-#var _current_resolve_classname: String = ""
-#
-### The current resolve color
-#var _current_resolve_color: Color = Color.TRANSPARENT
-#
-### The resolve Promise
-#var _resolve_promise: Promise = Promise.new()
+## The current resolve mode, if any
+var _current_resolve_subtype: int = Data.Sub.Type.NULL
 
-### Colors for each resolve hint
-#var _resolve_hint_colors: Dictionary[ResolveHint, Color] = {
-	#ResolveHint.NONE:		ThemeManager.Colors.ResolveHint.None,
-	#ResolveHint.SELECT:		ThemeManager.Colors.ResolveHint.Select,
-	#ResolveHint.ASSIGN:		ThemeManager.Colors.ResolveHint.Assign,
-	#ResolveHint.STORE:		ThemeManager.Colors.ResolveHint.Store,
-	#ResolveHint.EDIT:		ThemeManager.Colors.ResolveHint.Edit,
-	#ResolveHint.RENAME:		ThemeManager.Colors.ResolveHint.Rename,
-	#ResolveHint.EXECUTE:	ThemeManager.Colors.ResolveHint.Execute,
-	#ResolveHint.STOP:		ThemeManager.Colors.ResolveHint.Stop,
-	#ResolveHint.DELETE:		ThemeManager.Colors.ResolveHint.Delete,
-#}
+## The current resolve classname
+var _current_resolve_classname: String = ""
+
+## The current resolve color
+var _current_resolve_color: Color = Color.TRANSPARENT
+
+## The resolve Promise
+var _resolve_promise: Promise = Promise.new()
+
+## Colors for each resolve hint
+var _resolve_hint_colors: Dictionary[ResolveHint, Color] = {
+	ResolveHint.NONE:		ThemeManager.Colors.ResolveHint.None,
+	ResolveHint.SELECT:		ThemeManager.Colors.ResolveHint.Select,
+	ResolveHint.ASSIGN:		ThemeManager.Colors.ResolveHint.Assign,
+	ResolveHint.STORE:		ThemeManager.Colors.ResolveHint.Store,
+	ResolveHint.EDIT:		ThemeManager.Colors.ResolveHint.Edit,
+	ResolveHint.RENAME:		ThemeManager.Colors.ResolveHint.Rename,
+	ResolveHint.EXECUTE:	ThemeManager.Colors.ResolveHint.Execute,
+	ResolveHint.STOP:		ThemeManager.Colors.ResolveHint.Stop,
+	ResolveHint.DELETE:		ThemeManager.Colors.ResolveHint.Delete,
+}
 
 
 ## Stores configuration for each WindowPopup that will be instanced on each window
@@ -556,56 +550,72 @@ func get_window_node(p_source: Node) -> UIWindow:
 func add_command_palette_entry(p_entry: CommandPaletteEntry) -> void:
 	for module: SettingsModule in p_entry.get_settings_manager().get_modules().values():
 		_palette_search_index.get_or_add(p_entry.get_class_name(), {})[module.get_id()] = module
-#
-#
-### Gets the current ResolveHint
-#func get_current_resolve_hint() -> ResolveHint:
-	#return _current_resolve_hint
-#
-#
-### Gets the current ResolveType
-#func get_current_resolve_type() -> ResolveType:
-	#return _current_resolve_type
 
 
-### Gets the current resolve classname
-#func get_current_resolve_classname() -> String:
-	#return _current_resolve_classname
-#
-#
-### Gets the current resolve color
-#func get_current_resolve_color() -> Color:
-	#return _current_resolve_color
+## Gets the current ResolveHint
+func get_current_resolve_hint() -> ResolveHint:
+	return _current_resolve_hint
 
 
-### Gets the color for a resolve hint
-#func get_resolve_color(p_resolve_hint: ResolveHint) -> Color:
-	#return _resolve_hint_colors[p_resolve_hint]
-#
-#
-### Enables the ResolveMode
-#func enter_resolve_mode(p_resolve_type: ResolveType, p_resolve_hint: ResolveHint, p_classname: String) -> Promise:
-	#_current_resolve_type = p_resolve_type
-	#_current_resolve_hint = p_resolve_hint
-	#_current_resolve_classname = p_classname
-	#_current_resolve_color = get_resolve_color(_current_resolve_hint)
-	#
-	#resolve_requested.emit(_current_resolve_type, _current_resolve_hint, _current_resolve_classname, _current_resolve_color)
-	#return _resolve_promise
+## Gets the current ResolveType
+func get_current_resolve_type() -> Data.Type:
+	return _current_resolve_type
 
-#
-### Exits resolve mode
-#func exit_resolve_mode() -> bool:
-	#if _current_resolve_type == ResolveType.NONE:
-		#return false
-	#
-	#_current_resolve_type = ResolveType.NONE
-	#_current_resolve_hint = ResolveHint.NONE
-	#_current_resolve_classname = "p_classname"
-	#_current_resolve_color = Color.TRANSPARENT
-	#
-	#resolve_requested.emit(_current_resolve_type, _current_resolve_hint, _current_resolve_classname, _current_resolve_color)
-	#return true
+
+## Gets the current ResolveType
+func get_current_resolve_subtype() -> int:
+	return _current_resolve_subtype
+
+
+## Gets the current resolve classname
+func get_current_resolve_classname() -> String:
+	return _current_resolve_classname
+
+
+## Gets the current resolve color
+func get_current_resolve_color() -> Color:
+	return _current_resolve_color
+
+
+## Gets the color for a resolve hint
+func get_resolve_color(p_resolve_hint: ResolveHint) -> Color:
+	return _resolve_hint_colors[p_resolve_hint]
+
+
+## Enables the ResolveMode
+func enter_resolve_mode(p_type: Data.Type, p_subtype: int, p_resolve_hint: ResolveHint, p_classname: String) -> Promise:
+	_current_resolve_type = p_type
+	_current_resolve_subtype = p_subtype
+	_current_resolve_hint = p_resolve_hint
+	_current_resolve_classname = p_classname
+	_current_resolve_color = get_resolve_color(_current_resolve_hint)
+	
+	resolve_requested.emit(_current_resolve_type, _current_resolve_subtype, _current_resolve_hint, _current_resolve_classname, _current_resolve_color)
+	return _resolve_promise
+
+
+## Exits resolve mode
+func exit_resolve_mode() -> bool:
+	if _current_resolve_type == Data.Type.NULL:
+		return false
+	
+	_current_resolve_type = Data.Type.NULL
+	_current_resolve_subtype = Data.Sub.Type.NULL
+	_current_resolve_hint = ResolveHint.NONE
+	_current_resolve_classname = ""
+	_current_resolve_color = Color.TRANSPARENT
+	
+	resolve_requested.emit(_current_resolve_type, _current_resolve_subtype, _current_resolve_hint, _current_resolve_classname, _current_resolve_color)
+	return true
+
+
+## Resolves the current request
+func resolve_request(p_with: Variant) -> void:
+	if _current_resolve_type == Data.Type.NULL:
+		return
+	
+	_resolve_promise.resolve([p_with])
+	exit_resolve_mode()
 
 
 ## Takes a screenshot of all screens

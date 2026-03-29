@@ -53,8 +53,14 @@ func _ready() -> void:
 	set_show_close(show_close)
 	set_show_handle(show_handle)
 	
-	#Interface.resolve_requested.connect(_handle_resolve_request)
-	#_handle_resolve_request(Interface.get_current_resolve_type(), Interface.get_current_resolve_hint(), Interface.get_current_resolve_classname(), Interface.get_current_resolve_color())
+	Interface.resolve_requested.connect(_handle_resolve_request)
+	_handle_resolve_request(
+		Interface.get_current_resolve_type(), 
+		Interface.get_current_resolve_subtype(), 
+		Interface.get_current_resolve_hint(), 
+		Interface.get_current_resolve_classname(), 
+		Interface.get_current_resolve_color()
+	)
 
 
 ## Sets the visibility of the edit button
@@ -115,16 +121,15 @@ func _update_visability() -> void:
 		show()
 
 
-## TODO
-### Called when Interface.enter_resolve() is called
-#func _handle_resolve_request(p_type: Interface.ResolveType, p_hint: Interface.ResolveHint, p_classname: String, p_color_hint: Color):
-	#if p_type in [Interface.ResolveType.ANY, Interface.ResolveType.UIPANEL]:
-		#if not resolve_box.visible:
-			#resolve_box.show()
-			#resolve_box.modulate = Color.TRANSPARENT
-		#
-		#Interface.fade_property(resolve_box, "modulate", p_color_hint, Callable(), ThemeManager.Constants.Times.EditControlResolve)
-	#
-	#else:
-		#if resolve_box.is_visible():
-			#Interface.fade_property(resolve_box, "modulate", Color.TRANSPARENT, resolve_box.hide, ThemeManager.Constants.Times.EditControlResolve)
+## Called when Interface.enter_resolve() is called
+func _handle_resolve_request(p_type: Data.Type, p_subtype: int, p_hint: Interface.ResolveHint, p_classname: String, p_color_hint: Color):
+	if p_type == Data.Type.ANY or p_type == Data.Type.OBJECT and p_subtype == Data.Sub.Type.OBJECT_UIPANEL:
+		if not resolve_box.is_visible():
+			resolve_box.show()
+			resolve_box.modulate = Color.TRANSPARENT
+		
+		Interface.fade_property(resolve_box, "modulate", p_color_hint, Callable(), ThemeManager.Constants.Times.EditControlResolve)
+	
+	else:
+		if resolve_box.is_visible():
+			Interface.fade_property(resolve_box, "modulate", Color.TRANSPARENT, resolve_box.hide, ThemeManager.Constants.Times.EditControlResolve)

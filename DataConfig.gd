@@ -5,6 +5,7 @@
 class SubType:
 	enum Type {
 		NULL,						## No Type
+		OBJECT_UIPANEL,				## A UIPanel instance
 		PACKEDSCENE_UIPANEL,		## A UIPanel
 	}
 
@@ -35,8 +36,8 @@ static func get_object_name_changed_signal(p_module: SettingsModule) -> Variant:
 		return Signal()
 	
 	## check object type and return correct signal
-	#if object is Node:
-		#return (object as Node).renamed
+	if object is UIBase:
+		return object.name_changed
 	
 	## else return false to use default 
 	return false
