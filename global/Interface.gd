@@ -137,13 +137,6 @@ func _init() -> void:
 	
 	for script: Script in Config.object_picker_default_items:
 		_object_picker_index[script] = Config.object_picker_default_items[script]
-	
-	## TODO
-	#_settings.register_control("OpenMainMenu", Data.Type.ACTION, set_popup_visable.bind(WindowPopup.MAIN_MENU, self, true), Callable(), [])
-	#_settings.register_control("OpenSettings", Data.Type.ACTION, set_popup_visable.bind(WindowPopup.SETTINGS, self, true), Callable(), [])
-	#_settings.register_control("OpenSaveLoad", Data.Type.ACTION, set_popup_visable.bind(WindowPopup.SAVE_LOAD, self, true), Callable(), [])
-	#_settings.register_control("ComponentSettings", Data.Type.ACTION, Popups.search_component_then_settings.bind(self))
-	#_settings.register_control("CreateComponent", Data.Type.ACTION, Popups.create_component_then_rename.bind(self))
 
 
 ## Ready ClientInterface
