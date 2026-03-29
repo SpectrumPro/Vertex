@@ -308,6 +308,9 @@ func deserialize(p_serialized_data: Dictionary) -> void:
 	var panel_class: String = type_convert(serialized_panel.get("class_name"), TYPE_STRING)
 	var panel: UIPanel = UIDB.instance_panel(panel_class)
 	
+	if not is_instance_valid(panel):
+		return
+	
 	set_base_panel(panel)
 	panel.deserialize(serialized_panel)
 
