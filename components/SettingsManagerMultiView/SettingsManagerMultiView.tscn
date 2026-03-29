@@ -42,3 +42,5 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[connection signal="selection_changed" from="HSplitContainer/Table" to="." method="_on_table_selection_changed"]

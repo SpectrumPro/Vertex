@@ -340,7 +340,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="SelectBox" parent="Control/SelectContainer" instance=ExtResource("3_6x34v")]
+[node name="SelectBox" parent="Control/SelectContainer" node_paths=PackedStringArray("event_control") instance=ExtResource("3_6x34v")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -356,6 +356,7 @@ offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+event_control = NodePath("..")
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/PanelContainer2/DeSelectAll" to="." method="deselect_all"]
@@ -373,3 +374,4 @@ mouse_filter = 2
 [connection signal="multi_selected" from="HBoxContainer/HSplitContainer/CoreTreeContainer/CoreTree" to="." method="_handle_item_selected"]
 [connection signal="nothing_selected" from="HBoxContainer/HSplitContainer/CoreTreeContainer/CoreTree" to="." method="_on_tree_nothing_selected"]
 [connection signal="resized" from="HBoxContainer/HSplitContainer/CoreTreeContainer/CoreTree" to="." method="_on_core_tree_resized"]
+[connection signal="selection_updated" from="Control/SelectContainer/SelectBox" to="." method="_on_select_box_selection_updated"]
