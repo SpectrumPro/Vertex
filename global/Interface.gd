@@ -125,6 +125,7 @@ func _init() -> void:
 	_settings.register_control("HideAllPopups", Data.Type.ACTION, hide_all_popup_panels, Callable(), [])
 	_settings.register_control("AddWindow", Data.Type.ACTION, add_window, Callable(), [])
 	_settings.register_control("SaveUI", Data.Type.ACTION, save_ui, Callable(), [])
+	_settings.register_control("OpenWindowManager", Data.Type.ACTION, set_popup_visable.bind(UIWindowManager, self, true), Callable(), [])
 	
 	Config.load_config("res://InterfaceConfig.gd")
 	Config.load_user_config()
@@ -141,7 +142,6 @@ func _init() -> void:
 	#_settings.register_control("OpenMainMenu", Data.Type.ACTION, set_popup_visable.bind(WindowPopup.MAIN_MENU, self, true), Callable(), [])
 	#_settings.register_control("OpenSettings", Data.Type.ACTION, set_popup_visable.bind(WindowPopup.SETTINGS, self, true), Callable(), [])
 	#_settings.register_control("OpenSaveLoad", Data.Type.ACTION, set_popup_visable.bind(WindowPopup.SAVE_LOAD, self, true), Callable(), [])
-	#_settings.register_control("OpenWindowManager", Data.Type.ACTION, set_popup_visable.bind(WindowPopup.WINDOW_MANAGER, self, true), Callable(), [])
 	#_settings.register_control("ComponentSettings", Data.Type.ACTION, Popups.search_component_then_settings.bind(self))
 	#_settings.register_control("CreateComponent", Data.Type.ACTION, Popups.create_component_then_rename.bind(self))
 
