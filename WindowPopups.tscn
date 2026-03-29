@@ -24,6 +24,7 @@ visible = false
 layout_mode = 1
 offset_top = -170.0
 offset_bottom = 170.0
+display_mode = 1
 
 [node name="UIObjectSelector" parent="." instance=ExtResource("2_0h5oi")]
 visible = false
@@ -39,6 +40,7 @@ offset_right = 302.0
 offset_bottom = 180.0
 grow_horizontal = 2
 grow_vertical = 2
+display_mode = 1
 
 [node name="UIPanelSettings" parent="." instance=ExtResource("3_jcwaf")]
 visible = false
@@ -52,6 +54,7 @@ offset_left = -416.0
 offset_top = -235.0
 offset_right = 416.0
 offset_bottom = 235.0
+display_mode = 1
 
 [node name="UICommandPalette" parent="." instance=ExtResource("4_jcqk3")]
 visible = false
@@ -80,6 +83,7 @@ offset_left = -452.0
 offset_top = -254.0
 offset_right = 452.0
 offset_bottom = 254.0
+display_mode = 1
 
 [node name="UIWindowID" parent="." instance=ExtResource("6_tyrqo")]
 visible = false
@@ -88,6 +92,7 @@ offset_left = -263.0
 offset_top = -140.0
 offset_right = 263.0
 offset_bottom = 140.0
+display_mode = 1
 
 [node name="UINetworkSelector" parent="." instance=ExtResource("7_cbeyb")]
 visible = false
@@ -101,6 +106,7 @@ offset_left = -159.0
 offset_top = -228.0
 offset_right = 159.0
 offset_bottom = 228.0
+display_mode = 1
 
 [node name="UISettingsManager" parent="." instance=ExtResource("8_cxd05")]
 visible = false
@@ -114,6 +120,7 @@ offset_left = -458.0
 offset_top = -262.0
 offset_right = 458.0
 offset_bottom = 262.0
+display_mode = 1
 
 [node name="UIPopupSettingsModule" parent="." instance=ExtResource("9_3o6tu")]
 visible = false
@@ -129,3 +136,4 @@ offset_right = 108.5
 offset_bottom = 35.0
 grow_horizontal = 2
 grow_vertical = 2
+display_mode = 1
