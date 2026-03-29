@@ -390,7 +390,7 @@ func deserialize(p_serialized_data) -> void:
 		if window_uuid == "main":
 			get_window_node(self).deserialize(serialized_window)
 		else:
-			add_window(null).deserialize(serialized_window)
+			add_window(null, true).deserialize(serialized_window)
 
 
 ## Gets the WindowPopup for the window containing the p_source node
@@ -484,7 +484,7 @@ func hide(p_control: Control) -> void:
 
 
 ## Adds a new window
-func add_window(p_base_panel: Script = null) -> UIWindow:
+func add_window(p_base_panel: Script = null, p_no_default: bool = false) -> UIWindow:
 	var new_window: UIWindow = UIWindow.new()
 	var uuid: String = UUID.v4()
 	var popups: Control = _window_popups_scene.instantiate()
@@ -502,7 +502,7 @@ func add_window(p_base_panel: Script = null) -> UIWindow:
 	
 	if is_instance_valid(p_base_panel):
 		new_window.set_base_panel.call_deferred(UIDB.instance_panel(p_base_panel))
-	else:
+	elif not p_no_default:
 		new_window.set_base_panel.call_deferred(UIDB.instance_panel(Config.default_ui_panel))
 	
 	window_added.emit(new_window)
