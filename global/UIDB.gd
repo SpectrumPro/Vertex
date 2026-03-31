@@ -69,6 +69,7 @@ var _data_inputs: Dictionary[Data.Type, Variant] = {
 	Data.Type.IP:				load(_d("DataInputIPAddr")),
 	Data.Type.SETTINGSMANAGER:	load(_d("DataInputSettingsManager")),
 	Data.Type.ACTION:			load(_d("DataInputAction")),
+	Data.Type.OBJECT:			load(_d("DataInputObject")),
 	Data.Type.PACKEDSCENE: 		{
 		Data.Sub.Type.NULL:						load(_d("DataInputCustomPanel")),
 		Data.Sub.Type.PACKEDSCENE_UIPANEL:		load(_d("DataInputUIPanel")),
