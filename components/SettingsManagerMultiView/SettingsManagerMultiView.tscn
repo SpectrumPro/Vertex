@@ -15,7 +15,7 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="SettingsManagerMultiView" type="PanelContainer" node_paths=PackedStringArray("table", "settings_manager_view")]
+[node name="SettingsManagerMultiView" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -23,14 +23,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_kje12")
 script = ExtResource("1_fmitj")
-table = NodePath("HSplitContainer/Table")
-settings_manager_view = NodePath("HSplitContainer/ScrollContainer/SettingsManagerView")
 
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
 layout_mode = 2
 split_offset = -140
 
 [node name="Table" parent="HSplitContainer" instance=ExtResource("2_0b5xi")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -39,6 +38,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="SettingsManagerView" parent="HSplitContainer/ScrollContainer" instance=ExtResource("3_h5qm2")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
