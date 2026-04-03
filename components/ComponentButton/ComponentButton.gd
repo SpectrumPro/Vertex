@@ -86,6 +86,7 @@ func get_component_uuid(p_allow_resolve_uuid: bool = true) -> String:
 func remove_look_for() -> void:
 	if _look_for_component:
 		ObjectDB.remove_request_static(_look_for_component, _on_component_found)
+		_look_for_component = ""
 
 
 ## Looks for an object, or waits untill is added
