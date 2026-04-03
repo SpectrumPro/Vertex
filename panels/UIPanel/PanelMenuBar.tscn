@@ -16,6 +16,7 @@ script = ExtResource("2_fnf3r")
 layout_mode = 2
 
 [node name="ComponentButton" parent="HBoxContainer" instance=ExtResource("3_dnle8")]
+unique_name_in_owner = true
 layout_mode = 2
 flat = true
 
@@ -26,6 +27,7 @@ horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 
 [node name="EditControls" parent="HBoxContainer" instance=ExtResource("3_fnf3r")]
+unique_name_in_owner = true
 layout_mode = 2
 show_edit = false
 show_settings = false
