@@ -138,6 +138,6 @@ func _on_pressed() -> void:
 	if not enabled:
 		return
 	
-	Interface.show_window_popup(UIObjectSelector, self, null).then(func (p_component: Object):
+	Popups.ObjectSelector(self, base_class, class_filter.get_global_name()).then(func (p_component: Object):
 		set_component(p_component)
-	).get_object_refernce().set_index(base_class, class_filter.get_global_name())
+	)
