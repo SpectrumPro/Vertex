@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Liam Sherwin. All rights reserved.
+# Copyright (c) 2026 Liam Sherwin. All rights reserved.
 # This file is part of the Spectrum Lighting Controller, licensed under the GPL v3.0 or later.
 # See the LICENSE file for details.
 
@@ -28,12 +28,13 @@ var _search_mode: SearchMode = SearchMode.COMMAND
 ## init
 func _init() -> void:
 	super._init()
-	
-	_set_class_name("UISaveLoad")
+	_set_class_name("UICommandPalette")
 
 
 ## Ready
 func _ready() -> void:
+	super._ready()
+	
 	command_tree.set_column_expand(1, false)
 	command_tree.set_column_custom_minimum_width(1, 50)
 	

@@ -25,6 +25,8 @@ func _init() -> void:
 
 ## Ready
 func _ready() -> void:
+	super._ready()
+	
 	Interface.window_added.connect(_add_window)
 	Interface.window_removed.connect(_remove_window)
 	

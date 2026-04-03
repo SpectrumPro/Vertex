@@ -22,6 +22,7 @@ signal panel_chosen(p_panel_class: String)
 ## The TaggedLineEdit for the search bar
 @export var search_bar: TaggedLineEdit
 
+
 ## Current search text
 var _search_text: String = ""
 
@@ -30,12 +31,14 @@ var _search_text: String = ""
 func _init() -> void:
 	super._init()
 	
-	_set_class_name("UIPanelPicker")
+	_set_class_name("UIPanelSelector")
 	set_custom_accepted_signal(panel_chosen)
 
 
 ## Ready     
 func _ready() -> void:
+	super._ready()
+	
 	categorised_tree.set_column_expand(1, false)
 	categorised_tree.set_column_custom_minimum_width(1, column_min_size)
 	

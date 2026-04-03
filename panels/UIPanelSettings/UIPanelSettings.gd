@@ -36,7 +36,8 @@ func _init() -> void:
 
 ## Ready
 func _ready() -> void:
-	edit_controls.back_button.pressed.connect(_on_back_button_pressed)
+	super._ready()
+	get_edit_controls().back_button.pressed.connect(_on_back_button_pressed)
 
 
 ## Sets the panel
@@ -50,7 +51,7 @@ func set_panel(p_panel: UIPanel, add_to_history: bool = true) -> void:
 		if _panel_history.size() > MAX_HISTORY_LENGTH:
 			_panel_history.pop_front()
 	
-	edit_controls.set_show_back(_panel_history.size() > 1)
+	get_edit_controls().set_show_back(_panel_history.size() > 1)
 	panel_changed.emit(_panel)
 
 
@@ -70,6 +71,9 @@ func _on_back_button_pressed() -> void:
 
 ## Called when the visibility is changed
 func _on_visibility_changed() -> void:
+	if not is_node_ready():
+		return
+	
 	if not visible:
 		_panel_history.clear()
-		edit_controls.set_show_back(false)
+		get_edit_controls().set_show_back(false)

@@ -37,12 +37,15 @@ var _select_mode: SelectMode = SelectMode.OBJECT
 ## Init
 func _init() -> void:
 	super._init()
-	_set_class_name("UIObjectPicker")
+	
+	_set_class_name("UIObjectSelector")
 	set_custom_accepted_signal(object_selected)
 
 
 ## Ready
 func _ready() -> void:
+	super._ready()
+	
 	for script: Script in Interface._object_picker_index:
 		var config: ClassTreeConfig = Interface._object_picker_index[script]
 		var class_tree: SearchableClassTree = UIDB.instance_component(SearchableClassTree)
@@ -57,8 +60,8 @@ func _ready() -> void:
 		index_container.add_child(class_tree)
 		_indexes.map(script, class_tree)
 	
-	edit_controls.back_button.pressed.connect(_revert_to_class_mode)
-	edit_controls.back_button.set_disabled(true)
+	get_edit_controls().back_button.pressed.connect(_revert_to_class_mode)
+	get_edit_controls().back_button.set_disabled(true)
 
 
 ## Sets the index by base script
@@ -115,7 +118,7 @@ func _revert_to_class_mode() -> void:
 	if _current_index:
 		search_bar.clear_tags()
 		_current_index.search_mode_class()
-		edit_controls.back_button.set_disabled(true)
+		get_edit_controls().back_button.set_disabled(true)
 
 
 ## Called when the SearchMode is changed in a SearchableClassTree
@@ -128,13 +131,13 @@ func _on_search_mode_changed(p_search_mode: SearchableClassTree.SearchMode, p_cl
 			search_bar.clear()
 			search_bar.create_tag("@" + p_class_tree.get_object_class())
 			
-			edit_controls.back_button.set_disabled(false)
+			get_edit_controls().back_button.set_disabled(false)
 			await get_tree().process_frame
 			
 			search_bar.grab_focus()
 			search_bar.edit()
 		_:
-			edit_controls.back_button.set_disabled(true)
+			get_edit_controls().back_button.set_disabled(true)
 
 
 ## Called when a tag is removed from the search bar

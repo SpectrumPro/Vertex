@@ -21,7 +21,7 @@ var _manager: SettingsManager
 func _init() -> void:
 	super._init()
 	
-	_set_class_name("UIComponentSettings")
+	_set_class_name("UISettingsManager")
 
 
 ## Sets the component
@@ -37,5 +37,5 @@ func set_manager(p_manager: SettingsManager) -> void:
 
 
 ## Gets the current component
-func get_component() -> SettingsManager:
+func get_maneger() -> SettingsManager:
 	return _manager

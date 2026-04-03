@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://deii2wkil5fsl" path="res://modules/Vertex/assets/icons/Close.svg" id="7_014e3"]
 [ext_resource type="Texture2D" uid="uid://bi4ttx5uklwl7" path="res://modules/Vertex/assets/icons/Check.svg" id="8_k3eag"]
 
-[node name="UINetworkSelector" type="PanelContainer" node_paths=PackedStringArray("interface_tree", "confirm_button", "edit_controls", "menu_bar")]
+[node name="UINetworkSelector" type="PanelContainer" node_paths=PackedStringArray("interface_tree", "confirm_button")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -19,13 +19,12 @@ theme_override_styles/panel = ExtResource("1_plg1g")
 script = ExtResource("2_41xxg")
 interface_tree = NodePath("VBoxContainer/InterfaceTree")
 confirm_button = NodePath("VBoxContainer/PanelContainer/HBoxContainer/Confirm")
-edit_controls = NodePath("VBoxContainer/PanelMenuBar/HBoxContainer/EditControls")
-menu_bar = NodePath("VBoxContainer/PanelMenuBar")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
 [node name="PanelMenuBar" parent="VBoxContainer" instance=ExtResource("3_smya7")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="0"]

@@ -30,6 +30,8 @@ func _init() -> void:
 
 ## Ready
 func _ready() -> void:
+	super._ready()
+	
 	interface_tree.set_column_expand(1, false)
 	interface_tree.set_column_custom_minimum_width(1, column_min_size)
 	

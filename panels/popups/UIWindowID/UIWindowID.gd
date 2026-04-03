@@ -23,6 +23,8 @@ func _init() -> void:
 
 ## Ready
 func _ready() -> void:
+	super._ready()
+	
 	_window = Interface.get_window_node(self)
 	_window.window_title_changed.connect(label.set_text)
 	label.set_text(_window.get_window_title())

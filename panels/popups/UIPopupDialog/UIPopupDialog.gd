@@ -65,6 +65,8 @@ func _init() -> void:
 
 ## Ready
 func _ready() -> void:
+	super._ready()
+	
 	new_line()
 
 
@@ -73,7 +75,7 @@ func focus() -> void:
 	if _buttons:
 		_buttons[0].grab_focus()
 	else:
-		edit_controls.close_button.grab_focus()
+		get_edit_controls().close_button.grab_focus()
 
 
 ## Loads a preset
