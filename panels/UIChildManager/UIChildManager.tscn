@@ -1,0 +1,85 @@
+[gd_scene load_steps=10 format=3 uid="uid://cth1gcyw48lub"]
+
+[ext_resource type="Script" uid="uid://x7vnefcxdkm" path="res://modules/Vertex/panels/UIChildManager/UIChildManager.gd" id="1_aldlv"]
+[ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="2_rreh1"]
+[ext_resource type="Script" uid="uid://b5dfn08rtsf0l" path="res://core/components/Universe.gd" id="3_qbe33"]
+[ext_resource type="Texture2D" uid="uid://bbennjke0ioen" path="res://modules/Vertex/assets/icons/Add.svg" id="4_bw18i"]
+[ext_resource type="PackedScene" uid="uid://7prnynnrdn4n" path="res://components/ComponentManagerView/ComponentManagerView.tscn" id="4_h7s3y"]
+[ext_resource type="Script" uid="uid://ctnse5muj3sti" path="res://core/components/EngineComponent.gd" id="4_shc3j"]
+[ext_resource type="Texture2D" uid="uid://dfrrs2dnvlvsu" path="res://modules/Vertex/assets/icons/Delete.svg" id="5_qbe33"]
+[ext_resource type="Texture2D" uid="uid://cvkwk62wsykmn" path="res://modules/Vertex/assets/icons/ChevronRight.svg" id="5_shc3j"]
+[ext_resource type="Texture2D" uid="uid://cuvwwbojtcpg6" path="res://modules/Vertex/assets/icons/Duplicate.svg" id="6_shc3j"]
+
+[node name="UIChildManager" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_aldlv")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="PanelMenuBar" parent="VBoxContainer" instance=ExtResource("2_rreh1")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="0"]
+text = "ChildManager"
+class_filter = ExtResource("3_qbe33")
+base_class = ExtResource("4_shc3j")
+enable_resolve_mode = true
+enabled = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="1"]
+layout_mode = 2
+texture = ExtResource("5_shc3j")
+stretch_mode = 5
+
+[node name="ChildManagerSelection" type="OptionButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+flat = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer" index="0"]
+layout_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2"]
+layout_mode = 2
+
+[node name="NewChild" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+disabled = true
+text = "New"
+icon = ExtResource("4_bw18i")
+
+[node name="DeleteChild" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+disabled = true
+text = "Delete"
+icon = ExtResource("5_qbe33")
+
+[node name="DuplicateChild" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+disabled = true
+text = "Duplicate"
+icon = ExtResource("6_shc3j")
+
+[node name="ComponentManagerView" parent="VBoxContainer" instance=ExtResource("4_h7s3y")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="object_selected" from="VBoxContainer/PanelMenuBar/HBoxContainer/ComponentButton" to="." method="set_component"]
+[connection signal="item_selected" from="VBoxContainer/PanelMenuBar/HBoxContainer/ChildManagerSelection" to="." method="_on_child_manager_selection_item_selected"]
+
+[editable path="VBoxContainer/PanelMenuBar"]

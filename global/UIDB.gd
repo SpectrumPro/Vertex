@@ -27,6 +27,7 @@ var _panels: Dictionary[String, PackedScene] = {
 	"UIWindowManager":		load(_p("UIWindowManager")),
 	"UISettingsManager":	load(_p("UISettingsManager")),
 	"UIPanelSettings":		load(_p("UIPanelSettings")),
+	"UIChildManager":		load(_p("UIChildManager")),
 }
 
 
@@ -82,6 +83,9 @@ var _panels_by_category: Dictionary[String, Array] = {
 	"System": [
 		"UIWindowManager",
 	],
+	"Utils": [
+		"UIChildManager"
+	]
 }
 
 
