@@ -34,9 +34,9 @@ var _current_index: SearchableClassTree
 var _select_mode: SelectMode = SelectMode.OBJECT
 
 
-## Init
-func _init() -> void:
-	super._init()
+## init
+func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
+	super._init(p_uuid, p_args)
 	
 	_set_class_name("UIObjectSelector")
 	set_custom_accepted_signal(object_selected)

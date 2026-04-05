@@ -32,8 +32,8 @@ var _object_connections: SignalGroup = SignalGroup.new([
 
 
 ## init
-func _init(p_uuid: String = UUID.v4(), ..._p_args: Array[Variant]) -> void:
-	super._init(p_uuid, _p_args)
+func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
+	super._init(p_uuid, p_args)
 	_set_class_name("UIChildManager")
 
 

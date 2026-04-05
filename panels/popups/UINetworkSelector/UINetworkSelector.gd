@@ -21,8 +21,8 @@ signal address_selected(address: IPAddr)
 
 
 ## init
-func _init() -> void:
-	super._init()
+func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
+	super._init(p_uuid, p_args)
 	
 	_set_class_name("UIInterfaceSelector")
 	set_custom_accepted_signal(address_selected)
