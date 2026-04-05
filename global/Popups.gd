@@ -26,11 +26,6 @@ func PanelSettings(p_source: Node, p_panel: UIPanel) -> Promise:
 	return Interface.show_window_popup(UIPanelSettings, p_source, p_panel)
 
 
-## Promps the user with UIComponentSettings
-func ComponentSettings(p_source: Node, p_component: EngineComponent) -> Promise:
-	return Interface.show_window_popup(UIComponentSettings, p_source, p_component)
-
-
 ## Promps the user with UIPaneSettings
 func ObjectSelector(p_source: Node, p_index: Script, p_class_filter: Variant) -> Promise:
 	var promise: Promise = Interface.show_window_popup(UIObjectSelector, p_source, null)
@@ -71,17 +66,17 @@ func PopupDialog(p_source: Node, p_title: String = "") -> UIPopupDialog:
 
 
 ## Prompts the user with UIChildManager
-func ChildManager(p_source: Node, p_manager: ChildManager) -> Promise:
+func UChildManager(p_source: Node, p_manager: ChildManager) -> Promise:
 	return Interface.show_window_popup(UIChildManager, p_source, p_manager)
 
 
 ## Prompts the user with UISettingsManager
-func show_settings_manager(p_source: Node, p_manager: SettingsManager) -> void:
+func USettingsManager(p_source: Node, p_manager: SettingsManager) -> void:
 	Interface.show_window_popup(UISettingsManager, p_source, p_manager)
 
 
 ## Promps the user with SettingsModule
-func show_settings_module(p_source: Node, p_modules: Variant) -> Promise:
+func USettingsModule(p_source: Node, p_modules: Variant) -> Promise:
 	return Interface.show_window_popup(UIPopupSettingsModule, p_source, p_modules)
 
 

@@ -55,7 +55,7 @@ func show_child_manager(p_manager: ChildManager, p_id: String) -> void:
 	button.set_icon_alignment(HORIZONTAL_ALIGNMENT_LEFT)
 	button.set_flat(true)
 	
-	button.pressed.connect(Popups.ChildManager.bind(self, p_manager))
+	button.pressed.connect(Popups.UChildManager.bind(self, p_manager))
 	
 	_child_button_container.add_child(button)
 	_child_button_panel.show()
