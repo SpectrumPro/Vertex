@@ -99,7 +99,7 @@ var _class_icons: Dictionary[String, Texture2D] = {
 
 
 ## init
-func _init() -> void:
+func _ready() -> void:
 	Config.load_config("res://UIDBConfig.gd")
 	
 	_panels.merge(Config.panels, true)

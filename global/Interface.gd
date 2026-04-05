@@ -121,6 +121,10 @@ func _init() -> void:
 	_settings.register_control("SaveUI", Data.Type.ACTION, save_ui, Callable(), [])
 	_settings.register_control("OpenWindowManager", Data.Type.ACTION, set_popup_visable.bind(UIWindowManager, self, true), Callable(), [])
 	
+
+
+## Ready ClientInterface
+func _ready() -> void:
 	Config.load_config("res://InterfaceConfig.gd")
 	Config.load_user_config()
 	
@@ -131,10 +135,7 @@ func _init() -> void:
 	
 	for script: Script in Config.object_picker_default_items:
 		_object_picker_index[script] = Config.object_picker_default_items[script]
-
-
-## Ready ClientInterface
-func _ready() -> void:
+	
 	var root: Window = get_tree().root
 	var popups: Control = _window_popups_scene.instantiate()
 	
