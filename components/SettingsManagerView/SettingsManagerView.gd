@@ -43,11 +43,22 @@ func set_manager(p_manager: SettingsManager) -> void:
 	for classname: String in _manager.get_inheritance_list():
 		var view: SettingsManagerModuleView = preload("res://modules/Vertex/components/SettingsManagerView/ModuleView/SettingsManagerModuleView.tscn").instantiate()
 		
-		view.set_title(classname)
-		view.set_disabled(true)
-		
 		_views_by_class[classname] = view
 		_view_container.add_child(view)
+		
+		view.set_title(classname)
+		view.set_disabled(true)
+	
+	for child_manager_id: String in _manager.get_child_managers():
+		var child_manager: ChildManager = _manager.get_child_manager(child_manager_id)
+		var view: SettingsManagerModuleView
+		
+		if child_manager.get_category() in _views_by_class:
+			view = _views_by_class[child_manager.get_category()]
+		else:
+			view = _views_by_class[_manager.get_inheritance_root()]
+		
+		view.show_child_manager(child_manager, child_manager_id)
 	
 	for module: SettingsModule in _manager.get_modules().values():
 		if module.get_data_type() in module_type_denylist:

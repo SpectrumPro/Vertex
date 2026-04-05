@@ -82,11 +82,11 @@ func set_component(p_object: Object) -> void:
 
 ## Sets the displayed ChildManager
 func set_manager(p_child_manager: ChildManager) -> void:
-	if not is_instance_valid(_current_object):
+	if not is_instance_valid(p_child_manager):
 		return
 	
-	if not _current_object.get_settings().has_child_manager(p_child_manager):
-		p_child_manager = null
+	if not is_instance_valid(_current_object) or _current_object != p_child_manager.get_parent():
+		set_component(p_child_manager.get_parent())
 	
 	_component_manager.reset()
 	_current_manager = p_child_manager

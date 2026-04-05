@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwbgitej5f6yc"]
+[gd_scene load_steps=7 format=3 uid="uid://dwbgitej5f6yc"]
 
 [ext_resource type="Theme" uid="uid://cyua45ur0ijqo" path="res://modules/Vertex/assets/themes/Main.theme" id="1_0arna"]
 [ext_resource type="StyleBox" uid="uid://bxwylw4uk8cyk" path="res://modules/Vertex/assets/styles/ClassSettingsBG.tres" id="2_5gjfr"]
@@ -8,13 +8,14 @@
 [sub_resource type="LabelSettings" id="LabelSettings_hbu47"]
 font_size = 18
 
-[node name="ClassSettingsModule" type="PanelContainer" node_paths=PackedStringArray("_title", "_expand_hide_button", "_settings_container")]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1rgix"]
+
+[node name="ClassSettingsModule" type="PanelContainer"]
+offset_right = 254.0
+offset_bottom = 64.0
 theme = ExtResource("1_0arna")
 theme_override_styles/panel = ExtResource("2_5gjfr")
 script = ExtResource("3_1rgix")
-_title = NodePath("VBoxContainer/HBoxContainer/Title")
-_expand_hide_button = NodePath("VBoxContainer/HBoxContainer/ExpandHide")
-_settings_container = NodePath("VBoxContainer/SettingContainer")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -23,11 +24,31 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Title" type="Label" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "EngineComponent:"
 label_settings = SubResource("LabelSettings_hbu47")
 
-[node name="ExpandHide" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_styles/panel = SubResource("StyleBoxEmpty_1rgix")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="ChildButtonPanel" type="PanelContainer" parent="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="ChildButtonContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer/ChildButtonPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ExpandHide" type="Button" parent="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Expand / Hide"
@@ -36,6 +57,7 @@ icon = ExtResource("4_1gck8")
 flat = true
 
 [node name="SettingContainer" type="VBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[connection signal="toggled" from="VBoxContainer/HBoxContainer/ExpandHide" to="." method="_on_expand_hide_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer/ExpandHide" to="." method="_on_expand_hide_toggled"]

@@ -6,13 +6,19 @@ class_name SettingsManagerModuleView extends PanelContainer
 
 
 ## Title label
-@export var _title: Label
+@onready var _title: Label = %Title
 
 ## ExpandHide button
-@export var _expand_hide_button: Button
+@onready var _expand_hide_button: Button = %ExpandHide
 
 ## SettingsContainer VBox
-@export var _settings_container: VBoxContainer
+@onready var _settings_container: VBoxContainer = %SettingContainer
+
+## The PanelContainer containing ChildButtonContainer
+@onready var _child_button_panel: PanelContainer = %ChildButtonPanel
+
+## The BoxContainer containing ChildManager open buttons
+@onready var _child_button_container: BoxContainer = %ChildButtonContainer
 
 
 ## Disables this settings module
@@ -38,6 +44,21 @@ func show_module(p_module: SettingsModule) -> void:
 		, CONNECT_ONE_SHOT)
 	
 	_settings_container.add_child(data_input)
+
+
+## Adds a button to open the given ChildManager
+func show_child_manager(p_manager: ChildManager, p_id: String) -> void:
+	var button: Button = Button.new()
+	
+	button.set_text(p_id)
+	button.set_button_icon(preload("res://modules/Vertex/assets/icons/OpenInNew.svg"))
+	button.set_icon_alignment(HORIZONTAL_ALIGNMENT_LEFT)
+	button.set_flat(true)
+	
+	button.pressed.connect(Popups.ChildManager.bind(self, p_manager))
+	
+	_child_button_container.add_child(button)
+	_child_button_panel.show()
 
 
 ## Called when the ExpandHide button is toggled
