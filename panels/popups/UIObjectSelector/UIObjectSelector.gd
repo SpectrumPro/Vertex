@@ -46,8 +46,8 @@ func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
 func _ready() -> void:
 	super._ready()
 	
-	for script: Script in Interface._object_picker_index:
-		var config: ClassTreeConfig = Interface._object_picker_index[script]
+	for gbc_class: String in Data.Config.gbc_index:
+		var config: GBCIndexConfig = Data.get_gbc_config(gbc_class)
 		var class_tree: SearchableClassTree = UIDB.instance_component(SearchableClassTree)
 		
 		class_tree.search_mode_changed.connect(_on_search_mode_changed.bind(class_tree))
@@ -58,14 +58,23 @@ func _ready() -> void:
 		class_tree.hide()
 		
 		index_container.add_child(class_tree)
-		_indexes.map(script, class_tree)
+		_indexes.map(gbc_class, class_tree)
 	
 	get_edit_controls().back_button.pressed.connect(_revert_to_class_mode)
 	get_edit_controls().back_button.set_disabled(true)
 
 
 ## Sets the index by base script
-func set_index(p_class: Script, p_class_filter: String = "") -> bool:
+func set_index(p_class: Variant, p_class_filter: Variant = "") -> bool:
+	if p_class is Script:
+		p_class = p_class.get_global_name()
+	
+	if p_class_filter is Script:
+		p_class_filter = p_class_filter.get_global_name()
+	
+	p_class = type_convert(p_class, TYPE_STRING)
+	p_class_filter = type_convert(p_class_filter, TYPE_STRING)
+	
 	if not _indexes.has_left(p_class):
 		return false
 	

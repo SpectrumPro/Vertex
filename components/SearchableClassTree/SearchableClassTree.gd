@@ -41,7 +41,7 @@ enum SearchMode {
 
 
 ## The ClassTreeConfig
-var _config: ClassTreeConfig
+var _config: GBCIndexConfig
 
 ## RefMap for TreeItem: "ClassName"
 var _class_items: RefMap = RefMap.new()
@@ -151,7 +151,7 @@ func activate_selected() -> void:
 
 
 ## Loads a ClassTreeConfig
-func load_config(p_config: ClassTreeConfig) -> void:
+func load_config(p_config: GBCIndexConfig) -> void:
 	_config = p_config
 	
 	inheritance_tree.clear()
@@ -167,12 +167,13 @@ func load_config(p_config: ClassTreeConfig) -> void:
 	_inheritance_tree_null.set_text(1, "Empty")
 	_inheritance_tree_null.set_icon(0, UIDB.get_class_icon("null"))
 	
-	_climb_branch_tree.call(inheritance_tree.get_root(), p_config.get_class_tree(), p_config.get_class_tree().keys()[0])
+	var class_tree: Dictionary = _config.get_class_listdb().get_global_class_tree()
+	_climb_branch_tree.call(inheritance_tree.get_root(),class_tree, class_tree.keys()[0])
 	
-	var inheritance_map: Dictionary = p_config.get_inheritance_map()
+	var inheritance_map: Dictionary = _config.get_class_listdb().get_inheritance_map()
 	
 	for parent_class: String in inheritance_map.keys():
-		if _config.is_class_hidden(parent_class):
+		if _config.get_class_listdb().is_class_hidden(parent_class):
 			continue
 		
 		var parent_branch = searchable_inheritance_tree.create_item()
@@ -184,7 +185,7 @@ func load_config(p_config: ClassTreeConfig) -> void:
 		parent_branch.set_text(1, "Enter")
 		
 		for child_class: String in inheritance_map[parent_class]:
-			if _config.is_class_hidden(child_class):
+			if _config.get_class_listdb().is_class_hidden(child_class):
 				continue
 			
 			var child_branch = parent_branch.create_child()
@@ -197,7 +198,7 @@ func load_config(p_config: ClassTreeConfig) -> void:
 
 
 ## Gets the loaded config
-func get_config() -> ClassTreeConfig:
+func get_config() -> GBCIndexConfig:
 	return _config
 
 
@@ -227,14 +228,14 @@ func search_mode_object(p_classname: String) -> void:
 	object_tree.create_item()
 	_object_items.clear()
 	
-	for object: Object in _config.get_objects_by_classname(p_classname):
-		var classname: String = _config.get_object_classname(object)
-		if _config.is_class_hidden(classname):
+	for object: Object in _config.get_objectdb().get_components_by_classname(p_classname):
+		var classname: String = object.get_class_name()
+		if _config.get_class_listdb().is_class_hidden(classname):
 			continue
 		
 		var item: TreeItem = object_tree.create_item()
 		
-		item.set_text(0, _config.get_object_name(object))
+		item.set_text(0, object.get_uname())
 		item.set_icon(0, UIDB.get_class_icon(classname))
 		
 		item.set_custom_color(1, Color(0x919191ff))
@@ -279,7 +280,7 @@ func search_for(p_text: String) -> void:
 			search_tree = searchable_tree
 			
 			for classname: String in _class_items.get_right():
-				var should_show: bool = _search_mode == SearchMode.CLASS and _config.does_class_extend(classname, _search_mode_class_filter)
+				var should_show: bool = _search_mode == SearchMode.CLASS and _config.get_class_listdb().does_class_inherit(classname, _search_mode_class_filter)
 				items_to_display.append({
 					"item_name": classname,
 					"similarity": classname.similarity(search_string) if p_text else 0.0,
@@ -292,7 +293,7 @@ func search_for(p_text: String) -> void:
 			search_tree = object_tree
 			
 			for object: Object in _object_items.get_right():
-				var object_name: String = _config.get_object_name(object)
+				var object_name: String = object.get_uname()
 				items_to_display.append({
 					"item_name": object_name,
 					"similarity": object_name.similarity(search_string) if p_text else 0.0,
@@ -348,7 +349,7 @@ func _show_null() -> void:
 ## Climbs a branch on the class tree
 func _climb_branch_tree(p_tree_branch: TreeItem, p_data_branch: Dictionary, p_previous_classname: String) -> void:
 	for classname: String in p_data_branch.keys():
-		if _config.is_class_hidden(classname):
+		if _config.get_class_listdb().is_class_hidden(classname):
 			continue
 		
 		var value: Variant = p_data_branch[classname]

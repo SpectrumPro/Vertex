@@ -102,9 +102,6 @@ var _open_popup_dialogs: Dictionary[Node, UIPopupDialog]
 ## Contains all searchable items
 var _palette_search_index: Dictionary[String, Dictionary]
 
-## Config items for the ObjectPicker
-var _object_picker_index: Dictionary[Script, ClassTreeConfig]
-
 ## The settings manager for ClientInterface
 var _settings: SettingsManager = SettingsManager.new()
 
@@ -133,9 +130,6 @@ func _ready() -> void:
 	
 	for entry: CommandPaletteEntry in Config.command_palette_default_items:
 		add_command_palette_entry(entry)
-	
-	for script: Script in Config.object_picker_default_items:
-		_object_picker_index[script] = Config.object_picker_default_items[script]
 	
 	var root: Window = get_tree().root
 	var popups: Control = _window_popups_scene.instantiate()
@@ -700,9 +694,6 @@ class Config:
 	## Default items in the UICommandPalette
 	static var command_palette_default_items: Array
 	
-	## Default items in the UIObjectPicker
-	static var object_picker_default_items: Dictionary
-	
 	## Built in start up notics
 	static var startup_notices: Array = []
 	
@@ -724,12 +715,11 @@ class Config:
 		
 		save_ui_on_quit = type_convert(config.get("save_ui_on_quit", save_ui_on_quit), TYPE_BOOL)
 		scale_factor = type_convert(config.get("scale_factor", scale_factor), TYPE_INT)
+		
 		default_ui_panel = type_convert(config.get("default_ui_panel", default_ui_panel), TYPE_OBJECT)
-		
 		window_popup_config = type_convert(config.get("window_popup_config", window_popup_config), TYPE_DICTIONARY)
-		command_palette_default_items = type_convert(config.get("command_palette_default_items", command_palette_default_items), TYPE_ARRAY)
 		
-		object_picker_default_items = type_convert(config.get("object_picker_default_items", object_picker_default_items), TYPE_DICTIONARY)
+		command_palette_default_items = type_convert(config.get("command_palette_default_items", command_palette_default_items), TYPE_ARRAY)
 		startup_notices = type_convert(config.get("startup_notices", startup_notices), TYPE_ARRAY)
 		
 		return true
