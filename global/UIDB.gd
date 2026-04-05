@@ -46,6 +46,7 @@ var _popups: Dictionary[String, PackedScene] = {
 ## All UIComponents
 var _components: Dictionary[String, PackedScene] = {
 	"ComponentButton":			load(_c("ComponentButton")),
+	"ComponentManagerView":		load(_c("ComponentManagerView")),
 	"SearchableClassTree":		load(_c("SearchableClassTree")),
 	"SelectBox":				load(_c("SelectBox")),
 	"SettingsManagerMultiView":	load(_c("SettingsManagerMultiView")),
