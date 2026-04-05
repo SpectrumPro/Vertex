@@ -81,6 +81,7 @@ var _window_popup_config: Dictionary[Script, PopupConfig] = {
 	UIWindowID:				PopupConfig.new("UIWindowID", ""),
 	UINetworkSelector:		PopupConfig.new("UINetworkSelector"),
 	UISettingsManager:		PopupConfig.new("UISettingsManager", "set_manager"),
+	UIChildManager:			PopupConfig.new("UIChildManager", "set_manager"),
 }
 
 ## All windows by UUID RefMap for UUID: Window

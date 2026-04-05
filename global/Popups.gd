@@ -70,6 +70,11 @@ func PopupDialog(p_source: Node, p_title: String = "") -> UIPopupDialog:
 	return Interface.create_popup_dialog(p_source, p_title)
 
 
+## Prompts the user with UIChildManager
+func ChildManager(p_source: Node, p_manager: ChildManager) -> Promise:
+	return Interface.show_window_popup(UIChildManager, p_source, p_manager)
+
+
 ## Prompts the user with UISettingsManager
 func show_settings_manager(p_source: Node, p_manager: SettingsManager) -> void:
 	Interface.show_window_popup(UISettingsManager, p_source, p_manager)
