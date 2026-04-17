@@ -35,6 +35,9 @@ var _component: Object = null
 ## The orignal user defined text of this button
 var _orignal_text: String
 
+## The orignal user defined icon of this button
+var _orignal_icon: Texture2D
+
 ## UUID of the EngineComponent to look for
 var _look_for_component: String
 
@@ -48,6 +51,7 @@ var _signal_group: SignalGroup = SignalGroup.new([
 ## ready
 func _ready() -> void:
 	_orignal_text = get_text()
+	_orignal_icon = get_button_icon()
 	set_enabled(enabled)
 
 
@@ -62,10 +66,14 @@ func set_component(p_component: Object) -> void:
 	
 	if not is_instance_valid(_component):
 		set_text(_orignal_text)
+		set_button_icon(_orignal_icon)
+		
 		underline.set_modulate(ThemeManager.Colors.Statuses.Standby)
 	
 	else:
-		set_text(_component.get_name())
+		set_text(_component.get_uname())
+		set_button_icon(UIDB.get_class_icon(_component.get_class_name()))
+		
 		underline.set_modulate(ThemeManager.Colors.Statuses.Normal)
 	
 	remove_look_for()
@@ -138,6 +146,14 @@ func _on_pressed() -> void:
 	if not enabled:
 		return
 	
-	Popups.ObjectSelector(self, base_class, class_filter.get_global_name()).then(func (p_component: Object):
-		set_component(p_component)
-	)
+	if base_class:
+		@warning_ignore("incompatible_ternary")
+		var filter: Variant = class_filter.get_global_name() if class_filter else ""
+		
+		Popups.ObjectSelector(self, base_class, filter).then(func (p_component: Object):
+			set_component(p_component)
+		)
+	else:
+		Popups.ObjectSelector_gbc_object(self).then(func (p_component: Object):
+			set_component(p_component)
+		)
