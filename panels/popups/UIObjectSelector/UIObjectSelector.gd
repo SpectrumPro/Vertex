@@ -60,7 +60,7 @@ func _ready() -> void:
 		index_container.add_child(class_tree)
 		_indexes.map(gbc_class, class_tree)
 	
-	get_edit_controls().back_button.pressed.connect(_revert_to_class_mode)
+	get_edit_controls().back_button.pressed.connect(go_back)
 	get_edit_controls().back_button.set_disabled(true)
 
 
@@ -77,6 +77,9 @@ func set_index(p_class: Variant, p_class_filter: Variant = "") -> bool:
 	
 	if not _indexes.has_left(p_class):
 		return false
+	
+	if not p_class_filter:
+		p_class_filter = p_class
 	
 	if _current_index:
 		_current_index.hide()
@@ -122,12 +125,15 @@ func focus() -> void:
 	search_bar.grab_focus()
 
 
-## Called when the back button is pressed
-func _revert_to_class_mode() -> void:
-	if _current_index:
-		search_bar.clear_tags()
-		_current_index.search_mode_class()
-		get_edit_controls().back_button.set_disabled(true)
+## Goes back one level in the class tree
+func go_back() -> void:
+	if not is_instance_valid(_current_index):
+		return
+	
+	var current_filter: String = _current_index.get_object_class()
+	var parent_class: String = _current_index.get_config().get_class_listdb().get_class_parent(current_filter)
+	
+	_current_index.search_mode_object(parent_class)
 
 
 ## Called when the SearchMode is changed in a SearchableClassTree
@@ -137,21 +143,37 @@ func _on_search_mode_changed(p_search_mode: SearchableClassTree.SearchMode, p_cl
 	
 	match p_search_mode:
 		SearchableClassTree.SearchMode.OBJECT:
-			search_bar.clear()
-			search_bar.create_tag("@" + p_class_tree.get_object_class())
-			
-			get_edit_controls().back_button.set_disabled(false)
-			await get_tree().process_frame
+			search_bar.clear_all()
+			_add_filter_tag(p_class_tree)
 			
 			search_bar.grab_focus()
 			search_bar.edit()
+			
+			var is_top_level: bool = p_class_tree.get_object_class() == p_class_tree.get_config().get_base_class().get_global_name()
+			get_edit_controls().back_button.set_disabled(is_top_level)
+		
 		_:
 			get_edit_controls().back_button.set_disabled(true)
 
 
+## Adds a tag to the TaggedLineEdit for the current clas filter
+func _add_filter_tag(p_class_tree: SearchableClassTree) -> void:
+	var text: String = "@"
+	var config: GBCIndexConfig = p_class_tree.get_config()
+	var class_filter: String = p_class_tree.get_object_class()
+	
+	if not class_filter:
+		class_filter = str(config.get_base_class().get_global_name())
+	
+	for classname: String in config.get_class_listdb().get_class_inheritance_tree(class_filter):
+		text += classname + "/"
+		
+	search_bar.create_tag(text)
+
+
 ## Called when a tag is removed from the search bar
 func _on_line_edit_tag_removed(_p_id: Variant) -> void:
-	_revert_to_class_mode()
+	go_back()
 
 
 ## Called for all GUI inputs on the search bar

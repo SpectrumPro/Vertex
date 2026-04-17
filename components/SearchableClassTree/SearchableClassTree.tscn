@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c3dka6m08sjkx" path="res://modules/Vertex/components/SearchableClassTree/SearchableClassTree.gd" id="1_i1ig3"]
 
-[node name="SearchableClassTree" type="PanelContainer" node_paths=PackedStringArray("inheritance_tree", "searchable_inheritance_tree", "searchable_tree", "object_tree")]
+[node name="SearchableClassTree" type="PanelContainer" node_paths=PackedStringArray("inheritance_tree", "searchable_tree", "object_tree", "objecet_inheritance_tree")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,17 +11,11 @@ grow_vertical = 2
 size_flags_vertical = 3
 script = ExtResource("1_i1ig3")
 inheritance_tree = NodePath("InheritanceTree")
-searchable_inheritance_tree = NodePath("SearchableInheritanceTree")
 searchable_tree = NodePath("SearchableTree")
 object_tree = NodePath("ObjectTree")
+objecet_inheritance_tree = NodePath("ObjectInheritanceTree")
 
 [node name="InheritanceTree" type="Tree" parent="."]
-layout_mode = 2
-columns = 2
-hide_root = true
-select_mode = 1
-
-[node name="SearchableInheritanceTree" type="Tree" parent="."]
 visible = false
 layout_mode = 2
 columns = 2
@@ -42,7 +36,14 @@ columns = 2
 hide_root = true
 select_mode = 1
 
+[node name="ObjectInheritanceTree" type="Tree" parent="."]
+visible = false
+layout_mode = 2
+columns = 2
+hide_root = true
+select_mode = 1
+
 [connection signal="item_activated" from="InheritanceTree" to="." method="activate_selected"]
-[connection signal="item_activated" from="SearchableInheritanceTree" to="." method="activate_selected"]
 [connection signal="item_activated" from="SearchableTree" to="." method="activate_selected"]
 [connection signal="item_activated" from="ObjectTree" to="." method="activate_selected"]
+[connection signal="item_activated" from="ObjectInheritanceTree" to="." method="activate_selected"]
