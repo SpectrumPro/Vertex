@@ -27,14 +27,9 @@ func PanelSettings(p_source: Node, p_panel: UIPanel) -> Promise:
 
 
 ## Promps the user with UIPaneSettings
-func ObjectSelector(p_source: Node, p_index: Script, p_class_filter: Variant) -> Promise:
+func ObjectSelector(p_source: Node, p_index: Variant, p_class_filter: Variant = "") -> Promise:
 	var promise: Promise = Interface.show_window_popup(UIObjectSelector, p_source, null)
 	var object_picker: UIObjectSelector = promise.get_object_refernce()
-	
-	if p_class_filter is Script:
-		p_class_filter = p_class_filter.get_global_name()
-	
-	p_class_filter = type_convert(p_class_filter, TYPE_STRING)
 	
 	object_picker.set_select_mode(UIObjectSelector.SelectMode.OBJECT)
 	object_picker.set_index(p_index, p_class_filter)
@@ -43,7 +38,7 @@ func ObjectSelector(p_source: Node, p_index: Script, p_class_filter: Variant) ->
 
 
 ## Promps the user with UIObjectPicker
-func ObjectSelector_class(p_source: Node, p_index: Script, p_class_filter: String) -> Promise:
+func ObjectSelector_class(p_source: Node, p_index: Variant, p_class_filter: Variant = "") -> Promise:
 	var promise: Promise = Interface.show_window_popup(UIObjectSelector, p_source, null)
 	var object_picker: UIObjectSelector = promise.get_object_refernce()
 	
