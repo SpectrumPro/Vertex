@@ -1,15 +1,14 @@
-[gd_scene load_steps=11 format=3 uid="uid://cth1gcyw48lub"]
+[gd_scene load_steps=10 format=3 uid="uid://cth1gcyw48lub"]
 
 [ext_resource type="Script" uid="uid://x7vnefcxdkm" path="res://modules/Vertex/panels/UIChildManager/UIChildManager.gd" id="1_aldlv"]
 [ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://modules/Vertex/assets/styles/UIPanelBase.tres" id="1_of0uw"]
 [ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="2_rreh1"]
-[ext_resource type="Script" uid="uid://b5dfn08rtsf0l" path="res://core/components/Universe.gd" id="3_qbe33"]
 [ext_resource type="Texture2D" uid="uid://bbennjke0ioen" path="res://modules/Vertex/assets/icons/Add.svg" id="4_bw18i"]
 [ext_resource type="PackedScene" uid="uid://7prnynnrdn4n" path="res://modules/Vertex/components/ComponentManagerView/ComponentManagerView.tscn" id="4_h7s3y"]
-[ext_resource type="Script" uid="uid://ctnse5muj3sti" path="res://core/components/EngineComponent.gd" id="4_shc3j"]
 [ext_resource type="Texture2D" uid="uid://dfrrs2dnvlvsu" path="res://modules/Vertex/assets/icons/Delete.svg" id="5_qbe33"]
 [ext_resource type="Texture2D" uid="uid://cvkwk62wsykmn" path="res://modules/Vertex/assets/icons/ChevronRight.svg" id="5_shc3j"]
 [ext_resource type="Texture2D" uid="uid://cuvwwbojtcpg6" path="res://modules/Vertex/assets/icons/Duplicate.svg" id="6_shc3j"]
+[ext_resource type="LabelSettings" uid="uid://ci6veq1d2x5c4" path="res://modules/Vertex/assets/styles/DimText.tres" id="9_shc3j"]
 
 [node name="UIChildManager" type="PanelContainer"]
 anchors_preset = 15
@@ -29,8 +28,6 @@ layout_mode = 2
 
 [node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="0"]
 text = "ChildManager"
-class_filter = ExtResource("3_qbe33")
-base_class = ExtResource("4_shc3j")
 enable_resolve_mode = true
 enabled = true
 
@@ -79,7 +76,20 @@ icon = ExtResource("6_shc3j")
 
 [node name="ComponentManagerView" parent="VBoxContainer" instance=ExtResource("4_h7s3y")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
+
+[node name="InvalidSelection" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/InvalidSelection"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Selected Component has no ChildManagers"
+label_settings = ExtResource("9_shc3j")
 
 [connection signal="object_selected" from="VBoxContainer/PanelMenuBar/HBoxContainer/ComponentButton" to="." method="set_component"]
 [connection signal="item_selected" from="VBoxContainer/PanelMenuBar/HBoxContainer/ChildManagerSelection" to="." method="_on_child_manager_selection_item_selected"]

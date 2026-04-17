@@ -12,6 +12,9 @@ class_name UIChildManager extends UIPanel
 ## The OptionButton used to select the ChildManager
 @onready var _child_manager_selection: OptionButton = %ChildManagerSelection
 
+## The InvalidSelection panel shown when the component does not have any ChildManagers
+@onready var _invalid_selection: PanelContainer = %InvalidSelection
+
 
 ## The current GBC Object
 var _current_object: Object
@@ -62,13 +65,25 @@ func set_component(p_object: Object) -> void:
 	_manager_ids.clear()
 	_current_manager = null
 	
+	_invalid_selection.set_visible(true)
+	_component_manager.set_visible(false)
+	
 	var is_valid: bool = is_instance_valid(_current_object)
 	_child_manager_selection.set_disabled(not is_valid)
+	
 	
 	if not is_valid:
 		return
 	
-	for manager_id: String in _current_object.get_settings().get_child_managers():
+	var child_managers: Dictionary[String, ChildManager] = _current_object.get_settings().get_child_managers()
+	
+	if child_managers.size():
+		_invalid_selection.set_visible(false)
+		_component_manager.set_visible(true)
+	else:
+		return
+	
+	for manager_id: String in child_managers:
 		_manager_ids.append(manager_id)
 		_child_manager_selection.add_item(manager_id)
 	
