@@ -60,6 +60,9 @@ func create_tag(p_text: String, p_color: Color = Color.WHITE) -> int:
 	var container: PanelContainer = PanelContainer.new()
 	var label: Label = Label.new()
 	
+	label.add_theme_font_size_override("font_size", 14)
+	label.set_v_size_flags(Control.SIZE_SHRINK_CENTER) 
+	
 	container.add_theme_stylebox_override("panel", ThemeManager.StyleBoxes.ResolveBoxStyle)
 	container.self_modulate = p_color
 	
