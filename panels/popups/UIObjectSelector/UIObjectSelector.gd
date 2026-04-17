@@ -6,22 +6,35 @@ class_name UIObjectSelector extends UIPopup
 ## Find and selects objects
 
 
+## Emitted when a GBCIndexConfig is selected
+signal gbc_index_selected(p_gbc_index: GBCIndexConfig)
+
 ## Emitted when an object is selected
-signal object_selected(p_object: Variant)
+signal object_selected(p_object: Object)
+
+## Emitted when a class is selected
+signal class_selected(p_class: String)
 
 
 ## Enum for SelectMode
 enum SelectMode {
+	NONE,			## No SelectMode
+	GBC_INDEX,		## Selects a GBCIndexConfig
+	GBC_OBJECT,		## GBC_INDEX then OBJECT
+	GBC_CLASS,		## GBC_INDEX then CLASS
 	OBJECT, 		## Selects a pre-existing object
 	CLASS			## Selects a classname
 }
 
 
 ## The LineEdit search bar
-@export var search_bar: TaggedLineEdit
+@onready var _search_bar: TaggedLineEdit = %SearchBar
 
 ## The Container to hold all SearchableClassTrees
-@export var index_container: Container
+@onready var _index_container: Container = %IndexContainer
+
+## The GBCIndex tree
+@onready var _gbc_index_tree: Tree = %GBCIndexTree
 
 
 ## All Indexes shown
@@ -31,7 +44,13 @@ var _indexes: RefMap = RefMap.new()
 var _current_index: SearchableClassTree
 
 ## Current select mode
-var _select_mode: SelectMode = SelectMode.OBJECT
+var _select_mode: SelectMode = SelectMode.NONE
+
+## The previous select mode 
+var _previous_select_mode: SelectMode = SelectMode.NONE
+
+## RefMap for GBCIndex: TreeItem
+var _gbc_index_items: RefMap = RefMap.new()
 
 
 ## init
@@ -39,12 +58,23 @@ func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
 	super._init(p_uuid, p_args)
 	
 	_set_class_name("UIObjectSelector")
-	set_custom_accepted_signal(object_selected)
 
 
 ## Ready
 func _ready() -> void:
 	super._ready()
+	
+	_gbc_index_tree.set_columns(2)
+	_gbc_index_tree.create_item()
+	
+	_gbc_index_tree.set_column_expand(1, false)
+	_gbc_index_tree.set_column_custom_minimum_width(1, 100)
+	
+	var gbc_null: TreeItem = _gbc_index_tree.create_item()
+	
+	gbc_null.set_icon(0, UIDB.get_class_icon("null"))
+	gbc_null.set_text(0, "null")
+	gbc_null.set_text(1, "Empty")
 	
 	for gbc_class: String in Data.Config.gbc_index:
 		var config: GBCIndexConfig = Data.get_gbc_config(gbc_class)
@@ -57,15 +87,143 @@ func _ready() -> void:
 		class_tree.load_config(config)
 		class_tree.hide()
 		
-		index_container.add_child(class_tree)
+		_index_container.add_child(class_tree)
 		_indexes.map(gbc_class, class_tree)
+		
+		var gbc_item: TreeItem = _gbc_index_tree.create_item()
+		
+		gbc_item.set_text(0, gbc_class)
+		gbc_item.set_icon(0, UIDB.get_class_icon(gbc_class))
+		
+		gbc_item.set_custom_color(1, Color(0x919191ff))
+		gbc_item.set_text(1, "Use")
+		
+		_gbc_index_items.map(config, gbc_item)
 	
 	get_edit_controls().back_button.pressed.connect(go_back)
 	get_edit_controls().back_button.set_disabled(true)
 
 
+## Sets the SelectMode to SelectMode.GBC_INDEX
+func select_mode_gbc_index() -> void:
+	_previous_select_mode = SelectMode.GBC_INDEX
+	set_custom_accepted_signal(gbc_index_selected)
+	_set_select_mode_gbc_index()
+
+
+## Sets the SelectMode to SelectMode.GBC_INDEX
+func select_mode_gbc_object() -> void:
+	_previous_select_mode = SelectMode.GBC_OBJECT
+	set_custom_accepted_signal(object_selected)
+	_set_select_mode_gbc_object()
+
+
+## Sets the SelectMode to SelectMode.GBC_INDEX
+func select_mode_gbc_class() -> void:
+	_previous_select_mode = SelectMode.GBC_CLASS
+	set_custom_accepted_signal(class_selected)
+	_set_select_mode_gbc_class()
+
+
+## Sets the SelectMode to SelectMode.GBC_INDEX
+func select_mode_object(p_gbc_class: Variant, p_class_filter: Variant = "") -> void:
+	_previous_select_mode = SelectMode.OBJECT
+	set_custom_accepted_signal(object_selected)
+	_set_select_mode_object(p_gbc_class, p_class_filter)
+
+
+## Sets the SelectMode to SelectMode.CLASS
+func select_mode_class(p_gbc_class: Variant, p_class_filter: Variant = "") -> void:
+	_previous_select_mode = SelectMode.CLASS
+	set_custom_accepted_signal(class_selected)
+	_set_select_mode_class(p_gbc_class, p_class_filter)
+
+
+## Resets this UIObjectSelector
+func reset() -> void:
+	_search_bar.clear_all()
+	_select_mode = SelectMode.NONE
+	
+	if is_instance_valid(_current_index):
+		_current_index.hide()
+	
+	_gbc_index_tree.hide()
+	_current_index = null
+	get_edit_controls().back_button.set_disabled(true)
+
+
+## Sets the search filter
+func search_for(p_text: String) -> void:
+	if _current_index:
+		_current_index.search_for(p_text)
+
+
+## Makes this take focus
+func focus() -> void:
+	await get_tree().process_frame
+	
+	_search_bar.grab_focus()
+	_search_bar.edit()
+
+
+## Goes back one level in the class tree
+func go_back() -> void:
+	if not is_instance_valid(_current_index):
+		return
+	
+	var current_filter: String = _current_index.get_object_class()
+	var parent_class: String = _current_index.get_config().get_class_listdb().get_class_parent(current_filter)
+	
+	_current_index.search_mode_object(parent_class)
+
+
+## Sets the SelectMode to SelectMode.GBC_INDEX
+func _set_select_mode_gbc_index() -> void:
+	reset()
+	_select_mode = SelectMode.GBC_INDEX
+	
+	_search_bar.set_placeholder("Select GBCIndex")
+	
+	_gbc_index_tree.show()
+	focus.call_deferred()
+
+
+## Sets the SelectMode to SelectMode.GBC_OBJECT
+func _set_select_mode_gbc_object() -> void:
+	_set_select_mode_gbc_index()
+	_search_bar.set_placeholder("Select GBCIndex > Object")
+
+
+## Sets the SelectMode to SelectMode.GBC_CLASS
+func _set_select_mode_gbc_class() -> void:
+	_set_select_mode_gbc_index()
+	_search_bar.set_placeholder("Select GBCIndex > Class")
+
+
+## Sets the SelectMode to SelectMode.OBJECT
+func _set_select_mode_object(p_gbc_class: Variant, p_class_filter: Variant = "") -> void:
+	reset()
+	_select_mode = SelectMode.OBJECT
+	
+	_search_bar.set_placeholder("Select Object")
+	
+	_set_index(p_gbc_class, p_class_filter)
+	focus.call_deferred()
+
+
+## Sets the SelectMode to SelectMode.CLASS
+func _set_select_mode_class(p_gbc_class: Variant, p_class_filter: Variant = "") -> void:
+	reset()
+	_select_mode = SelectMode.CLASS
+	
+	_search_bar.set_placeholder("Select Class")
+	
+	_set_index(p_gbc_class, p_class_filter)
+	focus.call_deferred()
+
+
 ## Sets the index by base script
-func set_index(p_class: Variant, p_class_filter: Variant = "") -> bool:
+func _set_index(p_class: Variant, p_class_filter: Variant = "") -> bool:
 	if p_class is Script:
 		p_class = p_class.get_global_name()
 	
@@ -84,8 +242,8 @@ func set_index(p_class: Variant, p_class_filter: Variant = "") -> bool:
 	if _current_index:
 		_current_index.hide()
 	
-	search_bar.clear_tags()
-	search_bar.clear()
+	_search_bar.clear_tags()
+	_search_bar.clear()
 	
 	_current_index = _indexes.left(p_class)
 	_current_index.show()
@@ -99,41 +257,26 @@ func set_index(p_class: Variant, p_class_filter: Variant = "") -> bool:
 	return true
 
 
-## Sets the select mode
-func set_select_mode(p_select_mode: SelectMode) -> void:
-	_select_mode = p_select_mode
+## Selectes the next item in the given tree
+func _select_next(p_tree: Tree) -> void:
+	var current: TreeItem = p_tree.get_selected()
+	var next_item: TreeItem = current.get_next_visible(true) if current else p_tree.get_root().get_child(0)
 	
-	if not is_instance_valid(_current_index):
-		return
+	if next_item:
+		next_item.select(0)
 	
-	match _select_mode:
-		SelectMode.OBJECT:
-			_current_index.search_mode_combined()
-			
-		SelectMode.CLASS:
-			_current_index.search_mode_class()
+	p_tree.ensure_cursor_is_visible()
 
 
-## Sets the search filter
-func search_for(p_text: String) -> void:
-	if _current_index:
-		_current_index.search_for(p_text)
-
-
-## Makes this take focus
-func focus() -> void:
-	search_bar.grab_focus()
-
-
-## Goes back one level in the class tree
-func go_back() -> void:
-	if not is_instance_valid(_current_index):
-		return
+## Selectes the next item in the given tree
+func _select_prev(p_tree: Tree) -> void:
+	var current: TreeItem = p_tree.get_selected()
+	var next_item: TreeItem = current.get_prev_visible(true) if current else p_tree.get_root().get_child(0)
 	
-	var current_filter: String = _current_index.get_object_class()
-	var parent_class: String = _current_index.get_config().get_class_listdb().get_class_parent(current_filter)
+	if next_item:
+		next_item.select(0)
 	
-	_current_index.search_mode_object(parent_class)
+	p_tree.ensure_cursor_is_visible()
 
 
 ## Called when the SearchMode is changed in a SearchableClassTree
@@ -143,11 +286,11 @@ func _on_search_mode_changed(p_search_mode: SearchableClassTree.SearchMode, p_cl
 	
 	match p_search_mode:
 		SearchableClassTree.SearchMode.OBJECT:
-			search_bar.clear_all()
+			_search_bar.clear_all()
 			_add_filter_tag(p_class_tree)
 			
-			search_bar.grab_focus()
-			search_bar.edit()
+			_search_bar.grab_focus()
+			_search_bar.edit()
 			
 			var is_top_level: bool = p_class_tree.get_object_class() == p_class_tree.get_config().get_base_class().get_global_name()
 			get_edit_controls().back_button.set_disabled(is_top_level)
@@ -168,7 +311,27 @@ func _add_filter_tag(p_class_tree: SearchableClassTree) -> void:
 	for classname: String in config.get_class_listdb().get_class_inheritance_tree(class_filter):
 		text += classname + "/"
 		
-	search_bar.create_tag(text)
+	_search_bar.create_tag(text)
+
+
+## Called when text is submitted
+func _handle_activated() -> void:
+	match _select_mode:
+		SelectMode.GBC_INDEX:
+			var gbc_index: GBCIndexConfig = _gbc_index_items.right(_gbc_index_tree.get_selected(), null)
+			
+			match _previous_select_mode:
+				SelectMode.GBC_OBJECT when is_instance_valid(gbc_index):
+					_set_select_mode_object(gbc_index.get_base_class(), "")
+				
+				SelectMode.GBC_CLASS when is_instance_valid(gbc_index):
+					_set_select_mode_class(gbc_index.get_base_class())
+				
+				_:
+					accept(gbc_index)
+		
+		SelectMode.OBJECT, SelectMode.CLASS when is_instance_valid(_current_index):
+			_current_index.activate_selected()
 
 
 ## Called when a tag is removed from the search bar
@@ -178,17 +341,17 @@ func _on_line_edit_tag_removed(_p_id: Variant) -> void:
 
 ## Called for all GUI inputs on the search bar
 func _on_line_edit_gui_input(p_event: InputEvent) -> void:
-	if not _current_index:
-		return
-	
-	if p_event.is_action_pressed("ui_down"):
-		_current_index.select_next()
-	
-	if p_event.is_action_pressed("ui_up"):
-		_current_index.select_prev()
-
-
-## Called when text is submitted
-func _on_line_edit_text_submitted(_p_new_text: String) -> void:
-	if _current_index:
-		_current_index.activate_selected()
+	match _select_mode:
+		SelectMode.GBC_INDEX:
+			if p_event.is_action_pressed("ui_down"):
+				_select_next(_gbc_index_tree)
+			
+			if p_event.is_action_pressed("ui_up"):
+				_select_prev(_gbc_index_tree)
+		
+		SelectMode.OBJECT, SelectMode.CLASS when is_instance_valid(_current_index):
+			if p_event.is_action_pressed("ui_down"):
+				_current_index.select_next()
+			
+			if p_event.is_action_pressed("ui_up"):
+				_current_index.select_prev()

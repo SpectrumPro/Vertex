@@ -37,7 +37,7 @@ enum SearchMode {
 @export var objecet_inheritance_tree: Tree 
 
 ## Min size of the second tree column
-@export var column_min_size: int = 100
+@export var column_min_size: int = 150
 
 
 ## The ClassTreeConfig
@@ -241,7 +241,7 @@ func search_mode_object(p_classname: String = "") -> void:
 		flat_object_item.set_icon(0, UIDB.get_class_icon(classname))
 		
 		flat_object_item.set_custom_color(1, Color(0x919191ff))
-		flat_object_item.set_text(1, "Object")
+		flat_object_item.set_text(1, classname)
 		
 		var inhr_class_item: TreeItem = _object_inher_class_items.right(classname)
 		var inhr_object_item: TreeItem = inhr_class_item.create_child()

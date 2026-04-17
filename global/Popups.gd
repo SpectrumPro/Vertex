@@ -27,25 +27,43 @@ func PanelSettings(p_source: Node, p_panel: UIPanel) -> Promise:
 
 
 ## Promps the user with UIPaneSettings
-func ObjectSelector(p_source: Node, p_index: Variant, p_class_filter: Variant = "") -> Promise:
-	var promise: Promise = Interface.show_window_popup(UIObjectSelector, p_source, null)
-	var object_picker: UIObjectSelector = promise.get_object_refernce()
+func ObjectSelector(p_source: Node, p_gbc_class: Variant, p_class_filter: Variant = "") -> Promise:
+	var object_picker: UIObjectSelector = Interface.get_window_popup(UIObjectSelector, p_source)
+	object_picker.select_mode_object(p_gbc_class, p_class_filter)
 	
-	object_picker.set_select_mode(UIObjectSelector.SelectMode.OBJECT)
-	object_picker.set_index(p_index, p_class_filter)
+	return Interface.show_window_popup(UIObjectSelector, p_source, null)
+
+
+## Promps the user with UIPaneSettings
+func ObjectSelector_gbc_index(p_source: Node) -> Promise:
+	var object_picker: UIObjectSelector = Interface.get_window_popup(UIObjectSelector, p_source)
+	object_picker.select_mode_gbc_index()
 	
-	return promise
+	return Interface.show_window_popup(UIObjectSelector, p_source, null)
+
+
+## Promps the user with UIPaneSettings
+func ObjectSelector_gbc_object(p_source: Node) -> Promise:
+	var object_picker: UIObjectSelector = Interface.get_window_popup(UIObjectSelector, p_source)
+	object_picker.select_mode_gbc_object()
+	
+	return Interface.show_window_popup(UIObjectSelector, p_source, null)
+
+
+## Promps the user with UIPaneSettings
+func ObjectSelector_gbc_class(p_source: Node) -> Promise:
+	var object_picker: UIObjectSelector = Interface.get_window_popup(UIObjectSelector, p_source)
+	object_picker.select_mode_gbc_class()
+	
+	return Interface.show_window_popup(UIObjectSelector, p_source, null)
 
 
 ## Promps the user with UIObjectPicker
-func ObjectSelector_class(p_source: Node, p_index: Variant, p_class_filter: Variant = "") -> Promise:
-	var promise: Promise = Interface.show_window_popup(UIObjectSelector, p_source, null)
-	var object_picker: UIObjectSelector = promise.get_object_refernce()
+func ObjectSelector_class(p_source: Node, p_gbc_class: Variant, p_class_filter: Variant = "") -> Promise:
+	var object_picker: UIObjectSelector = Interface.get_window_popup(UIObjectSelector, p_source)
+	object_picker.select_mode_class(p_gbc_class, p_class_filter)
 	
-	object_picker.set_select_mode(UIObjectSelector.SelectMode.CLASS)
-	object_picker.set_index(p_index, p_class_filter)
-	
-	return promise
+	return Interface.show_window_popup(UIObjectSelector, p_source, null)
 
 
 ## Prompts the user with UIInterfaceSelector
