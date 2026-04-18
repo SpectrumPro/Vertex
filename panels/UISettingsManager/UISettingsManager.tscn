@@ -27,6 +27,7 @@ layout_mode = 2
 [node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="0"]
 text = "SettingsManager"
 icon = ExtResource("4_8058h")
+enabled = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
