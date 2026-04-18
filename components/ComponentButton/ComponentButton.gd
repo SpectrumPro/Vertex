@@ -93,7 +93,7 @@ func get_component_uuid(p_allow_resolve_uuid: bool = true) -> String:
 ## Removes the ComponentDB request for the object
 func remove_look_for() -> void:
 	if _look_for_component:
-		ObjectDB.remove_request_static(_look_for_component, _on_component_found)
+		CoreObjectDB.remove_request_static(_look_for_component, _on_component_found)
 		_look_for_component = ""
 
 
@@ -106,7 +106,7 @@ func look_for(p_uuid: String) -> void:
 		return
 	
 	underline.set_modulate(ThemeManager.Colors.Statuses.Caution)
-	ObjectDB.request_component_static(_look_for_component, _on_component_found)
+	CoreObjectDB.request_component_static(_look_for_component, _on_component_found)
 
 
 ## Sets the enabled state
