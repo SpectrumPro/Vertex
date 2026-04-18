@@ -83,6 +83,7 @@ var _data_inputs: Dictionary[Data.Type, Variant] = {
 var _panels_by_category: Dictionary[String, Array] = {
 	"System": [
 		"UIWindowManager",
+		"UISettingsManager",
 	],
 	"Utils": [
 		"UIChildManager"
