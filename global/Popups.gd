@@ -2,18 +2,14 @@
 # This file is part of the Spectrum Lighting Engine, licensed under the GPL v3.0 or later.
 # See the LICENSE file for details.
 
-class_name CorePopups extends Node
+class_name CorePopups extends CoreGlobal
 ## Collection of shortcuts for opening UIPopups
 
 
-## The SettingsManager for this IntefacePopups object
-var _settings: SettingsManager = SettingsManager.new()
-
-
 ## init 
-func _init() -> void:
-	_settings.set_owner(self)
-	_settings.set_inheritance_array(["Popups"])
+func _init(p_uuid: String = "", ...p_args: Array[Variant]) -> void:
+	super._init(p_uuid, p_args)
+	_set_class_name("CorePopups")
 
 
 ## Prompts the user to select a UIPanel
@@ -136,8 +132,3 @@ func confirm_delete_components(p_source: Node, p_components: Array, p_auto_delet
 ## Prompts the user with a custom panel popup
 func create_panel_popup(p_source: Node, p_panel_class: Variant) -> UIPanel:
 	return Interface.create_panel_popup(p_source, p_panel_class)
-
-
-## Returns the SettingsManager for this InterfacePopups object
-func get_settings() -> SettingsManager:
-	return _settings

@@ -2,7 +2,7 @@
 # This file is part of the Spectrum Lighting Engine, licensed under the GPL v3.0 or later.
 # See the LICENSE file for details.
 
-class_name CoreInterface extends Node
+class_name CoreInterface extends CoreGlobal
 ## Main script for the Spectrum Lighting Controller UI interface
 
 
@@ -102,14 +102,11 @@ var _open_popup_dialogs: Dictionary[Node, UIPopupDialog]
 ## Contains all searchable items
 var _palette_search_index: Dictionary[String, Dictionary]
 
-## The settings manager for ClientInterface
-var _settings: SettingsManager = SettingsManager.new()
-
 
 ## Init
-func _init() -> void:
-	_settings.set_owner(self)
-	_settings.set_inheritance_array(["Interface"])
+func _init(p_uuid: String = "", ...p_args: Array[Variant]) -> void:
+	super._init(p_uuid, p_args)
+	_set_class_name("CoreInterface")
 	
 	_settings.register_setting("ScaleFactor", Data.Type.FLOAT, set_scale_factor, get_scale_factor, [scale_factor_changed]).set_min_max(0.2, 2)
 	_settings.register_setting("SaveUIOnQuit", Data.Type.BOOL, set_save_ui_on_quit, get_save_ui_on_quit, [save_ui_on_quit_changed])
@@ -339,17 +336,17 @@ func create_panel_popup(p_source: Node, p_panel_class: Variant) -> UIPanel:
 
 ## Saves the UI to the ui save file
 func save_ui() -> void:
-	Utils.save_json_to_file(Config.ui_file_location, Config.ui_file_name, serialize())
+	Utils.save_json_to_file(Config.ui_file_location, Config.ui_file_name, serialize(Data.SerializationFlags.NONE))
 	Config.save_user_config()
 
 
 ## Loads the UI from the ui save file
 func load_ui() -> void:
-	deserialize(Utils.load_json_from_file(Config.ui_file_location, Config.ui_file_name))
+	deserialize(Utils.load_json_from_file(Config.ui_file_location, Config.ui_file_name), Data.SerializationFlags.NONE)
 
 
 ## Seralizes the interface into a Dictionary
-func serialize() -> Dictionary:
+func serialize(p_flags: Data.SerializationFlags) -> Dictionary[String, Variant]:
 	var serialize_data: Dictionary = {
 		"windows": {}
 	}
@@ -357,11 +354,13 @@ func serialize() -> Dictionary:
 	for window_uuid: String in _windows.get_left():
 		serialize_data.windows[window_uuid] = _windows.left(window_uuid).serialize()
 	
-	return serialize_data
+	return super.serialize(p_flags).merged(serialize_data)
 
 
 ## Deserializes the serialized data
-func deserialize(p_serialized_data) -> void:
+func deserialize(p_serialized_data: Dictionary, p_flags: Data.SerializationFlags) -> void:
+	super.deserialize(p_serialized_data, p_flags)
+	
 	var windows: Dictionary = type_convert(p_serialized_data.get("windows", {}), TYPE_DICTIONARY)
 	
 	for window_uuid: Variant in windows:
@@ -621,11 +620,6 @@ func take_screenshot() -> void:
 		
 		window.get_viewport().get_texture().get_image().save_png(file_name)
 		print("Screenshot saved as: ", file_name)
-
-
-## Returns the SettingsManager object for ClientInterface
-func get_settings() -> SettingsManager:
-	return _settings
 
 
 ## Quits the program

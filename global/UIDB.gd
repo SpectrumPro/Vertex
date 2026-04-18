@@ -2,7 +2,7 @@
 # This file is part of the Spectrum Lighting Controller, licensed under the GPL v3.0 or later.
 # See the LICENSE file for details.
 
-class_name CoreUIDB extends Node
+class_name CoreUIDB extends CoreGlobal
 ## Contains a list of all the UIPanel classes
 
 
@@ -100,6 +100,12 @@ var _class_icons: Dictionary[String, Texture2D] = {
 
 
 ## init
+func _init(p_uuid: String = "", ...p_args: Array[Variant]) -> void:
+	super._init(p_uuid, p_args)
+	_set_class_name("CoreUIDB")
+
+
+## ready
 func _ready() -> void:
 	Config.load_config("res://UIDBConfig.gd")
 	
