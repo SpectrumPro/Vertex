@@ -6,8 +6,8 @@ class_name SearchableClassTree extends UIComponent
 ## A tree containing a list of classes that are searchable
 
 
-## Emitted when the SearchMode is changed
-signal search_mode_changed(mode: SearchMode)
+## Emitted when the class filter is changed, only emitted in SearchMode.OBJECT
+signal class_filter_changed(filter: String)
 
 ## Emitted when an object is selected
 signal object_selected(object: Object)
@@ -18,60 +18,61 @@ signal class_selected(classname: String)
 
 ## Enum for SearchMode
 enum SearchMode {
-	CLASS,		## Searching for classes
-	OBJECT,		## Searching for objects with a given class
-	COMBINED,	## Both class and object
+	NONE,		## No selected SearchMode
+	OBJECT,		## Search for objects in a GBCIndex
+	CLASS,		## Search for classes in a GBCIndex
 }
 
 
+## Min size of the second tree column
+const COLUMN_MIN_SIZE: int = 150
+
+
 ## The InheritanceTree
-@export var inheritance_tree: Tree
+@onready var _class_inhr_tree: Tree = %ClassInhrTree
 
 ## The SearchableTree
-@export var searchable_tree: Tree
-
-## The ObjectTree
-@export var object_tree: Tree
+@onready var _class_list: Tree = %ClassList
 
 ## The ObjectInheritanceTree
-@export var objecet_inheritance_tree: Tree 
+@onready var _objecet_inhr_tree: Tree = %ObjectInhrTree
 
-## Min size of the second tree column
-@export var column_min_size: int = 150
+## The ObjectTree
+@onready var _object_list: Tree = %ObjectList
 
 
 ## The ClassTreeConfig
 var _config: GBCIndexConfig
 
-## RefMap for TreeItem: "ClassName". for inheritance_tree and searchable_tree
+## RefMap for TreeItem: "ClassName". for _class_inhr_tree and _class_list
 var _class_items: RefMap = RefMap.new()
 
-## RefMap for TreeItem: Object. for object_tree
+## RefMap for TreeItem: Object. for _object_list
 var _object_items: RefMap = RefMap.new()
 
-## RefMap for TreeItem: Object's "ClassName". For objecet_inheritance_tree
+## RefMap for TreeItem: Object's "ClassName". For _objecet_inhr_tree
 var _object_inher_class_items: RefMap = RefMap.new()
 
-## RefMap for TreeItem: Object. For objecet_inheritance_tree
+## RefMap for TreeItem: Object. For _objecet_inhr_tree
 var _object_inher_object_items: RefMap = RefMap.new()
 
 ## Set for all visable object_inher_class_items
 var _visable_object_inher_class_items: Set = Set.new()
 
-## The null item in the inheritance_tree
+## The null item in the _class_inhr_tree
 var _inheritance_tree_null: TreeItem
 
 ## All tree nulls
 var _tree_nulls: RefMap
 
 ## Current search mode
-var _search_mode: SearchMode = SearchMode.COMBINED
+var _search_mode: SearchMode = SearchMode.NONE
 
-## The classname of SearchMode.OBJECT
-var _search_mode_object_class: String = ""
+## The class filter given when selecting the SearchMode
+var _class_filter: String = ""
 
-## The class filter when using SearchMode.CLASS
-var _search_mode_class_filter: String = ""
+## The class filter defined when a searchmode was selectod.
+var _orignal_class_filter: String = ""
 
 ## The current search text
 var _search_text: String = ""
@@ -86,31 +87,55 @@ func _init() -> void:
 ## Ready
 func _ready() -> void:
 	_tree_nulls = RefMap.from({
-		inheritance_tree: null,
-		searchable_tree: null,
-		object_tree: null,
-		objecet_inheritance_tree: null
+		_class_inhr_tree: null,
+		_class_list: null,
+		_object_list: null,
+		_objecet_inhr_tree: null
 	})
 	
 	_tree_nulls.get_left().map(func (tree: Tree):
 		tree.set_column_expand(1, false)
-		tree.set_column_custom_minimum_width(1, column_min_size)
+		tree.set_column_custom_minimum_width(1, COLUMN_MIN_SIZE)
 	)
 
 
-## Gets the selected object class for SearchMode.OBJECT
-func get_object_class() -> String:
-	return _search_mode_object_class
+## Loads a ClassTreeConfig
+func load_config(p_config: GBCIndexConfig) -> void:
+	_config = p_config
+	
+	_class_inhr_tree.clear()
+	_class_list.clear()
+	_objecet_inhr_tree.clear()
+	
+	_class_inhr_tree.create_item()
+	_class_list.create_item()
+	_objecet_inhr_tree.create_item()
+	
+	_inheritance_tree_null = _class_inhr_tree.get_root().create_child()
+	_inheritance_tree_null.set_text(0, "null")
+	_inheritance_tree_null.set_text(1, "Empty")
+	_inheritance_tree_null.set_icon(0, UIDB.get_class_icon("null"))
+	
+	var class_tree: Dictionary = _config.get_class_listdb().get_global_class_tree()
+	if not _class_inhr_tree:
+		return
+	
+	_climb_branch_tree(_class_inhr_tree.get_root(), _objecet_inhr_tree.get_root(), class_tree, class_tree.keys()[0])
 
 
-## Gets the filter used for SearchMode.CLASS
-func get_class_filter() -> String:
-	return _search_mode_class_filter
+## Sets the search mode to SearchMode.CLASS
+func search_mode_class(p_class_filter: String = "") -> void:
+	_search_mode = SearchMode.CLASS
+	_class_filter = p_class_filter
+	_orignal_class_filter = p_class_filter
+	
+	search_for("")
 
 
-## Focuses the current Tree
-func focus() -> void:
-	_get_active_tree().grab_focus()
+## Sets the search mode to SearchMode.OBJECT
+func search_mode_object(p_classname: String = "") -> void:
+	_orignal_class_filter = p_classname
+	_set_search_mode_object(p_classname)
 
 
 ## Selectes the next item in the tree
@@ -149,9 +174,6 @@ func activate_selected() -> void:
 		object_selected.emit(null)
 	
 	match _search_mode:
-		SearchMode.COMBINED:
-			search_mode_object(selected.get_text(0))
-		
 		SearchMode.CLASS:
 			class_selected.emit(selected.get_text(0))
 		
@@ -160,109 +182,19 @@ func activate_selected() -> void:
 		
 		SearchMode.OBJECT when not _search_text:
 			if _object_inher_class_items.has_left(selected):
-				search_mode_object(_object_inher_class_items.left(selected))
+				var classname: String = _object_inher_class_items.left(selected)
+				
+				if not _is_higher_then_filer(classname):
+					_set_search_mode_object(classname)
+					class_filter_changed.emit(classname)
+			
 			else:
 				object_selected.emit(_object_inher_object_items.left(selected))
 
 
-## Loads a ClassTreeConfig
-func load_config(p_config: GBCIndexConfig) -> void:
-	_config = p_config
-	
-	inheritance_tree.clear()
-	searchable_tree.clear()
-	objecet_inheritance_tree.clear()
-	
-	inheritance_tree.create_item()
-	searchable_tree.create_item()
-	objecet_inheritance_tree.create_item()
-	
-	_inheritance_tree_null = inheritance_tree.get_root().create_child()
-	_inheritance_tree_null.set_text(0, "null")
-	_inheritance_tree_null.set_text(1, "Empty")
-	_inheritance_tree_null.set_icon(0, UIDB.get_class_icon("null"))
-	
-	var class_tree: Dictionary = _config.get_class_listdb().get_global_class_tree()
-	_climb_branch_tree(inheritance_tree.get_root(), objecet_inheritance_tree.get_root(), class_tree, class_tree.keys()[0])
-
-
-## Gets the loaded config
-func get_config() -> GBCIndexConfig:
-	return _config
-
-
-## Sets the search mode to SearchMode.CLASS
-func search_mode_class(p_class_filter: String = "") -> void:
-	_search_mode = SearchMode.CLASS
-	_search_mode_class_filter = p_class_filter
-	
-	search_for("")
-	search_mode_changed.emit(_search_mode)
-
-
-## Sets the search mode to SearchMode.CLASS
-func search_mode_combined() -> void:
-	_search_mode = SearchMode.COMBINED
-	
-	search_for("")
-	search_mode_changed.emit(_search_mode)
-
-
-## Sets the search mode to SearchMode.OBJECT
-func search_mode_object(p_classname: String = "") -> void:
-	if not p_classname:
-		p_classname = _config.get_base_class().get_global_name()
-	
-	_search_mode = SearchMode.OBJECT
-	_search_mode_object_class = p_classname
-	
-	object_tree.clear()
-	object_tree.create_item()
-	_object_items.clear()
-	
-	for item: TreeItem in _object_inher_object_items.get_left():
-		item.free()
-	
-	for item: TreeItem in _visable_object_inher_class_items.get_as_array():
-		item.set_visible(false)
-	
-	_visable_object_inher_class_items.clear()
-	_object_inher_object_items.clear()
-	
-	for object: Object in _config.get_objectdb().get_components_by_classname(p_classname):
-		var classname: String = object.get_class_name()
-		if _config.get_class_listdb().is_class_hidden(classname):
-			continue
-		
-		var flat_object_item: TreeItem = object_tree.create_item()
-		_object_items.map(flat_object_item, object)
-		
-		flat_object_item.set_text(0, object.get_uname())
-		flat_object_item.set_icon(0, UIDB.get_class_icon(classname))
-		
-		flat_object_item.set_custom_color(1, Color(0x919191ff))
-		flat_object_item.set_text(1, classname)
-		
-		var inhr_class_item: TreeItem = _object_inher_class_items.right(classname)
-		var inhr_object_item: TreeItem = inhr_class_item.create_child()
-		
-		_object_inher_object_items.map(inhr_object_item, object)
-		_visable_object_inher_class_items.add(inhr_class_item)
-		
-		inhr_object_item.set_text(0, object.get_uname())
-		inhr_object_item.set_icon(0, UIDB.get_class_icon(classname))
-		
-		inhr_object_item.set_custom_color(1, Color(0x919191ff))
-		inhr_object_item.set_text(1, "Object")
-	
-	for item: TreeItem in _visable_object_inher_class_items.get_as_array():
-		while is_instance_valid(item) and not item.is_visible():
-			item.set_visible(true)
-			_visable_object_inher_class_items.add(item)
-			item = item.get_parent()
-	
-	search_for("")
-	search_mode_changed.emit(_search_mode)
+## Focuses the current Tree
+func focus() -> void:
+	_get_active_tree().grab_focus()
 
 
 ## Searches for the given text
@@ -273,33 +205,33 @@ func search_for(p_text: String) -> void:
 	
 	_search_text = p_text.to_lower()
 	
-	object_tree.hide()
-	objecet_inheritance_tree.hide()
-	searchable_tree.hide()
-	inheritance_tree.hide()
+	_object_list.hide()
+	_objecet_inhr_tree.hide()
+	_class_list.hide()
+	_class_inhr_tree.hide()
 	
 	match _search_mode:
 		SearchMode.CLASS when _search_text == "":
-			inheritance_tree.show()
-			search_tree = inheritance_tree
+			_class_inhr_tree.show()
+			search_tree = _class_inhr_tree
 			
-			for item: TreeItem in inheritance_tree.get_root().get_children():
-				if item.get_text(0) == _search_mode_class_filter and _search_mode_class_filter:
+			for item: TreeItem in _class_inhr_tree.get_root().get_children():
+				if item.get_text(0) == _class_filter and _class_filter:
 					item_to_select = item
 					item.set_visible(true)
 				else:
 					item.set_visible(false)
 			
-		SearchMode.COMBINED, SearchMode.CLASS:
+		SearchMode.CLASS:
 			if not _search_text:
-				inheritance_tree.show()
+				_class_inhr_tree.show()
 				return
 			
-			searchable_tree.show()
-			search_tree = searchable_tree
+			_class_list.show()
+			search_tree = _class_list
 			
 			for classname: String in _class_items.get_right():
-				var should_show: bool = _search_mode == SearchMode.CLASS and _config.get_class_listdb().does_class_inherit(classname, _search_mode_class_filter)
+				var should_show: bool = _search_mode == SearchMode.CLASS and _config.get_class_listdb().does_class_inherit(classname, _class_filter)
 				items_to_display.append({
 					"item_name": classname,
 					"similarity": classname.similarity(_search_text) if _search_text else 0.0,
@@ -309,11 +241,11 @@ func search_for(p_text: String) -> void:
 		
 		SearchMode.OBJECT:
 			if not _search_text:
-				objecet_inheritance_tree.show()
+				_objecet_inhr_tree.show()
 				return
 			
-			object_tree.show()
-			search_tree = object_tree
+			_object_list.show()
+			search_tree = _object_list
 			
 			for object: Object in _object_items.get_right():
 				var object_name: String = object.get_uname()
@@ -347,6 +279,16 @@ func search_for(p_text: String) -> void:
 		search_tree.ensure_cursor_is_visible()
 	
 	_show_null()
+
+
+## Gets the loaded config
+func get_config() -> GBCIndexConfig:
+	return _config
+
+
+## Gets the filter used for SearchMode.CLASS
+func get_class_filter() -> String:
+	return _class_filter
 
 
 ## Shows a "null" item on each tree
@@ -400,7 +342,7 @@ func _climb_branch_tree(p_class_inhr_tree: TreeItem, p_object_inhr: TreeItem, p_
 			_climb_branch_tree.call(class_inhr_branch, object_inhr_branch, value, classname)
 		
 		elif value is Script:
-			var flat_item: TreeItem = searchable_tree.create_item()
+			var flat_item: TreeItem = _class_list.create_item()
 			
 			flat_item.set_text(0, classname)
 			flat_item.set_icon(0, UIDB.get_class_icon(classname))
@@ -411,20 +353,88 @@ func _climb_branch_tree(p_class_inhr_tree: TreeItem, p_object_inhr: TreeItem, p_
 			_class_items.map(flat_item, classname)
 
 
+## Sets the SearchMode to OBJECT
+func _set_search_mode_object(p_class_filter: String) -> void:
+	if not p_class_filter:
+		p_class_filter = _config.get_base_class().get_global_name()
+	
+	_search_mode = SearchMode.OBJECT
+	_class_filter = p_class_filter
+	
+	_object_list.clear()
+	_object_list.create_item()
+	_object_items.clear()
+	
+	for item: TreeItem in _object_inher_object_items.get_left():
+		item.free()
+	
+	for item: TreeItem in _visable_object_inher_class_items.get_as_array():
+		item.set_visible(false)
+	
+	_visable_object_inher_class_items.clear()
+	_object_inher_object_items.clear()
+	
+	for object: Object in _config.get_objectdb().get_components_by_classname(p_class_filter):
+		_add_object_tree_item(object)
+	
+	for item: TreeItem in _visable_object_inher_class_items.get_as_array():
+		while is_instance_valid(item) and not item.is_visible():
+			item.set_visible(true)
+			_visable_object_inher_class_items.add(item)
+			item = item.get_parent()
+	
+	search_for("")
+
+
+## Adds an item to the object tree
+func _add_object_tree_item(p_object: Object) -> void:
+	var classname: String = p_object.get_class_name()
+	if _config.get_class_listdb().is_class_hidden(classname):
+		return
+	
+	var flat_object_item: TreeItem = _object_list.create_item()
+	_object_items.map(flat_object_item, p_object)
+	
+	flat_object_item.set_text(0, p_object.get_uname())
+	flat_object_item.set_icon(0, UIDB.get_class_icon(classname))
+	
+	flat_object_item.set_custom_color(1, Color(0x919191ff))
+	flat_object_item.set_text(1, classname)
+	
+	var inhr_class_item: TreeItem = _object_inher_class_items.right(classname)
+	var inhr_object_item: TreeItem = inhr_class_item.create_child()
+	
+	_object_inher_object_items.map(inhr_object_item, p_object)
+	_visable_object_inher_class_items.add(inhr_class_item)
+	
+	inhr_object_item.set_text(0, p_object.get_uname())
+	inhr_object_item.set_icon(0, UIDB.get_class_icon(classname))
+	
+	inhr_object_item.set_custom_color(1, Color(0x919191ff))
+	inhr_object_item.set_text(1, "Object")
+
+
 ## Gets the active tree
 func _get_active_tree() -> Tree:
 	match _search_mode:
-		SearchMode.CLASS, SearchMode.COMBINED when _search_text:
-			return searchable_tree
+		SearchMode.CLASS when _search_text:
+			return _class_list
 		
-		SearchMode.CLASS:
-			return inheritance_tree
+		SearchMode.CLASS when not _search_text:
+			return _class_inhr_tree
 		
-		SearchMode.COMBINED:
-			return inheritance_tree
+		SearchMode.OBJECT when _search_text:
+			return _object_list
 		
 		SearchMode.OBJECT when not _search_text:
-			return objecet_inheritance_tree
+			return _objecet_inhr_tree
 		
 		_:
-			return object_tree
+			return null
+
+## Returns true if the given class is higher then the highest class defined when the object selector was opened
+func _is_higher_then_filer(p_class: String) -> bool:
+	if _orignal_class_filter and not _config.get_class_listdb().does_class_inherit(p_class, _orignal_class_filter):
+		return true
+	else:
+		return false

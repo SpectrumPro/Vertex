@@ -52,6 +52,9 @@ var _previous_select_mode: SelectMode = SelectMode.NONE
 ## RefMap for GBCIndex: TreeItem
 var _gbc_index_items: RefMap = RefMap.new()
 
+## The class filter defined when this UIObjectSelector was opened, back button wont proceed higher then this class
+var _min_class_filter: String
+
 
 ## init
 func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
@@ -80,15 +83,15 @@ func _ready() -> void:
 		var config: GBCIndexConfig = Data.get_gbc_config(gbc_class)
 		var class_tree: SearchableClassTree = UIDB.instance_component(SearchableClassTree)
 		
-		class_tree.search_mode_changed.connect(_on_search_mode_changed.bind(class_tree))
+		class_tree.class_filter_changed.connect(_on_class_filter_changed.bind(class_tree))
 		class_tree.object_selected.connect(accept)
 		class_tree.class_selected.connect(accept)
 		
-		class_tree.load_config(config)
-		class_tree.hide()
-		
 		_index_container.add_child(class_tree)
 		_indexes.map(gbc_class, class_tree)
+		
+		class_tree.load_config(config)
+		class_tree.hide()
 		
 		var gbc_item: TreeItem = _gbc_index_tree.create_item()
 		
@@ -136,6 +139,7 @@ func select_mode_object(p_gbc_class: Variant, p_class_filter: Variant = "") -> v
 func select_mode_class(p_gbc_class: Variant, p_class_filter: Variant = "") -> void:
 	_previous_select_mode = SelectMode.CLASS
 	set_custom_accepted_signal(class_selected)
+	
 	_set_select_mode_class(p_gbc_class, p_class_filter)
 
 
@@ -149,6 +153,7 @@ func reset() -> void:
 	
 	_gbc_index_tree.hide()
 	_current_index = null
+	_min_class_filter = ""
 	get_edit_controls().back_button.set_disabled(true)
 
 
@@ -171,10 +176,22 @@ func go_back() -> void:
 	if not is_instance_valid(_current_index):
 		return
 	
-	var current_filter: String = _current_index.get_object_class()
-	var parent_class: String = _current_index.get_config().get_class_listdb().get_class_parent(current_filter)
+	var current_filter: String = _current_index.get_class_filter()
+	var classdb: CoreClassListDB = _current_index.get_config().get_class_listdb()
+	var parent_class: String = classdb.get_class_parent(current_filter)
 	
-	_current_index.search_mode_object(parent_class)
+	match _previous_select_mode:
+		SelectMode.GBC_OBJECT when not parent_class:
+			_set_select_mode_gbc_object()
+		SelectMode.GBC_CLASS when not parent_class:
+			_set_select_mode_gbc_class()
+		_:
+			if _is_higher_then_filer(parent_class, classdb):
+				get_edit_controls().back_button.set_disabled(true)
+			else:
+				_current_index.search_mode_object(parent_class)
+			
+			_update_menu_bar_items(_current_index)
 
 
 ## Sets the SelectMode to SelectMode.GBC_INDEX
@@ -204,6 +221,7 @@ func _set_select_mode_gbc_class() -> void:
 func _set_select_mode_object(p_gbc_class: Variant, p_class_filter: Variant = "") -> void:
 	reset()
 	_select_mode = SelectMode.OBJECT
+	_min_class_filter = p_class_filter
 	
 	_search_bar.set_placeholder("Select Object")
 	
@@ -215,6 +233,7 @@ func _set_select_mode_object(p_gbc_class: Variant, p_class_filter: Variant = "")
 func _set_select_mode_class(p_gbc_class: Variant, p_class_filter: Variant = "") -> void:
 	reset()
 	_select_mode = SelectMode.CLASS
+	_min_class_filter = p_class_filter
 	
 	_search_bar.set_placeholder("Select Class")
 	
@@ -254,6 +273,7 @@ func _set_index(p_class: Variant, p_class_filter: Variant = "") -> bool:
 		SelectMode.CLASS:
 			_current_index.search_mode_class(p_class_filter)
 	
+	_update_menu_bar_items(_current_index)
 	return true
 
 
@@ -279,39 +299,44 @@ func _select_prev(p_tree: Tree) -> void:
 	p_tree.ensure_cursor_is_visible()
 
 
-## Called when the SearchMode is changed in a SearchableClassTree
-func _on_search_mode_changed(p_search_mode: SearchableClassTree.SearchMode, p_class_tree: SearchableClassTree) -> void:
-	if p_class_tree != _current_index:
-		return
+## Updates the search bar tag and back button
+func _update_menu_bar_items(p_class_tree: SearchableClassTree) -> void:
+	var class_filter: String = p_class_tree.get_class_filter()
+	var is_top_level: bool = class_filter == p_class_tree.get_config().get_base_class().get_global_name()
 	
-	match p_search_mode:
-		SearchableClassTree.SearchMode.OBJECT:
-			_search_bar.clear_all()
-			_add_filter_tag(p_class_tree)
-			
-			_search_bar.grab_focus()
-			_search_bar.edit()
-			
-			var is_top_level: bool = p_class_tree.get_object_class() == p_class_tree.get_config().get_base_class().get_global_name()
-			get_edit_controls().back_button.set_disabled(is_top_level)
-		
+	_search_bar.clear_all()
+	_add_filter_tag(p_class_tree)
+	
+	_search_bar.grab_focus()
+	_search_bar.edit()
+	
+	match _previous_select_mode:
+		SelectMode.GBC_OBJECT, SelectMode.GBC_CLASS:
+			get_edit_controls().back_button.set_disabled(false)
 		_:
-			get_edit_controls().back_button.set_disabled(true)
+			if _is_higher_then_filer(class_filter, p_class_tree.get_config().get_class_listdb(), true):
+				get_edit_controls().back_button.set_disabled(true)
+				
+			else:
+				get_edit_controls().back_button.set_disabled(is_top_level)
 
 
 ## Adds a tag to the TaggedLineEdit for the current clas filter
 func _add_filter_tag(p_class_tree: SearchableClassTree) -> void:
-	var text: String = "@"
+	var text: String = ""
 	var config: GBCIndexConfig = p_class_tree.get_config()
-	var class_filter: String = p_class_tree.get_object_class()
+	var class_filter: String = p_class_tree.get_class_filter()
 	
 	if not class_filter:
 		class_filter = str(config.get_base_class().get_global_name())
 	
 	for classname: String in config.get_class_listdb().get_class_inheritance_tree(class_filter):
 		text += classname + "/"
-		
-	_search_bar.create_tag(text)
+	
+	if not text:
+		text = class_filter
+	
+	_search_bar.create_tag("@" + text)
 
 
 ## Called when text is submitted
@@ -332,6 +357,22 @@ func _handle_activated() -> void:
 		
 		SelectMode.OBJECT, SelectMode.CLASS when is_instance_valid(_current_index):
 			_current_index.activate_selected()
+
+
+## Returns true if the given class is higher then the highest class defined when the object selector was opened
+func _is_higher_then_filer(p_class: String, p_class_db: CoreClassListDB, p_true_if_match: bool = false) -> bool:
+	if _min_class_filter or not p_class and not p_class_db.does_class_inherit(p_class, _min_class_filter) or (p_class == _min_class_filter and p_true_if_match):
+		return true
+	else:
+		return false
+
+
+## Called when the SearchMode is changed in a SearchableClassTree
+func _on_class_filter_changed(p_class_filter: String, p_class_tree: SearchableClassTree) -> void:
+	if p_class_tree != _current_index:
+		return
+	
+	_update_menu_bar_items(p_class_tree)
 
 
 ## Called when a tag is removed from the search bar
