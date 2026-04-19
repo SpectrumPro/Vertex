@@ -196,28 +196,32 @@ func show_window_popup(p_popup_type: Script, p_source: Node, p_setter_arg: Varia
 		config.setter_callables[window].call(p_setter_arg)
 	
 	if not resolve_signal.is_null():
-		if config.resolve_connections.has(window) and resolve_signal.is_connected(config.resolve_connections[window]):
-			resolve_signal.disconnect(config.resolve_connections[window])
+		if config.resolve_connections.has(window) and config.resolve_connections[window][1].is_connected(config.resolve_connections[window][0]):
+			config.resolve_connections[window][1].disconnect(config.resolve_connections[window][0])
 		
-		config.resolve_connections[window] = (func (...p_args: Array):
+		config.resolve_connections[window] = [(func (...p_args: Array):
 			hide_window_popup(p_popup_type, window)
-			resolve_signal.disconnect(config.resolve_connections[window])
+			resolve_signal.disconnect(config.resolve_connections[window][0])
+			
+			config.reject_connections[window][1].disconnect(config.reject_connections[window][0])
 			config.promises[window].resolve(p_args)
-		)
+		), resolve_signal]
 		
-		resolve_signal.connect(config.resolve_connections[window])
+		resolve_signal.connect(config.resolve_connections[window][0])
 	
 	if not reject_signal.is_null():
-		if config.reject_connections.has(window) and reject_signal.is_connected(config.reject_connections[window]):
-			reject_signal.disconnect(config.reject_connections[window])
+		if config.reject_connections.has(window) and config.reject_connections[window][1].is_connected(config.reject_connections[window][0]):
+			config.reject_connections[window][1].disconnect(config.reject_connections[window][0])
 		
-		config.reject_connections[window] = (func (...p_args: Array):
+		config.reject_connections[window] = [(func (...p_args: Array):
 			hide_window_popup(p_popup_type, window)
-			reject_signal.disconnect(config.reject_connections[window])
+			reject_signal.disconnect(config.reject_connections[window][0])
+			
+			config.resolve_connections[window][1].disconnect(config.resolve_connections[window][0])
 			config.promises[window].resolve(p_args)
-		)
+		), reject_signal]
 		
-		reject_signal.connect(config.reject_connections[window])
+		reject_signal.connect(config.reject_connections[window][0])
 	
 	config.active_state[window] = true
 	config.promises[window] = promise
@@ -789,10 +793,10 @@ class PopupConfig:
 	var promises: Dictionary[Window, Promise]
 	
 	## Callables connected to the panels resolve signal
-	var resolve_connections: Dictionary[Window, Callable]
+	var resolve_connections: Dictionary[Window, Array]
 	
 	## Callables connected to the panels reject signal
-	var reject_connections: Dictionary[Window, Callable]
+	var reject_connections: Dictionary[Window, Array]
 	
 	## Constructor
 	func _init(p_node_name: String = "", p_setter: String = "") -> void:
