@@ -125,8 +125,10 @@ func set_enabled(p_enabled) -> void:
 
 ## Called if ComponentDB find the component
 func _on_component_found(p_component: Object) -> void:
-	if p_component.get_class_tree().has(class_filter.get_global_name()):
-		set_component(p_component)
+	if class_filter and not p_component.get_class_tree().has(class_filter.get_global_name()):
+		return
+	
+	set_component(p_component)
 
 
 ## Called when the components name is changed
