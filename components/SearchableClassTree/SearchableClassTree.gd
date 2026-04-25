@@ -27,6 +27,9 @@ enum SearchMode {
 ## Min size of the second tree column
 const COLUMN_MIN_SIZE: int = 150
 
+## Dim text color for the tree
+const DIM_TEXT_COLOR: Color = Color(0x919191ff)
+
 
 ## The InheritanceTree
 @onready var _class_inhr_tree: Tree = %ClassInhrTree
@@ -44,8 +47,11 @@ const COLUMN_MIN_SIZE: int = 150
 ## The ClassTreeConfig
 var _config: GBCIndexConfig
 
-## RefMap for TreeItem: "ClassName". for _class_inhr_tree and _class_list
-var _class_items: RefMap = RefMap.new()
+## RefMap for TreeItem: "ClassName". for _class_list
+var _class_list_items: RefMap = RefMap.new()
+
+## RefMap for TreeItem: "ClassName". for _class_inhr_tree
+var _class_inhr_items: RefMap = RefMap.new()
 
 ## RefMap for TreeItem: Object. for _object_list
 var _object_items: RefMap = RefMap.new()
@@ -58,9 +64,6 @@ var _object_inher_object_items: RefMap = RefMap.new()
 
 ## Set for all visable object_inher_class_items
 var _visable_object_inher_class_items: Set = Set.new()
-
-## The null item in the _class_inhr_tree
-var _inheritance_tree_null: TreeItem
 
 ## All tree nulls
 var _tree_nulls: RefMap
@@ -89,8 +92,8 @@ func _ready() -> void:
 	_tree_nulls = RefMap.from({
 		_class_inhr_tree: null,
 		_class_list: null,
+		_objecet_inhr_tree: null,
 		_object_list: null,
-		_objecet_inhr_tree: null
 	})
 	
 	_tree_nulls.get_left().map(func (tree: Tree):
@@ -110,11 +113,6 @@ func load_config(p_config: GBCIndexConfig) -> void:
 	_class_inhr_tree.create_item()
 	_class_list.create_item()
 	_objecet_inhr_tree.create_item()
-	
-	_inheritance_tree_null = _class_inhr_tree.get_root().create_child()
-	_inheritance_tree_null.set_text(0, "null")
-	_inheritance_tree_null.set_text(1, "Empty")
-	_inheritance_tree_null.set_icon(0, UIDB.get_class_icon("null"))
 	
 	var class_tree: Dictionary = _config.get_class_listdb().get_global_class_tree()
 	if not _class_inhr_tree:
@@ -175,7 +173,10 @@ func activate_selected() -> void:
 	
 	match _search_mode:
 		SearchMode.CLASS:
-			class_selected.emit(selected.get_text(0))
+			var classname: String = selected.get_text(0)
+			
+			if _config.get_class_listdb().does_class_inherit(classname, _class_filter):
+				class_selected.emit(classname)
 		
 		SearchMode.OBJECT when _search_text:
 			object_selected.emit(_object_items.left(selected))
@@ -211,31 +212,37 @@ func search_for(p_text: String) -> void:
 	_class_inhr_tree.hide()
 	
 	match _search_mode:
-		SearchMode.CLASS when _search_text == "":
+		SearchMode.CLASS when not _search_text:
 			_class_inhr_tree.show()
 			search_tree = _class_inhr_tree
 			
-			for item: TreeItem in _class_inhr_tree.get_root().get_children():
-				if item.get_text(0) == _class_filter and _class_filter:
-					item_to_select = item
+			for classname: String in _class_inhr_items.get_right():
+				var item: TreeItem = _class_inhr_items.right(classname)
+				
+				if _config.get_class_listdb().does_class_inherit(classname, _class_filter):
 					item.set_visible(true)
+					
+					item.clear_custom_color(0)
+					item.set_icon_modulate(0, Color.WHITE)
+				
+				elif _config.get_class_listdb().does_parent_have(classname, _class_filter):
+					item.set_visible(true)
+					
+					item.set_custom_color(0, DIM_TEXT_COLOR)
+					item.set_icon_modulate(0, DIM_TEXT_COLOR)
 				else:
 					item.set_visible(false)
 			
-		SearchMode.CLASS:
-			if not _search_text:
-				_class_inhr_tree.show()
-				return
-			
+		SearchMode.CLASS when _search_text:
 			_class_list.show()
 			search_tree = _class_list
 			
-			for classname: String in _class_items.get_right():
+			for classname: String in _class_list_items.get_right():
 				var should_show: bool = _search_mode == SearchMode.CLASS and _config.get_class_listdb().does_class_inherit(classname, _class_filter)
 				items_to_display.append({
 					"item_name": classname,
 					"similarity": classname.similarity(_search_text) if _search_text else 0.0,
-					"tree_item": _class_items.right(classname),
+					"tree_item": _class_list_items.right(classname),
 					"show": should_show
 				})
 		
@@ -317,13 +324,18 @@ func _climb_branch_tree(p_class_inhr_tree: TreeItem, p_object_inhr: TreeItem, p_
 			continue
 		
 		var value: Variant = p_data_branch[classname]
-		var class_inhr_branch = p_class_inhr_tree.create_child()
+		var class_inhr_branch: TreeItem
 		
-		class_inhr_branch.set_text(0, classname)
-		class_inhr_branch.set_icon(0, UIDB.get_class_icon(classname))
-		
-		class_inhr_branch.set_custom_color(1, Color(0x919191ff))
-		class_inhr_branch.set_text(1, "Class")
+		if not _class_inhr_items.has_right(classname):
+			class_inhr_branch = p_class_inhr_tree.create_child()
+			
+			class_inhr_branch.set_text(0, classname)
+			class_inhr_branch.set_icon(0, UIDB.get_class_icon(classname))
+			
+			class_inhr_branch.set_custom_color(1, DIM_TEXT_COLOR)
+			class_inhr_branch.set_text(1, "Class")
+			
+			_class_inhr_items.map(class_inhr_branch, classname)
 		
 		var object_inhr_branch = p_object_inhr.create_child()
 		_object_inher_class_items.map(object_inhr_branch, classname)
@@ -332,10 +344,10 @@ func _climb_branch_tree(p_class_inhr_tree: TreeItem, p_object_inhr: TreeItem, p_
 		object_inhr_branch.set_text(0, classname)
 		object_inhr_branch.set_icon(0, UIDB.get_class_icon(classname))
 		
-		object_inhr_branch.set_icon_modulate(0, Color(0x919191ff))
-		object_inhr_branch.set_custom_color(0, Color(0x919191ff))
+		object_inhr_branch.set_icon_modulate(0, DIM_TEXT_COLOR)
+		object_inhr_branch.set_custom_color(0, DIM_TEXT_COLOR)
 		
-		object_inhr_branch.set_custom_color(1, Color(0x919191ff))
+		object_inhr_branch.set_custom_color(1, DIM_TEXT_COLOR)
 		object_inhr_branch.set_text(1, "Class")
 		
 		if value is Dictionary:
@@ -347,10 +359,10 @@ func _climb_branch_tree(p_class_inhr_tree: TreeItem, p_object_inhr: TreeItem, p_
 			flat_item.set_text(0, classname)
 			flat_item.set_icon(0, UIDB.get_class_icon(classname))
 			
-			flat_item.set_custom_color(1, Color(0x919191ff))
+			flat_item.set_custom_color(1, DIM_TEXT_COLOR)
 			flat_item.set_text(1, p_previous_classname)
 			
-			_class_items.map(flat_item, classname)
+			_class_list_items.map(flat_item, classname)
 
 
 ## Sets the SearchMode to OBJECT
@@ -398,7 +410,7 @@ func _add_object_tree_item(p_object: Object) -> void:
 	flat_object_item.set_text(0, p_object.get_uname())
 	flat_object_item.set_icon(0, UIDB.get_class_icon(classname))
 	
-	flat_object_item.set_custom_color(1, Color(0x919191ff))
+	flat_object_item.set_custom_color(1, DIM_TEXT_COLOR)
 	flat_object_item.set_text(1, classname)
 	
 	var inhr_class_item: TreeItem = _object_inher_class_items.right(classname)
@@ -410,7 +422,7 @@ func _add_object_tree_item(p_object: Object) -> void:
 	inhr_object_item.set_text(0, p_object.get_uname())
 	inhr_object_item.set_icon(0, UIDB.get_class_icon(classname))
 	
-	inhr_object_item.set_custom_color(1, Color(0x919191ff))
+	inhr_object_item.set_custom_color(1, DIM_TEXT_COLOR)
 	inhr_object_item.set_text(1, "Object")
 
 
