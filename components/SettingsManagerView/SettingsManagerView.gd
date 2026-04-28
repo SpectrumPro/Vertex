@@ -72,6 +72,10 @@ func set_manager(p_manager: SettingsManager) -> void:
 				
 				_view_container.add_child(manager_view)
 				manager_view.set_manager(module.get_getter().call())
+			
+			Data.Type.ACTION:
+				pass
+			
 			_:
 				if module.get_visual_category() in _views_by_class:
 					view = _views_by_class[module.get_visual_category()]
