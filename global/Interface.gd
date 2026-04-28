@@ -203,7 +203,7 @@ func show_window_popup(p_popup_type: Script, p_source: Node, p_setter_arg: Varia
 			hide_window_popup(p_popup_type, window)
 			resolve_signal.disconnect(config.resolve_connections[window][0])
 			
-			if config.reject_connections[window][1].is_connected(config.reject_connections[window][0]):
+			if config.reject_connections.has(window) and config.reject_connections[window][1].is_connected(config.reject_connections[window][0]):
 				config.reject_connections[window][1].disconnect(config.reject_connections[window][0])
 			
 			config.promises[window].resolve(p_args)
@@ -219,7 +219,7 @@ func show_window_popup(p_popup_type: Script, p_source: Node, p_setter_arg: Varia
 			hide_window_popup(p_popup_type, window)
 			reject_signal.disconnect(config.reject_connections[window][0])
 			
-			if config.resolve_connections[window][1].is_connected(config.resolve_connections[window][0]):
+			if config.resolve_connections.has(window) and config.resolve_connections[window][1].is_connected(config.resolve_connections[window][0]):
 				config.resolve_connections[window][1].disconnect(config.resolve_connections[window][0])
 			
 			config.promises[window].resolve(p_args)
