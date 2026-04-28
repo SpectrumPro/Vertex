@@ -159,3 +159,14 @@ func _on_pressed() -> void:
 		Popups.ObjectSelector_gbc_object(self).then(func (p_component: Object):
 			set_component(p_component)
 		)
+
+
+## Called for all gui inputs on this button
+func _on_gui_input(p_event: InputEvent) -> void:
+	if p_event is InputEventMouseButton and p_event.is_pressed():
+		p_event = p_event as InputEventMouseButton
+		
+		match p_event.button_index:
+			MOUSE_BUTTON_RIGHT:
+				if enabled and is_instance_valid(_component):
+					Popups.USettingsManager(self, _component.get_settings())
