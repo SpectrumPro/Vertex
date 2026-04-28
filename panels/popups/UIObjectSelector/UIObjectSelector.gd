@@ -220,29 +220,27 @@ func _set_select_mode_gbc_class() -> void:
 ## Sets the SelectMode to SelectMode.OBJECT
 func _set_select_mode_object(p_gbc_class: Variant, p_class_filter: Variant = "") -> void:
 	reset()
-	_select_mode = SelectMode.OBJECT
-	_min_class_filter = p_class_filter
 	
+	_select_mode = SelectMode.OBJECT
 	_search_bar.set_placeholder("Select Object")
 	
-	_set_index(p_gbc_class, p_class_filter)
+	_set_index(p_gbc_class, p_class_filter, true)
 	focus.call_deferred()
 
 
 ## Sets the SelectMode to SelectMode.CLASS
 func _set_select_mode_class(p_gbc_class: Variant, p_class_filter: Variant = "") -> void:
 	reset()
-	_select_mode = SelectMode.CLASS
-	_min_class_filter = p_class_filter
 	
+	_select_mode = SelectMode.CLASS
 	_search_bar.set_placeholder("Select Class")
 	
-	_set_index(p_gbc_class, p_class_filter)
+	_set_index(p_gbc_class, p_class_filter, true)
 	focus.call_deferred()
 
 
 ## Sets the index by base script
-func _set_index(p_class: Variant, p_class_filter: Variant = "") -> bool:
+func _set_index(p_class: Variant, p_class_filter: Variant = "", p_set_min_filter: bool = false) -> bool:
 	if p_class is Script:
 		p_class = p_class.get_global_name()
 	
@@ -260,6 +258,9 @@ func _set_index(p_class: Variant, p_class_filter: Variant = "") -> bool:
 	
 	if _current_index:
 		_current_index.hide()
+	
+	if p_set_min_filter:
+		_min_class_filter = p_class_filter
 	
 	_search_bar.clear_tags()
 	_search_bar.clear()
