@@ -1048,14 +1048,14 @@ class Row extends Object:
 	
 	
 	## Recursively set visabilityu of sub rows
-	func _traverse_sub_rows_set_folded(p_rows: Array[Row], p_folded: bool):
+	func _traverse_sub_rows_set_folded(p_rows: Array[Row], p_parent_folded: bool):
 		for row: Row in p_rows:
-			row.get_side_bar_button().set_visible(not (_folded and not row.get_folded()))
+			row.get_side_bar_button().set_visible(not (p_parent_folded))
 			row._set_visable(not _folded)
 			
 			var sub_rows: Array[Row] = row.get_sub_rows()
 			if sub_rows:
-				_traverse_sub_rows_set_folded(sub_rows, p_folded)
+				_traverse_sub_rows_set_folded(sub_rows, p_parent_folded or row.get_folded())
 	
 	
 	## Called when an Object's name is changed on a SettingsModule with Data.Type.OBJECT
