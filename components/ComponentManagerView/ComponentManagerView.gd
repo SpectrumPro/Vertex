@@ -220,10 +220,13 @@ func _on_delete_button_pressed() -> void:
 	if not is_instance_valid(_child_manager):
 		return
 	
-	var selected: Object = _settings_manager_multi_view.get_selected_owner()
+	var child_manager: ChildManager = _child_manager
+	var selected: Array[Object] = _settings_manager_multi_view.get_selected_owners()
 	
-	if is_instance_valid(selected):
-		_child_manager.remove_child(selected)
+	Popups.confirm_delete_components(self, selected, false).then(func ():
+		if is_instance_valid(child_manager):
+			child_manager.remove_children(selected)
+	)
 
 
 ## Called when the DuplicateComponent Button is pressed
