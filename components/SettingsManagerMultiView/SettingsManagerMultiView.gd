@@ -116,9 +116,19 @@ func get_column_entrys() -> Array[String]:
 	return _column_entrys.duplicate()
 
 
-## Gets the current selected SettingsManager
+##0 Returns the last selected SettingsManager
 func get_selected_manager() -> SettingsManager:
 	return _selected_manager
+
+
+## Returns all selected SettingsManagers
+func get_selected_managers() -> Array[SettingsManager]:
+	var result: Array[SettingsManager]
+	
+	for selected: Table.Row in _table.get_selected_rows():
+		result.append(_manager_rows.left(selected))
+	
+	return result
 
 
 ## Gets the owner of the selected SettingsManager, or null
@@ -129,6 +139,16 @@ func get_selected_owner() -> Object:
 		return selected_manager.get_owner()
 	else:
 		return null
+
+
+## Returns the owners of all selected SettingsManagers
+func get_selected_owners() -> Array[Object]:
+	var result: Array[Object]
+	
+	for selected: Table.Row in _table.get_selected_rows():
+		result.append(_manager_rows.left(selected).get_owner())
+	
+	return result
 
 
 ## Sets the display icons state. a full reset() is needed to update already visable rows
