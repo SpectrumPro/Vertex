@@ -52,6 +52,9 @@ signal edit_request_none_module(p_selected_items: Dictionary[Row, Array])
 ## The Control node that contains the SelectBox
 @onready var _select_container: Control = %SelectContainer
 
+## The VBoxContainer containing the indexes
+@onready var _index_bar: VBoxContainer = %IndexBar
+
 
 ## All columns in the tree
 var _columns: Array[Column] 
@@ -286,6 +289,11 @@ func set_column_freeze(p_column_freeze: int) -> void:
 	column_freeze_changed.emit(_column_freeze)
 
 
+## Sets the visibility of the IndexBar
+func set_show_index_bar(p_show: bool) -> void:
+	_index_bar.set_visible(p_show)
+
+
 ## Gets the expand state
 func get_expand() -> bool:
 	return _expand
@@ -356,6 +364,11 @@ func get_freeze_title_container() -> HBoxContainer:
 ## Returns the SideBarContainer
 func get_side_bar_container() -> VBoxContainer:
 	return _side_bar_container
+
+
+## Returns the visability state of the IndexBar
+func get_show_index_bar() -> bool:
+	return _index_bar.is_visible()
 
 
 ## Returns True if there are selected items in the tree
