@@ -18,7 +18,7 @@ signal manager_selected(manager: SettingsManager)
 
 
 ## Defines what SettingsModule entrys to show in the Table
-var _column_entrys: Array[String] = ["name"]
+var _column_entrys: Array[String] = ["Name"]
 
 ## True if icons should be auto added based on an object type
 var _display_icons: bool = false

@@ -29,6 +29,9 @@ func _ready() -> void:
 	Interface.window_added.connect(_add_window)
 	Interface.window_removed.connect(_remove_window)
 	
+	settings_manager_multi_view.set_column_entrys(["Title"])
+	settings_manager_multi_view.reset()
+	
 	for window: UIWindow in Interface.get_all_windows():
 		_add_window(window)
 
