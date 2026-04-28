@@ -56,7 +56,7 @@ func set_component(p_object: Object) -> void:
 	
 	_object_connections.disconnect_object(_current_object)
 	_current_object = p_object
-	_object_connections.disconnect_object(_current_object)
+	_object_connections.connect_object(_current_object)
 	
 	get_component_button().set_component(p_object)
 	_component_manager.reset()
