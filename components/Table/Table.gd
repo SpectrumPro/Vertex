@@ -284,7 +284,10 @@ func set_column_freeze(p_column_freeze: int) -> void:
 		return
 	
 	_column_freeze = p_column_freeze
-	_freeze_tree_container.set_visible(bool(_column_freeze))
+	var is_enabled: bool = bool(_column_freeze)
+	
+	_freeze_tree_container.set_visible(is_enabled)
+	_core_tree.add_theme_constant_override("item_margin", 0 if is_enabled else 16)
 	
 	column_freeze_changed.emit(_column_freeze)
 
