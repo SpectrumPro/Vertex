@@ -76,13 +76,13 @@ func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
 
 ## ready
 func _ready() -> void:
-	var menu_bar: PanelMenuBar = %PanelMenuBar
+	var menu_bar: PanelMenuBar = get_node_or_null("%PanelMenuBar")
 	
 	if is_instance_valid(menu_bar):
-		set_menu_bar(%PanelMenuBar)
+		set_menu_bar(menu_bar)
 	else:
-		set_edit_controls(%EditControls)
-		set_component_button(%ComponentButton)
+		set_edit_controls(get_node_or_null("%EditControls"))
+		set_component_button(get_node_or_null("%ComponentButton"))
 	
 	set_edit_mode(false)
 	
