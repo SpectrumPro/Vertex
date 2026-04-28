@@ -53,6 +53,9 @@ func _ready() -> void:
 	set_show_close(show_close)
 	set_show_handle(show_handle)
 	
+	if Engine.is_editor_hint():
+		return
+	
 	Interface.resolve_requested.connect(_handle_resolve_request)
 	_handle_resolve_request(
 		Interface.get_current_resolve_type(), 
