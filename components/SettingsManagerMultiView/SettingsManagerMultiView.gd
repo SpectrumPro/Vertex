@@ -20,6 +20,9 @@ signal manager_selected(manager: SettingsManager)
 ## Defines what SettingsModule entrys to show in the Table
 var _column_entrys: Array[String] = ["Name"]
 
+## The column index to sort by
+var _sort_column: int = 0
+
 ## True if icons should be auto added based on an object type
 var _display_icons: bool = false
 
@@ -102,8 +105,16 @@ func reset() -> void:
 	_table.clear_columns()
 	_settings_manager_view.reset()
 	
-	for column_name: String in _column_entrys:
-		_table_columns.map(_table.add_column(column_name.capitalize(), Data.Type.NULL), column_name)
+	for column_index: int in range(_column_entrys.size()):
+		var column_name: String = _column_entrys[column_index]
+		var new_column: Table.Column = _table.add_column(column_name.capitalize(), Data.Type.NULL)
+		
+		if column_index == _sort_column:
+			_table.set_column_sort(new_column)
+		
+		_table_columns.map(new_column, column_name)
+	
+	
 
 
 ## Returns the display icons state

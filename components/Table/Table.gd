@@ -15,8 +15,18 @@ signal expand_changed(expand: bool)
 ## Emitted when the column freeze number is changed
 signal column_freeze_changed(column_freeze: int)
 
+## Emitted when the column being sorted by is changed
+signal column_sort_changed(column: Column, direction: SortDirection)
+
 ## Emitted when an edit is requested on data that is not of type SettingsModule
 signal edit_request_none_module(p_selected_items: Dictionary[Row, Array])
+
+
+## Enum for SortDirection
+enum SortDirection {
+	ASCENDING,		## Sort A-Z
+	DESCENDING		## Sort Z-A
+}
 
 
 ## The CoreTree for all data
@@ -100,6 +110,12 @@ var _expand: bool = true
 
 ## Number of columns to freeze so they wont scroll
 var _column_freeze: int = 0
+
+## The Column to sort by
+var _sort_column: Column
+
+## The Direction to sort columns by
+var _sort_direction: SortDirection
 
 ## Saved column sizes from seralize
 var _saved_column_sizes: Dictionary[int, int]
@@ -197,6 +213,16 @@ func remove_row(p_row: Row) -> bool:
 	return true
 
 
+## Returns true if this table has the given column
+func has_column(p_column: Column) -> bool:
+	return _columns.has(p_column)
+
+
+## Returns true if this tablw has the given row
+func has_row(p_row: Row) -> bool:
+	return _rows.has(p_row)
+
+
 ## Clears all rows
 func clear() -> void:
 	for row: Row in _rows:
@@ -224,6 +250,8 @@ func clear_columns() -> void:
 	_columns.clear()
 	_core_tree.set_columns(1)
 	_freeze_tree.set_columns(1)
+	
+	_sort_column = null
 
 
 ## Deselects all items
@@ -250,7 +278,7 @@ func edit_selected() -> void:
 		
 		if modules_to_edit:
 			Utils.array_move_to_start(modules_to_edit, cell_data)
-			Interface.show_window_popup(UIPopupSettingsModule, self, modules_to_edit)
+			Popups.USettingsModule(self, modules_to_edit)
 	else:
 		var result: Dictionary[Row, Array] = _deselect_all_settings_modules()
 		edit_request_none_module.emit(result)
@@ -295,6 +323,17 @@ func set_column_freeze(p_column_freeze: int) -> void:
 ## Sets the visibility of the IndexBar
 func set_show_index_bar(p_show: bool) -> void:
 	_index_bar.set_visible(p_show)
+
+
+## Sets the columnm to sort the tree by, if p_column == null the table will not be sorted
+func set_column_sort(p_column: Column, p_direction: SortDirection = SortDirection.ASCENDING) -> void:
+	if not has_column(p_column):
+		p_column = null
+	
+	_sort_column = p_column
+	_sort_direction = p_direction
+	
+	queue_resort()
 
 
 ## Gets the expand state
@@ -374,9 +413,24 @@ func get_show_index_bar() -> bool:
 	return _index_bar.is_visible()
 
 
+## Returns the Column used to sort the table
+func get_sort_column() -> Column:
+	return _sort_column
+
+
+## Returns the SortDirection used to sort the column
+func get_sort_direction() -> SortDirection:
+	return _sort_direction
+
+
 ## Returns True if there are selected items in the tree
 func is_any_selected() -> bool:
 	return not _selected_items.is_empty()
+
+
+## Queues a table sort
+func queue_resort() -> void:
+	queue(_sort_table)
 
 
 ## Serializes this Table
@@ -425,6 +479,40 @@ func _set_item_selected(p_row: Row, p_column: Column, p_selected: bool) -> void:
 		p_row.get_tree_item(p_column).deselect(p_column.get_tree_id())
 	
 	_handle_item_selected(p_row, p_column, p_selected)
+
+
+## Sorts the table by the selected sort row and direction
+func _sort_table() -> void:
+	if not is_instance_valid(_sort_column):
+		return
+	
+	var row_values: Array[Array]
+	
+	for row: Row in _rows:
+		row_values.append([
+			row,
+			row.get_cell_data(_sort_column)
+		])
+	
+	row_values.sort_custom(func(a: Array, b: Array): 
+		var a_value: Variant = a[1]
+		var b_value: Variant = b[1]
+		
+		if a_value is SettingsModule:
+			a_value = a_value.get_value_string()
+		
+		if b_value is SettingsModule:
+			b_value = b_value.get_value_string()
+		
+		match _sort_direction:
+			SortDirection.ASCENDING:
+				return a_value.naturalnocasecmp_to(b_value) < 0
+			SortDirection.DESCENDING:
+				return a_value.naturalnocasecmp_to(b_value) > 0
+	)
+	
+	for index: int in range(row_values.size()):
+		row_values[index][0].set_position(index)
 
 
 ## Updates all the row selection, adding a light blue tint to selected rows
@@ -848,6 +936,8 @@ class Row extends Object:
 			if p_value.get_data_type() != p_column.get_data_type() and p_column.get_data_type() != Data.Type.NULL:
 				_cells.erase(p_column)
 				get_tree_item(p_column).set_text(p_column.get_tree_id(), "")
+				
+				_table.queue_resort()
 				return
 			
 			_module_bound_name_methods[p_column] = p_value.connect_name_signal(_on_cell_data_object_name_changed.bind(p_column))
@@ -864,6 +954,8 @@ class Row extends Object:
 			
 			_cells[p_column] = data
 			get_tree_item(p_column).set_text(p_column.get_tree_id(), str(_cells[p_column]))
+		
+		_table.queue_resort()
 	
 	
 	## Sets the index of this row realtive to its parent
@@ -1002,6 +1094,7 @@ class Row extends Object:
 			return
 		
 		item.set_text(p_column.get_tree_id(), _cells[p_column].get_value_string())
+		_table.queue_resort()
 	
 	
 	## Sets the BG color of the underlaying TreeItem
