@@ -84,18 +84,26 @@ func USettingsManager(p_source: Node, p_manager: SettingsManager) -> void:
 	Interface.show_window_popup(UISettingsManager, p_source, p_manager)
 
 
-## Promps the user with SettingsModule
+## Promps the user with SettingsModule, accepts either a SettingsModule or Array[SettingsModule]
 func USettingsModule(p_source: Node, p_modules: Variant) -> Promise:
-	return Interface.show_window_popup(UIPopupSettingsModule, p_source, p_modules)
+	var modules: Array[SettingsModule]
+	
+	match typeof(p_modules):
+		TYPE_ARRAY:
+			modules.assign(p_modules)
+		TYPE_OBJECT when p_modules is SettingsModule:
+			modules.append(p_modules)
+	
+	return Interface.show_window_popup(UIPopupSettingsModule, p_source, modules)
 
 
 ## Promps the user with a DataInput
 func show_data_input(p_source: Node, p_data_type: Data.Type, p_default: Variant, p_label: String) -> Promise:
-	var promise: Promise = Interface.show_window_popup(UIPopupSettingsModule, p_source, null)
+	var promise: Promise = Interface.show_window_popup(UIPopupSettingsModule, p_source, [])
 	var module_view: UIPopupSettingsModule = promise.get_object_refernce()
 	var dummy_module: SettingsModule = SettingsModule.new(p_label, p_label, p_data_type, SettingsModule.Type.SETTING, promise.resolvev, func (): return p_default, [], p_source)
 	
-	module_view.set_module(dummy_module)
+	module_view.set_module([dummy_module])
 	module_view.focus()
 	return promise
 

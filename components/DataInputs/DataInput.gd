@@ -60,24 +60,17 @@ func focus() -> void:
 		_focus_node.grab_focus()
 
 
-## Sets the SettingsMoudle to edit, accepts either a SettingsModule or Array[SettingsModule]
-func set_module(p_modules: Variant) -> bool:
-	reset()
-	
-	if p_modules is Array and p_modules[0] is SettingsModule:
-		_module = p_modules[0]
-		
-		for module: Variant in p_modules:
-			if module is SettingsModule and Data.do_types_match_base(module.get_data_type(), _data_type):
-				_modules.append(module)
-		
-		if not _modules:
-			return false
-		
-	elif p_modules is SettingsModule and is_instance_valid(p_modules):
-		_module = p_modules
-	else:
+## Sets the SettingsMoudle to edit
+func set_module(p_modules: Array[SettingsModule]) -> bool:
+	if not p_modules.size():
 		return false
+	
+	reset()
+	_module = p_modules[0]
+	
+	for module: Variant in p_modules:
+		if module is SettingsModule and Data.do_types_match_base(module.get_data_type(), _data_type):
+			_modules.append(module)
 	
 	_module.subscribe(_module_value_changed)
 	_settings_module_changed(_module)

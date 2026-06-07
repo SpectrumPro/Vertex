@@ -38,7 +38,7 @@ func show_module(p_module: SettingsModule) -> void:
 	
 	if data_input is not DataInputNull:
 		data_input.ready.connect(func ():
-			data_input.set_module(p_module)
+			data_input.set_module([p_module])
 			data_input.set_show_label(true)
 			data_input.set_label_text(p_module.get_name())
 		, CONNECT_ONE_SHOT)
@@ -65,4 +65,4 @@ func show_child_manager(p_manager: ChildManager, p_id: String) -> void:
 ## Called when the ExpandHide button is toggled
 func _on_expand_hide_toggled(toggled_on: bool) -> void:
 	_settings_container.visible = not toggled_on
-	_expand_hide_button.icon = preload("res://modules/Vertex/assets/icons/UnfoldMore.svg") if toggled_on else preload("res://modules/Vertex/assets/icons/UnfoldLess.svg") 
+	_expand_hide_button.icon = preload("res://modules/Vertex/assets/icons/UnfoldMore.svg") if toggled_on else preload("res://modules/Vertex/assets/icons/UnfoldLess.svg")

@@ -86,7 +86,7 @@ func activate_item(p_tree_item: TreeItem) -> void:
 				Data.Type.ACTION:
 					module.get_setter().call()
 				_:
-					Interface.show_window_popup(UIPopupSettingsModule, self, module)
+					Popups.USettingsModule(self, module)
 	
 	accept()
 
