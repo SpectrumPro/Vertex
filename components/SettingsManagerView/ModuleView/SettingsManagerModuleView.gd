@@ -49,8 +49,9 @@ func show_module(p_module: SettingsModule) -> void:
 ## Adds a button to open the given ChildManager
 func show_child_manager(p_manager: ChildManager, p_id: String) -> void:
 	var button: Button = Button.new()
+	var child_count: int = len(p_manager.get_children())
 	
-	button.set_text(p_id)
+	button.set_text(p_id + " (%s)" % child_count)
 	button.set_button_icon(preload("res://modules/Vertex/assets/icons/OpenInNew.svg"))
 	button.set_icon_alignment(HORIZONTAL_ALIGNMENT_LEFT)
 	button.set_flat(true)
