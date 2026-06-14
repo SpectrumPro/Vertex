@@ -38,7 +38,7 @@ func _set_editable(p_editable: bool) -> void:
 ## Called when the button is pressed
 func _on_button_pressed() -> void:
 	Interface.show_window_popup(UIPanelSelector, self, null).then(func (p_panel_class: String):
-		set_value(UIDB.instance_panel(p_panel_class))
+		set_value([UIDB.instance_panel(p_panel_class)])
 	)
 
 

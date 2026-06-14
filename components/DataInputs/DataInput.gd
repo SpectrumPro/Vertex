@@ -101,11 +101,16 @@ func set_editable(p_editable: bool) -> void:
 
 
 ## Sets the value on the settings modules
-func set_value(...p_args: Array) -> void:
-	_update_outline_feedback(_module.get_setter().callv(p_args))
+func set_value(p_values: Array[Variant] = [null]) -> void:
+	if not _modules or (p_values.size() != 1 and p_values.size() != _modules.size()):
+		return
 	
-	for module: SettingsModule in _modules:
-		module.get_setter().callv(p_args)
+	var use_single: bool = p_values.size() == 1
+	
+	_update_outline_feedback(_modules[0].get_setter().callv(p_values[0]))
+	
+	for index: int in range(1, _modules.size()):
+		_modules[index].get_setter().callv(p_values[0] if use_single else p_values[index])
 
 
 ## Gets the SettingsMoudle

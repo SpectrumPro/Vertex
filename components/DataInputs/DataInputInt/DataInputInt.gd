@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Liam Sherwin. All rights reserved.
+# Copyright (c) 2026 Liam Sherwin. All rights reserved.
 # This file is part of the Spectrum Lighting Controller, licensed under the GPL v3.0 or later.
 # See the LICENSE file for details.
 
@@ -7,68 +7,35 @@ class_name DataInputInt extends DataInput
 
 
 ## The LineEdit
-var _spin_box: SpinBox
-
-## Bool to ignore next change in the spinbox
-var _ignore_next_update: bool = false
+var _line_edit: LineEdit
 
 
 ## Ready
 func _ready() -> void:
 	_data_type = Data.Type.INT
-	_spin_box = $HBox/SpinBox
+	_line_edit = $HBox/LineEdit
+	_line_edit.text_changed.connect(func (_p_text): _make_unsaved())
 	_label = $HBox/Label
-	_outline = $HBox/SpinBox/Outline
-	_spin_box.get_line_edit().text_changed.connect(func (_p_text): _make_unsaved())
-	_spin_box.get_line_edit().set_select_all_on_focus(true)
-	_focus_node = _spin_box
-
-
-## Sets the prefix
-func set_prefix(p_prefix: String) -> void:
-	_spin_box.set_prefix(p_prefix)
-
-
-## Sets the prefix
-func set_suffix(p_suffix: String) -> void:
-	_spin_box.set_suffix(p_suffix)
-
-
-## Grabs focus
-func focus() -> void:
-	_spin_box.get_line_edit().grab_focus()
-
-
-## Called when the SettingModule is changed
-func _settings_module_changed(p_module: SettingsModule) -> void:
-	_ignore_next_update = true
-	_spin_box.min_value = p_module.get_min()
-	_ignore_next_update = true
-	_spin_box.max_value = p_module.get_max()
-	
-	_ignore_next_update = false
+	_outline = $HBox/LineEdit/Outline
+	_focus_node = _line_edit
 
 
 ## Called when the orignal value is changed
 func _module_value_changed(p_value: Variant, ..._p_args) -> void:
 	if p_value is int and not _unsaved:
-		_spin_box.set_value_no_signal(p_value)
+		_line_edit.set_text(_module.get_value_string())
 
 
 ## Resets this DataInputString
 func _reset() -> void:
-	_spin_box.set_value_no_signal(0)
+	_line_edit.clear()
 
 
 ## Called when the editable state is changed
 func _set_editable(p_editable: bool) -> void:
-	_spin_box.set_editable(p_editable)
+	_line_edit.set_editable(p_editable)
 
 
-## Called when the value is changed
-func _on_spin_box_value_changed(value: float) -> void:
-	if _ignore_next_update:
-		return
-	
-	set_value(value)
-	_ignore_next_update = false
+## Called when the text is submitted in the LineEdit
+func _on_line_edit_text_submitted(new_text: String) -> void:
+	set_value(Data.autofill_entrys(new_text, _modules.size(), TYPE_INT, true, _module.get_min(), _module.get_max()))

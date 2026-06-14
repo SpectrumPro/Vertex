@@ -86,5 +86,5 @@ func _on_axis_gui_input(p_event: InputEvent) -> void:
 				@warning_ignore("narrowing_conversion")
 				value = Vector2i(x_axis.get_value(), y_axis.get_value())
 			
-			set_value(_module.get_setter().call(value))
+			set_value([[value]])
 		).call_deferred()

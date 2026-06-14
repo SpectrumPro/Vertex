@@ -266,7 +266,7 @@ func deselect_all() -> void:
 
 
 ## Edits the selected items, if they are SettingsModules
-func edit_selected() -> void:
+func edit_selected(p_latest_to_front: bool = true) -> void:
 	if not is_any_selected():
 		return
 	
@@ -276,9 +276,14 @@ func edit_selected() -> void:
 	if cell_data is SettingsModule:
 		var modules_to_edit: Array[SettingsModule] = _deselect_type_without_match(cell_data.get_data_type())
 		
-		if modules_to_edit:
+		if not modules_to_edit:
+			return
+		
+		if p_latest_to_front:
 			Utils.array_move_to_start(modules_to_edit, cell_data)
-			Popups.USettingsModule(self, modules_to_edit)
+			
+		Popups.USettingsModule(self, modules_to_edit)
+	
 	else:
 		var result: Dictionary[Row, Array] = _deselect_all_settings_modules()
 		edit_request_none_module.emit(result)
@@ -1253,7 +1258,7 @@ class Column extends Object:
 	func edit_column() -> void:
 		_table.deselect_all()
 		select()
-		_table.edit_selected()
+		_table.edit_selected(false)
 	
 	
 	## Sets the column title

@@ -59,5 +59,5 @@ func _on_component_name_changed(p_name: String) -> void:
 ## Called when the button is pressed
 func _on_button_pressed() -> void:
 	Popups.ObjectSelector(self, _module.get_base_class(), _module.get_class_filter()).then(func (p_component: Object):
-		set_value(p_component)
+		set_value([[p_component]])
 	)
