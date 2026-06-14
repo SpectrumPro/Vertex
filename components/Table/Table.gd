@@ -18,8 +18,16 @@ signal column_freeze_changed(column_freeze: int)
 ## Emitted when the column being sorted by is changed
 signal column_sort_changed(column: Column, direction: SortDirection)
 
-## Emitted when an edit is requested on data that is not of type SettingsModule
-signal edit_request_none_module(p_selected_items: Dictionary[Row, Array])
+## Emitted when an edit is requested on data that is not of type SettingsModule, emitted with the DataType of all cells, and the column
+signal edit_request_none_module(p_selected_items: Dictionary[Row, Array], p_data_type: Data.Type, p_column: Column)
+
+
+## Enum for MultiEditMode
+enum MultiEditMode {
+	DISABLE,			## Multi edit is disabled
+	MATCH_TYPE,			## Multi edit will edit accross all cells with matching types
+	MATCH_COLUMN_TYPE,	## Multi edit will fiter to the current column
+}
 
 
 ## Enum for SortDirection
@@ -116,6 +124,9 @@ var _sort_column: Column
 
 ## The Direction to sort columns by
 var _sort_direction: SortDirection
+
+## The current MultiEditMode 
+var _multi_edit_mode: MultiEditMode = MultiEditMode.MATCH_TYPE
 
 ## Saved column sizes from seralize
 var _saved_column_sizes: Dictionary[int, int]
@@ -271,10 +282,12 @@ func edit_selected(p_latest_to_front: bool = true) -> void:
 		return
 	
 	var latest_selected: Array = _selection_history.keys()[-1]
-	var cell_data: Variant = latest_selected[0].get_cell_data(latest_selected[1])
+	var row: Row = latest_selected[0]
+	var column: Column = latest_selected[1]
+	var cell_data: Variant = row.get_cell_data(column)
 	
 	if cell_data is SettingsModule:
-		var modules_to_edit: Array[SettingsModule] = _deselect_type_without_match(cell_data.get_data_type())
+		var modules_to_edit: Array[SettingsModule] = _deselect_module_type_without_match(row, column)
 		
 		if not modules_to_edit:
 			return
@@ -285,8 +298,12 @@ func edit_selected(p_latest_to_front: bool = true) -> void:
 		Popups.USettingsModule(self, modules_to_edit)
 	
 	else:
-		var result: Dictionary[Row, Array] = _deselect_all_settings_modules()
-		edit_request_none_module.emit(result)
+		var result: Dictionary[Row, Array] = _deselect_none_module_type_without_match(row, column)
+		
+		if not result:
+			return
+		
+		edit_request_none_module.emit(result, column.get_data_type(), column)
 
 
 ## Sets the expand flag
@@ -325,6 +342,11 @@ func set_column_freeze(p_column_freeze: int) -> void:
 	column_freeze_changed.emit(_column_freeze)
 
 
+## Sets the MultiEditMode
+func set_multi_edit_mode(p_multi_edit_mode: MultiEditMode) -> void:
+	_multi_edit_mode = p_multi_edit_mode
+
+
 ## Sets the visibility of the IndexBar
 func set_show_index_bar(p_show: bool) -> void:
 	_index_bar.set_visible(p_show)
@@ -349,6 +371,11 @@ func get_expand() -> bool:
 ## Returns the column freeze number
 func get_column_freeze() -> int:
 	return _column_freeze
+
+
+## Return MultiEditMode
+func get_multi_edit_mode() -> MultiEditMode:
+	return _multi_edit_mode
 
 
 ## Returns the last selected row
@@ -549,35 +576,64 @@ func _update_selection() -> void:
 
 
 ## Deselects all items unless they contain SettingsModule with a Data.Type that matches the one given
-func _deselect_type_without_match(p_type: Data.Type) -> Array[SettingsModule]:
+func _deselect_module_type_without_match(p_row: Row, p_column: Column) -> Array[SettingsModule]:
 	var selected_items: Dictionary = _selected_items.duplicate(true)
 	var result: Array[SettingsModule]
+	var p_module: SettingsModule
+	
+	if p_row.get_cell_data(p_column) is SettingsModule:
+		p_module = p_row.get_cell_data(p_column)
+	else:
+		return []
+	
+	if _multi_edit_mode == MultiEditMode.DISABLE:
+		deselect_all()
+		p_row.select(p_column)
+		
+		return [p_module]
 	
 	for row: Row in selected_items:
 		for column: Column in selected_items[row]:
 			var data: Variant = row.get_cell_data(column)
 			
-			if data is SettingsModule and data.get_data_type() == p_type:
-				result.append(data)
-			else:
-				_set_item_selected(row, column, false)
+			match _multi_edit_mode:
+				MultiEditMode.MATCH_TYPE when data is SettingsModule and data.get_data_type() == p_module.get_data_type():
+					result.append(data)
+				
+				MultiEditMode.MATCH_COLUMN_TYPE when data is SettingsModule and data.get_data_type() == p_module.get_data_type() and column == p_column:
+					result.append(data)
+				
+				_:
+					_set_item_selected(row, column, false)
 	
 	return result
 
 
-## Deselects all none SettingsModule types
-func _deselect_all_settings_modules() -> Dictionary[Row, Array]:
+## Deselects all none SettingsModule types, if p_match_last_type the column type of the last selected item will be used as a filter
+func _deselect_none_module_type_without_match(p_row: Row, p_column: Column) -> Dictionary[Row, Array]:
 	var selected_items: Dictionary[Row, Array] = _selected_items.duplicate(true)
 	var result: Dictionary[Row, Array]
+	var type_filter: Data.Type = Data.Type.ANY
+	
+	if p_row.get_cell_data(p_column) is SettingsModule:
+		return {}
+	else:
+		type_filter = p_column.get_data_type()
+	
+	if _multi_edit_mode == MultiEditMode.DISABLE:
+		return {p_row: [p_column]}
 	
 	for row: Row in selected_items:
 		for column: Column in selected_items[row]:
-			var data: Variant = row.get_cell_data(column)
-			
-			if data is SettingsModule:
-				_set_item_selected(row, column, false)
-			else:
-				result.get_or_add(row, []).append(column)
+			match _multi_edit_mode:
+				MultiEditMode.MATCH_TYPE when column.get_data_type() == type_filter:
+					result.get_or_add(row, []).append(column)
+				
+				MultiEditMode.MATCH_COLUMN_TYPE when column == p_column:
+					result.get_or_add(row, []).append(column)
+				
+				_:
+					_set_item_selected(row, column, false)
 	
 	return result
 
