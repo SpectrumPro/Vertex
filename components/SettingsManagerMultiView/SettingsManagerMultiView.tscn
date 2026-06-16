@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cv7a3xtevftpm" path="res://modules/Vertex/components/SettingsManagerMultiView/SettingsManagerMultiView.gd" id="1_fmitj"]
 [ext_resource type="PackedScene" uid="uid://bf3cbsyaotnnq" path="res://modules/Vertex/components/Table/Table.tscn" id="2_0b5xi"]
-[ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerView/SettingsManagerView.tscn" id="3_h5qm2"]
+[ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerBlockView/SettingsManagerBlockView.tscn" id="3_h5qm2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kje12"]
 content_margin_left = 5.0
@@ -37,7 +37,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SettingsManagerView" parent="HSplitContainer/ScrollContainer" instance=ExtResource("3_h5qm2")]
+[node name="SettingsManagerBlockView" parent="HSplitContainer/ScrollContainer" instance=ExtResource("3_h5qm2")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

@@ -1,15 +1,16 @@
-# Copyright (c) 2025 Liam Sherwin. All rights reserved.
+# Copyright (c) 2026 Liam Sherwin. All rights reserved.
 # This file is part of the Spectrum Lighting Controller, licensed under the GPL v3.0 or later.
 # See the LICENSE file for details.
 
-class_name SettingsManagerView extends UIComponent
-## SettingsManagerView
+class_name SettingsManagerBlockView extends UIComponent
+## Displays all SettingsModules in a SettingsManager 
+## using SettingsManagerClassBlock components seprated by classname
 
 
 ## List of Data.Types that wont be displayed
 @export var module_type_denylist: Array[Data.Type]
 
-## The VBox for all SettingsManagerModuleView
+## The VBox for all SettingsManagerClassBlock
 @onready var _view_container: VBoxContainer = $VBoxContainer
 
 
@@ -17,15 +18,15 @@ class_name SettingsManagerView extends UIComponent
 var _manager: SettingsManager
 
 ## Stores each ModuleView by its class
-var _views_by_class: Dictionary[String, SettingsManagerModuleView]
+var _views_by_class: Dictionary[String, SettingsManagerClassBlock]
 
 
 ## Init
 func _init() -> void:
-	_set_class_name("SettingsManagerView")
+	_set_class_name("SettingsManagerBlockView")
 
 
-## Resets this SettingsManagerView
+## Resets this SettingsManagerBlockView
 func reset() -> void:
 	for view: Control in _view_container.get_children():
 		_view_container.remove_child(view)
@@ -37,11 +38,11 @@ func reset() -> void:
 
 ## Sets the SettingsManager
 func set_manager(p_manager: SettingsManager) -> void:
-	reset()
+	reset()	
 	_manager = p_manager
 	
 	for classname: String in _manager.get_inheritance_list():
-		var view: SettingsManagerModuleView = preload("res://modules/Vertex/components/SettingsManagerView/ModuleView/SettingsManagerModuleView.tscn").instantiate()
+		var view: SettingsManagerClassBlock = UIDB.instance_component(SettingsManagerClassBlock)
 		
 		_views_by_class[classname] = view
 		_view_container.add_child(view)
@@ -51,7 +52,7 @@ func set_manager(p_manager: SettingsManager) -> void:
 	
 	for child_manager_id: String in _manager.get_child_managers():
 		var child_manager: ChildManager = _manager.get_child_manager(child_manager_id)
-		var view: SettingsManagerModuleView
+		var view: SettingsManagerClassBlock
 		
 		if child_manager.get_category() in _views_by_class:
 			view = _views_by_class[child_manager.get_category()]
@@ -64,11 +65,11 @@ func set_manager(p_manager: SettingsManager) -> void:
 		if module.get_data_type() in module_type_denylist:
 			continue
 		
-		var view: SettingsManagerModuleView
+		var view: SettingsManagerClassBlock
 		
 		match module.get_data_type():
 			Data.Type.SETTINGSMANAGER:
-				var manager_view: SettingsManagerView = UIDB.instance_component(SettingsManagerView)
+				var manager_view: SettingsManagerBlockView = UIDB.instance_component(SettingsManagerBlockView)
 				
 				_view_container.add_child(manager_view)
 				manager_view.set_manager(module.get_getter().call())

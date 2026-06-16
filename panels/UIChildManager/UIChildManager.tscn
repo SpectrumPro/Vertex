@@ -4,7 +4,7 @@
 [ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://modules/Vertex/assets/styles/UIPanelBase.tres" id="1_of0uw"]
 [ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="2_rreh1"]
 [ext_resource type="Texture2D" uid="uid://bbennjke0ioen" path="res://modules/Vertex/assets/icons/Add.svg" id="4_bw18i"]
-[ext_resource type="PackedScene" uid="uid://7prnynnrdn4n" path="res://modules/Vertex/components/ComponentManagerView/ComponentManagerView.tscn" id="4_h7s3y"]
+[ext_resource type="PackedScene" uid="uid://7prnynnrdn4n" path="res://modules/Vertex/components/ChildManagerView/ChildManagerView.tscn" id="4_h7s3y"]
 [ext_resource type="Texture2D" uid="uid://dfrrs2dnvlvsu" path="res://modules/Vertex/assets/icons/Delete.svg" id="5_qbe33"]
 [ext_resource type="Texture2D" uid="uid://cvkwk62wsykmn" path="res://modules/Vertex/assets/icons/ChevronRight.svg" id="5_shc3j"]
 [ext_resource type="Texture2D" uid="uid://cuvwwbojtcpg6" path="res://modules/Vertex/assets/icons/Duplicate.svg" id="6_shc3j"]
@@ -74,7 +74,7 @@ disabled = true
 text = "Duplicate"
 icon = ExtResource("6_shc3j")
 
-[node name="ComponentManagerView" parent="VBoxContainer" instance=ExtResource("4_h7s3y")]
+[node name="ChildManagerView" parent="VBoxContainer" instance=ExtResource("4_h7s3y")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

@@ -3,7 +3,8 @@
 # See the LICENSE file for details.
 
 class_name SettingsManagerMultiView extends UIComponent
-## SettingsManagerMultiView
+## Displays mutiple SettingsManagers in a Table and SettingsManagerBlock view, 
+## syncing selection between both
 
 
 ## Emitted when a SettingsManager is selected
@@ -13,8 +14,8 @@ signal manager_selected(manager: SettingsManager)
 ## The Table
 @onready var _table: Table = %Table
 
-## The SettingsManagerView
-@onready var _settings_manager_view: SettingsManagerView = %SettingsManagerView
+## The SettingsManagerBlockView
+@onready var _settings_manager_view: SettingsManagerBlockView = %SettingsManagerBlockView
 
 
 ## Defines what SettingsModule entrys to show in the Table
@@ -36,9 +37,9 @@ var _manager_rows: RefMap = RefMap.new()
 var _selected_manager: SettingsManager
 
 
-## Init
-func _init() -> void:
-	super._init()
+## init
+func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
+	super._init(p_uuid, p_args)
 	
 	_set_class_name("SettingsManagerMultiView")
 

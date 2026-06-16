@@ -4,7 +4,7 @@
 [ext_resource type="StyleBox" uid="uid://drpfuhk8y61xk" path="res://modules/Vertex/assets/styles/UIPanelPopup.tres" id="1_i7um0"]
 [ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="3_ct4k6"]
 [ext_resource type="Texture2D" uid="uid://c6xnsmttojanx" path="res://modules/Vertex/assets/icons/Settings.svg" id="4_ct4k6"]
-[ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerView/SettingsManagerView.tscn" id="6_a0kig"]
+[ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerBlockView/SettingsManagerBlockView.tscn" id="6_a0kig"]
 [ext_resource type="Script" uid="uid://b04qmvjkmiw3d" path="res://modules/Vertex/panels/UIPanelSettings/Shortcuts.gd" id="6_ct4k6"]
 [ext_resource type="Texture2D" uid="uid://bbennjke0ioen" path="res://modules/Vertex/assets/icons/Add.svg" id="6_i3a75"]
 [ext_resource type="Texture2D" uid="uid://bsf1p0f2ta85" path="res://modules/Vertex/assets/icons/Remove.svg" id="8_ct4k6"]

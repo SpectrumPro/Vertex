@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://7prnynnrdn4n"]
 
-[ext_resource type="Script" uid="uid://dsx8tu82of1tm" path="res://modules/Vertex/components/ComponentManagerView/ComponentManagerView.gd" id="1_bwvqs"]
+[ext_resource type="Script" uid="uid://dsx8tu82of1tm" path="res://modules/Vertex/components/ChildManagerView/ChildManagerView.gd" id="1_bwvqs"]
 [ext_resource type="PackedScene" uid="uid://bobrutb83r27e" path="res://modules/Vertex/components/SettingsManagerMultiView/SettingsManagerMultiView.tscn" id="2_i14tg"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bwvqs"]
 
-[node name="ComponentManagerView" type="PanelContainer"]
+[node name="ChildManagerView" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

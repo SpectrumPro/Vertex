@@ -1,21 +1,21 @@
 [gd_scene load_steps=7 format=3 uid="uid://dwbgitej5f6yc"]
 
-[ext_resource type="Theme" uid="uid://cyua45ur0ijqo" path="res://modules/Vertex/assets/themes/Main.theme" id="1_0arna"]
-[ext_resource type="StyleBox" uid="uid://bxwylw4uk8cyk" path="res://modules/Vertex/assets/styles/ClassSettingsBG.tres" id="2_5gjfr"]
-[ext_resource type="Script" uid="uid://bshd73mg03j0j" path="res://modules/Vertex/components/SettingsManagerView/ModuleView/SettingsManagerModuleView.gd" id="3_1rgix"]
-[ext_resource type="Texture2D" uid="uid://dj7k0od8o16ok" path="res://modules/Vertex/assets/icons/UnfoldLess.svg" id="4_1gck8"]
+[ext_resource type="Theme" uid="uid://cyua45ur0ijqo" path="res://modules/Vertex/assets/themes/Main.theme" id="1_1kik6"]
+[ext_resource type="StyleBox" uid="uid://bxwylw4uk8cyk" path="res://modules/Vertex/assets/styles/ClassSettingsBG.tres" id="2_uforb"]
+[ext_resource type="Script" uid="uid://bshd73mg03j0j" path="res://modules/Vertex/components/SettingsManagerClassBlock/SettingsManagerClassBlock.gd" id="3_asyqc"]
+[ext_resource type="Texture2D" uid="uid://dj7k0od8o16ok" path="res://modules/Vertex/assets/icons/UnfoldLess.svg" id="4_cku2m"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_hbu47"]
 font_size = 18
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1rgix"]
 
-[node name="ClassSettingsModule" type="PanelContainer"]
+[node name="SettingsManagerClassBlock" type="PanelContainer"]
 offset_right = 254.0
 offset_bottom = 64.0
-theme = ExtResource("1_0arna")
-theme_override_styles/panel = ExtResource("2_5gjfr")
-script = ExtResource("3_1rgix")
+theme = ExtResource("1_1kik6")
+theme_override_styles/panel = ExtResource("2_uforb")
+script = ExtResource("3_asyqc")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -53,7 +53,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Expand / Hide"
 toggle_mode = true
-icon = ExtResource("4_1gck8")
+icon = ExtResource("4_cku2m")
 flat = true
 
 [node name="SettingContainer" type="VBoxContainer" parent="VBoxContainer"]

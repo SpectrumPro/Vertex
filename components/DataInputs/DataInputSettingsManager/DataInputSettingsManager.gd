@@ -6,14 +6,14 @@ class_name DataInputSettingsManager extends DataInput
 ## DataInput for Data.Type.SETTINGSMANAGER
 
 
-## The SettingsManagerView to show the SettingsManager
-var _settings_manager_view: SettingsManagerView
+## The SettingsManagerBlockView to show the SettingsManager
+var _settings_manager_view: SettingsManagerBlockView
 
 
 ## Ready
 func _ready() -> void:
 	_data_type = Data.Type.SETTINGSMANAGER
-	_settings_manager_view = $SettingsManagerView
+	_settings_manager_view = $SettingsManagerBlockView
 	_outline = $Outline
 	_focus_node = self
 

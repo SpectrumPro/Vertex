@@ -1,8 +1,9 @@
-# Copyright (c) 2025 Liam Sherwin. All rights reserved.
+# Copyright (c) 2026 Liam Sherwin. All rights reserved.
 # This file is part of the Spectrum Lighting Controller, licensed under the GPL v3.0 or later.
 # See the LICENSE file for details.
 
-class_name SettingsManagerModuleView extends PanelContainer
+class_name SettingsManagerClassBlock extends UIComponent
+## Displays SettingsModules in a vertical block view
 
 
 ## Title label
@@ -19,6 +20,13 @@ class_name SettingsManagerModuleView extends PanelContainer
 
 ## The BoxContainer containing ChildManager open buttons
 @onready var _child_button_container: BoxContainer = %ChildButtonContainer
+
+
+## init
+func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
+	super._init(p_uuid, p_args)
+	
+	_set_class_name("SettingsManagerClassBlock")
 
 
 ## Disables this settings module

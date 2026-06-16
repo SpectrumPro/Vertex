@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c1re0pibtaq4q"]
 
 [ext_resource type="Script" uid="uid://cc2owlvb1xdlq" path="res://modules/Vertex/components/DataInputs/DataInputSettingsManager/DataInputSettingsManager.gd" id="1_k757h"]
-[ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerView/SettingsManagerView.tscn" id="2_43kj3"]
+[ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerBlockView/SettingsManagerBlockView.tscn" id="2_43kj3"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="3_2t263"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qyj0o"]
@@ -13,7 +13,7 @@ offset_bottom = 233.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_qyj0o")
 script = ExtResource("1_k757h")
 
-[node name="SettingsManagerView" parent="." instance=ExtResource("2_43kj3")]
+[node name="SettingsManagerBlockView" parent="." instance=ExtResource("2_43kj3")]
 layout_mode = 2
 script = null
 

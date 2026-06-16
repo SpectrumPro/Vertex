@@ -9,8 +9,8 @@ class_name UISettingsManager extends UIPanel
 ## The ComponentButton
 @export var component_button: ComponentButton
 
-## The SettingsManagerView
-@export var settings_manager_view: SettingsManagerView
+## The SettingsManagerBlockView
+@export var settings_manager_view: SettingsManagerBlockView
 
 
 ## The current selected GBC component

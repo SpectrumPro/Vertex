@@ -3,11 +3,11 @@
 # See the LICENSE file for details.
 
 class_name UIChildManager extends UIPanel
-## Displays a GBC's ChildManager via ComponentManagerView
+## Displays a GBC's ChildManager via ChildManagerView
 
 
-## The ComponentManagerView used to displat the ChildManager
-@onready var _component_manager: ComponentManagerView = %ComponentManagerView
+## The ChildManagerView used to displat the ChildManager
+@onready var _component_manager: ChildManagerView = %ChildManagerView
 
 ## The OptionButton used to select the ChildManager
 @onready var _child_manager_selection: OptionButton = %ChildManagerSelection

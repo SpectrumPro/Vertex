@@ -13,8 +13,8 @@ signal panel_changed(panel)
 ## UIPanelSettingsShortcuts Settings Page
 @export var _shortcuts_panel: UIPanelSettingsShortcuts
 
-## The SettingsManagerView for settings
-@export var _settings_panel: SettingsManagerView
+## The SettingsManagerBlockView for settings
+@export var _settings_panel: SettingsManagerBlockView
 
 
 ## Max History Length
