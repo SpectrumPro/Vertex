@@ -1,0 +1,87 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7lh26am36j5n"]
+
+[ext_resource type="Script" uid="uid://cnk2n16dnamqb" path="res://modules/Vertex/components/Table2/Table2.gd" id="1_qasxj"]
+[ext_resource type="PackedScene" uid="uid://b6eijsxlis7r3" path="res://modules/Vertex/components/SelectBox/SelectBox.tscn" id="2_hfnc6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qasxj"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.11372549, 0.11372549, 0.11372549, 1)
+border_color = Color(0.16924527, 0.1692453, 0.16924527, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Table2" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_qasxj")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qasxj")
+
+[node name="Canvas" type="Control" parent="PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HScrollBar" type="HScrollBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 8
+
+[node name="VScrollBar" type="VScrollBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -20.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+
+[node name="SelectBox" parent="." node_paths=PackedStringArray("event_control") instance=ExtResource("2_hfnc6")]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+event_control = NodePath("../PanelContainer/Canvas")
+
+[connection signal="draw" from="PanelContainer/Canvas" to="." method="_draw_table"]
+[connection signal="value_changed" from="HScrollBar" to="." method="_on_h_scroll_bar_value_changed"]
+[connection signal="value_changed" from="VScrollBar" to="." method="_on_v_scroll_bar_value_changed"]
