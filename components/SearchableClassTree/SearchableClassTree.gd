@@ -247,21 +247,21 @@ func search_for(p_text: String) -> void:
 				})
 		
 		SearchMode.OBJECT:
-			if not _search_text:
+			if _search_text:
+				_object_list.show()
+				search_tree = _object_list
+				
+				for object: Object in _object_items.get_right():
+					var object_name: String = object.get_uname()
+					items_to_display.append({
+						"item_name": object_name,
+						"similarity": object_name.similarity(_search_text) if p_text else 0.0,
+						"tree_item": _object_items.right(object),
+						"show": true
+					})
+			else:
 				_objecet_inhr_tree.show()
-				return
-			
-			_object_list.show()
-			search_tree = _object_list
-			
-			for object: Object in _object_items.get_right():
-				var object_name: String = object.get_uname()
-				items_to_display.append({
-					"item_name": object_name,
-					"similarity": object_name.similarity(_search_text) if p_text else 0.0,
-					"tree_item": _object_items.right(object),
-					"show": true
-				})
+				search_tree = _objecet_inhr_tree
 	
 	items_to_display.sort_custom(func (p_a: Dictionary, p_b: Dictionary) -> bool:
 		if _search_text and len(_search_text) < 3:
