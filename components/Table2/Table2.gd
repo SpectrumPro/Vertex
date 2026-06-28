@@ -175,7 +175,79 @@ func clear_data() -> void:
 
 ## Sorts the rows in the table based on cells in the given column
 func sort_table(p_column: Column = _sort_column, p_direction: SortDirection = _sort_direction) -> void:
-	pass ## TODO
+	if not is_instance_valid(_sort_column) or _sort_column.get_table() != self:
+		return
+	
+	var row_values: Array[Array]
+	
+	for row: Row in _rows:
+		row_values.append([
+			row,
+			row.get_cell_at_column(_sort_column).get_value()
+		])
+	
+	row_values.sort_custom(func(a: Array, b: Array): 
+		var a_value: Variant = a[1]
+		var b_value: Variant = b[1]
+		
+		match _sort_direction:
+			SortDirection.ASCENDING:
+				return a_value.naturalnocasecmp_to(b_value) < 0
+			SortDirection.DESCENDING:
+				return a_value.naturalnocasecmp_to(b_value) > 0
+	)
+	
+	for index: int in range(row_values.size()):
+		row_values[index][0].set_index(index)
+
+
+## Deselects all cells in the table
+func deselect_all() -> void:
+	for cell: Cell in _selection.get_as_array():
+		cell._set_selected(false)
+	
+	_selection.clear()
+	
+	queue(_emit_selection)
+	queue_redraw_table()
+
+
+## Edits the selected cells, in the selection order
+func edit_selected() -> void:
+	if not _selection.size():
+		return
+	
+	var selection: Array = _selection.get_as_array()
+	var first: Cell = selection[0]
+	var is_settings_module: bool = first.is_using_settings_module()
+	
+	filter_selection(
+		null, 
+		first.get_settings_module().get_data_type() if is_settings_module else Data.Type.NULL
+	)
+	
+	if is_settings_module:
+		Popups.USettingsModule(self, _selection.get_as_array().map(func (p_cell: Cell):
+			return p_cell.get_settings_module()
+		))
+	else:
+		var cells: Array[Cell]
+		
+		cells.assign(_selection.get_as_array())
+		edit_requested.emit(cells)
+
+
+## Updates and filters the selection to match the given inputs.
+## p_data_type is used to filter SettingsModules. 
+func filter_selection(p_column: Column, p_data_type: Data.Type = Data.Type.NULL) -> void:
+	for cell: Cell in _selection.get_as_array():
+		if is_instance_valid(p_column) and p_column != cell.get_column():
+			cell.set_selected(false)
+		
+		if p_data_type not in [Data.Type.NULL, Data.Type.ANY] \
+		and cell.is_using_settings_module() \
+		and cell.get_settings_module().get_data_type() != p_data_type:
+			cell.set_selected(false)
 
 
 ## Queues a table sort with the current sort settings
@@ -876,6 +948,9 @@ class Cell extends Object:
 	## Sets the value of this Cell
 	func set_value(p_value: String) -> Cell:
 		_value = p_value
+		
+		if is_instance_valid(_table) and _table.get_sort_column() == _column:
+			_table.queue_sort()
 		
 		_queue_redraw()
 		return self
