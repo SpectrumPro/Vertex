@@ -17,13 +17,19 @@ signal edit_requested(cells: Array[Cell])
 const COLUMN_WIDTH: int = 100
 
 ## Default row height
-const ROW_HEIGHT: int = 30
+const ROW_HEIGHT: int = 40
 
 ## Cell hover bg color
 const CELL_HOVER_COLOR: Color = Color(0.458, 0.458, 0.458, 0.353)
 
+## Row hilight color
+const ROW_HILIGHT_COLOR: Color = Color("0f7af53a")
+
 ## Cell select color
 const CELL_SELECT_COLOR: Color = Color("0f7af5c2")
+
+## Amount to lighten the text of cells when they are selected
+const CELL_TEXT_SELECTED_LIGHTEN: float = 1
 
 
 ## Enum for SortDirection
@@ -637,6 +643,9 @@ class Row extends Object:
 	## Position of this row in local space y
 	var _position: int  = 0
 	
+	## Border color for row borders
+	var _border_color: Color = Color(0.29, 0.29, 0.29, 1.0)
+	
 	## All cells in this Row
 	var _cells: Dictionary[Column, Cell]
 	
@@ -727,6 +736,12 @@ class Row extends Object:
 		return self
 	
 	
+	## Sets the border color
+	func set_border_color(p_color: Color) -> Row:
+		_border_color = p_color
+		return self 
+	
+	
 	## Returns the index number of this row
 	func get_index() -> int:
 		return _index
@@ -735,6 +750,11 @@ class Row extends Object:
 	## Returns the height in px of this column
 	func get_height() -> int:
 		return _height
+	
+	
+	## Returns the border color
+	func get_border_color() -> Color:
+		return _border_color
 	
 	
 	## Returns the vertical positions in pixels this row starts, top left cornor
@@ -763,6 +783,20 @@ class Row extends Object:
 	## Returns the table this row in in
 	func get_table() -> Table2:
 		return _table
+	
+	
+	## Returns the Rect2 for this row
+	func get_rect() -> Rect2:
+		return Rect2(
+			Vector2(
+				0,
+				_position
+			),
+			Vector2(
+				_table.get_table_size().x,
+				_height
+			)
+		)
 	
 	
 	## Returns true if any cells are selected in this row
@@ -806,11 +840,12 @@ class Row extends Object:
 			
 			cell._draw(p_canvas, p_scroll)
 		
-		p_canvas.draw_line(
-			Vector2(0, _position) + p_scroll, 
-			Vector2(_table.get_table_size().x, _position) + p_scroll, 
-			Color.WHITE
-		)
+		if _border_color != Color.TRANSPARENT:
+			p_canvas.draw_line(
+				Vector2(0, _position + _height) + p_scroll, 
+				Vector2(_table.get_table_size().x, _position + _height) + p_scroll, 
+				_border_color
+			)
 	
 	
 	## Cleanup before deletion
@@ -838,6 +873,9 @@ class Column extends Object:
 	
 	## The title of this Column
 	var _title: String
+	
+	## Border color for coloumn lines
+	var _border_color: Color = Color.TRANSPARENT
 	
 	## Set for all selected cells in this Column
 	var _selected_cells: Set = Set.new(TYPE_OBJECT)
@@ -878,6 +916,14 @@ class Column extends Object:
 		return self
 	
 	
+	## Sets the border color
+	func set_border_color(p_color: Color) -> Column:
+		_border_color = p_color
+		
+		_table.queue_redraw_table()
+		return self
+	
+	
 	## Gets the index of this Column
 	func get_index() -> int:
 		return _index
@@ -886,6 +932,11 @@ class Column extends Object:
 	## Gets the width of this Column
 	func get_width() -> int:
 		return _width
+	
+	
+	## Returns the border color
+	func get_border_color() -> Color:
+		return _border_color
 	
 	
 	## Returns the horisontal position of this column in pixels
@@ -936,13 +987,12 @@ class Column extends Object:
 	
 	## draw
 	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
-		var scroll: Vector2 = p_scroll
-		
-		p_canvas.draw_line(
-			Vector2(_position, 0) + scroll,
-			Vector2(_position, _table.get_table_size().y) + scroll,
-			Color.WHITE
-		)
+		if _border_color != Color.TRANSPARENT:
+			p_canvas.draw_line(
+				Vector2(_position + _width, 0) + p_scroll,
+				Vector2(_position + _width, _table.get_table_size().y) + p_scroll,
+				_border_color
+			)
 	
 	
 	## Cleanup before deletion
@@ -969,10 +1019,10 @@ class Cell extends Object:
 	var _settings_module: SettingsModule
 	
 	## Background color of this Cell
-	var _bg_color: Color = Color("1d1d1d")
+	var _bg_color: Color = Color.TRANSPARENT
 	
 	## Text color of this Cell
-	var _text_color: Color = Color.WHITE
+	var _text_color: Color = Color(0.869, 0.869, 0.869, 1.0)
 	
 	## Border color
 	var _border_color: Color = Color.TRANSPARENT
@@ -1202,6 +1252,9 @@ class Cell extends Object:
 		if _is_hovored:
 			p_canvas.draw_rect(rect, _table.CELL_HOVER_COLOR)
 		
+		if _row.is_any_selected() and not _is_selected:
+			p_canvas.draw_rect(rect, _table.ROW_HILIGHT_COLOR)
+		
 		if _border_width and _border_color != Color.TRANSPARENT:
 			p_canvas.draw_rect(rect.grow(-_border_width / 2), _border_color, false, _border_width)
 		
@@ -1212,7 +1265,7 @@ class Cell extends Object:
 			HORIZONTAL_ALIGNMENT_LEFT, 
 			rect.size.x, 
 			font_size, 
-			_text_color
+			_text_color.lightened(_table.CELL_TEXT_SELECTED_LIGHTEN if _is_selected else 0) 
 		)
 	
 	
