@@ -9,6 +9,9 @@ class_name Table2 extends UIComponent
 ## Emitted when the current selection is changed
 signal selection_changed()
 
+## Emitted when an edit is requested on cells that do not contain a SettingsModule
+signal edit_requested(cells: Array[Cell])
+
 
 ## Default Column width
 const COLUMN_WIDTH: int = 100
@@ -20,7 +23,7 @@ const ROW_HEIGHT: int = 30
 const CELL_HOVER_COLOR: Color = Color(0.458, 0.458, 0.458, 0.353)
 
 ## Cell select color
-const CELL_SELECT_COLOR: Color = Color.ROYAL_BLUE
+const CELL_SELECT_COLOR: Color = Color("0f7af5c2")
 
 
 ## Enum for SortDirection
@@ -38,6 +41,9 @@ enum SortDirection {
 
 ## The CanvasItem to draw on
 @onready var _canvas: Control = %Canvas
+
+## The SelectBox
+@onready var _select_box: SelectBox = %SelectBox
 
 
 ## Stores all rows
@@ -84,6 +90,7 @@ func _ready() -> void:
 	
 	_canvas.resized.connect(_on_canvas_resized)
 	_canvas.gui_input.connect(_on_canvas_gui_input)
+	_canvas.mouse_exited.connect(_on_canvas_mouse_exited)
 	_canvas.draw.connect(_draw_table)
 
 
@@ -408,6 +415,11 @@ func get_last_selected() -> Cell:
 		return null
 
 
+## Returns the size of the selection
+func get_selection_size() -> int:
+	return _selection.size()
+
+
 ## Returns the sort column
 func get_sort_column() -> Column:
 	return _sort_column
@@ -498,6 +510,49 @@ func _get_scroll_offset() -> Vector2:
 	)
 
 
+## Selects the cell at the given position
+func _select_cell_at_position(p_position: Vector2) -> void:
+	var cell: Cell = get_cell_at_position(p_position)
+	var control_pressed: bool = Input.is_key_pressed(KEY_CTRL)
+	
+	if not is_instance_valid(cell):
+		if not control_pressed:
+			deselect_all()
+		return
+	
+	var is_selected: bool = cell.is_selected()
+	
+	if not control_pressed:
+		deselect_all()
+	
+	cell.set_selected(not is_selected if control_pressed else true)
+	queue_redraw_table()
+
+
+## Called when the select box is moved
+func _on_select_box_selection_updated(p_selection: Rect2) -> void:
+	var control_pressed: bool = Input.is_key_pressed(KEY_CTRL)
+	var shift_pressed: bool = Input.is_key_pressed(KEY_SHIFT)
+	
+	var flip_x: bool = p_selection.position.x < _select_box.get_start_point().x
+	var flip_y: bool = p_selection.position.y < _select_box.get_start_point().y
+	
+	if not control_pressed:
+		deselect_all()
+	
+	p_selection.position -= _get_scroll_offset()
+	
+	for row_index: int in range(_rows.size() - 1, -1, -1) if flip_y else range(_rows.size()):
+		var row: Row = _rows[row_index]
+		var cells: Array = row.get_cells().values()
+		
+		for cell_index: int in range(cells.size() - 1, -1, -1) if flip_x else range(cells.size()):
+			var cell: Cell = cells[cell_index]
+			
+			if p_selection.intersects(cell.get_rect()):
+				cell.set_selected(not shift_pressed)
+
+
 ## Called when this table is resized
 func _on_canvas_resized() -> void:
 	if not is_node_ready():
@@ -528,13 +583,34 @@ func _on_canvas_gui_input(p_event: InputEvent) -> void:
 		
 		queue_redraw_table()
 	
-	elif p_event is InputEventMouseButton and p_event.is_pressed() and p_event.button_index == MOUSE_BUTTON_LEFT:
-		var cell: Cell = get_cell_at_position(p_event.position)
-		
-		if is_instance_valid(cell):
-			cell.set_selected(not cell.is_selected())
-		
-		queue_redraw_table()
+	elif p_event is InputEventMouseButton and p_event.is_pressed():
+		match p_event.button_index:
+			MOUSE_BUTTON_LEFT:
+				_select_cell_at_position(p_event.position)
+			MOUSE_BUTTON_RIGHT:
+				_on_mouse_button_right_down(p_event)
+
+
+## Called when MOUSE_BUTTON_RIGHT is pressed
+func _on_mouse_button_right_down(p_event: InputEventMouseButton) -> void:
+	var cell: Cell = get_cell_at_position(p_event.position)
+	
+	if get_selection_size() == 1 and not Input.is_key_pressed(KEY_CTRL):
+		deselect_all()
+	
+	if is_instance_valid(cell) and not cell.is_selected():
+		cell.set_selected(true)
+	
+	edit_selected()
+
+
+## Called when the mouse exits the canvas
+func _on_canvas_mouse_exited() -> void:
+	if not is_instance_valid(_hovered_cell):
+		return
+	
+	_hovered_cell._set_hovored(false)
+	queue_redraw()
 
 
 ## Called when the scroll position is changed on the VScrollBar
@@ -994,6 +1070,11 @@ class Cell extends Object:
 			_table.set_cell_selected(self, p_selected)
 	
 	
+	## Returns the SettingsModule displayed by this cell, or null
+	func get_settings_module() -> SettingsModule:
+		return _settings_module
+	
+	
 	## Returns the value of this cell
 	func get_value() -> String:
 		return _value
@@ -1061,6 +1142,11 @@ class Cell extends Object:
 	## Returns the selected state of this Cell
 	func is_selected() -> bool:
 		return _is_selected
+	
+	
+	## Returns true if this Cell is displaying a SettingsModule
+	func is_using_settings_module() -> bool:
+		return is_instance_valid(_settings_module)
 	
 	
 	## Sets the selected state

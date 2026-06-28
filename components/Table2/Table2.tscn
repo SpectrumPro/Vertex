@@ -40,6 +40,25 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_qasxj")
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="SelectBox" parent="PanelContainer/Canvas" node_paths=PackedStringArray("event_control") instance=ExtResource("2_hfnc6")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+event_control = NodePath("..")
+
 [node name="HScrollBar" type="HScrollBar" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
@@ -64,24 +83,7 @@ grow_horizontal = 0
 grow_vertical = 2
 size_flags_horizontal = 8
 
-[node name="SelectBox" parent="." node_paths=PackedStringArray("event_control") instance=ExtResource("2_hfnc6")]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1.0
-offset_top = -1.0
-offset_right = 1.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-event_control = NodePath("../PanelContainer/Canvas")
-
 [connection signal="draw" from="PanelContainer/Canvas" to="." method="_draw_table"]
+[connection signal="selection_updated" from="PanelContainer/Canvas/SelectBox" to="." method="_on_select_box_selection_updated"]
 [connection signal="value_changed" from="HScrollBar" to="." method="_on_h_scroll_bar_value_changed"]
 [connection signal="value_changed" from="VScrollBar" to="." method="_on_v_scroll_bar_value_changed"]
