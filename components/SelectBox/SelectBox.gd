@@ -78,6 +78,14 @@ func set_event_control(p_event_control: Control) -> void:
 func get_selection() -> Rect2:
 	return _current_selection
 
+ 
+## Returns the start point of the selection
+func get_start_point() -> Vector2:
+	if use_global:
+		return _selection_start_pos + event_control.get_global_rect().position
+	else:
+		return _selection_start_pos
+
 
 ## Returns true if the select box is selecting
 func is_selecting() -> bool:
