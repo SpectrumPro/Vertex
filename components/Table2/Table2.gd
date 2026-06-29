@@ -1493,6 +1493,23 @@ class Cell extends TableItem:
 		)
 	
 	
+	## Returns the Rect2 inclosing the visable portion of this Cell on the screen
+	func get_visable_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		var rect: Rect2 = get_rect(p_scroll)
+		var clipped_pos: Vector2 = rect.position.clamp(
+			_table.get_table_draw_start(),
+			_table.get_table_size()
+		)
+		
+		return Rect2(
+			clipped_pos,
+			Vector2(
+				maxf(_column.get_rect(p_scroll).end.x - clipped_pos.x, 0),
+				maxf(_row.get_rect(p_scroll).end.y - clipped_pos.y, 0)
+			)
+		)
+	
+	
 	## Returns the Table this Cell is in
 	func get_table() -> Table2:
 		return _table
