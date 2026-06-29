@@ -19,6 +19,15 @@ const COLUMN_WIDTH: int = 100
 ## Default row height
 const ROW_HEIGHT: int = 40
 
+## Height for the column headderr
+const COLUMN_HEADDER_HEIGHT: int = 40
+
+## Width for the row headder
+const ROW_HEADDER_WIDTH: int = 40
+
+## Margin in px
+const MARGIN: int = 5
+
 ## Cell hover bg color
 const CELL_HOVER_COLOR: Color = Color(0.458, 0.458, 0.458, 0.353)
 
@@ -30,6 +39,9 @@ const CELL_SELECT_COLOR: Color = Color("0f7af5c2")
 
 ## Amount to lighten the text of cells when they are selected
 const CELL_TEXT_SELECTED_LIGHTEN: float = 1
+
+## Font color
+const FONT_COLOR: Color = Color(0.869, 0.869, 0.869, 1.0)
 
 
 ## Enum for SortDirection
@@ -64,8 +76,8 @@ var _size_cache: Vector2 = Vector2.ZERO
 ## Set for storing current selection
 var _selection: Set = Set.new(TYPE_OBJECT)
 
-## The cell currently being hovered
-var _hovered_cell: Cell
+## The TableItem currently being hovered
+var _curent_hovered_item: TableItem
 
 ## Current SortDirection
 var _sort_direction: SortDirection = SortDirection.ASCENDING
@@ -81,6 +93,12 @@ var _font_size: int
 
 ## Margin to add when rendering font from bottom left cornor 
 var _text_margin: Vector2 = Vector2(5, -1)
+
+## The StyleBox used for headder bars
+var _headder_bar_theme: StyleBox = preload("uid://b0mo3v7qocc4r")
+
+## The StyleBox used for the table background
+var _table_backgroud_theme: StyleBox = preload("uid://ivg5xu85gbgt")
 
 
 ## init
@@ -98,11 +116,18 @@ func _ready() -> void:
 	_canvas.gui_input.connect(_on_canvas_gui_input)
 	_canvas.mouse_exited.connect(_on_canvas_mouse_exited)
 	_canvas.draw.connect(_draw_table)
+	
+	_recompute_all()
 
 
 ## draw
 func _draw_table() -> void:
 	var scroll: Vector2 = _get_scroll_offset()
+	
+	_canvas.draw_style_box(_headder_bar_theme, get_header_index_rect())
+	_canvas.draw_style_box(_headder_bar_theme, get_row_headers_rect())
+	_canvas.draw_style_box(_headder_bar_theme, get_column_headers_rect())
+	_canvas.draw_style_box(_table_backgroud_theme, get_table_rect())
 	
 	for row: Row in _rows:
 		if row.get_position() > _canvas.size.y - scroll.y:
@@ -216,6 +241,9 @@ func sort_table(p_column: Column = _sort_column, p_direction: SortDirection = _s
 
 ## Deselects all cells in the table
 func deselect_all() -> void:
+	if not _selection.size():
+		return
+	
 	for cell: Cell in _selection.get_as_array():
 		cell._set_selected(false)
 	
@@ -381,6 +409,26 @@ func get_column(p_index: int) -> Column:
 	return _columns[p_index]
 
 
+## Returns all Rows in this Table
+func get_rows() -> Array[Row]:
+	return _rows.duplicate()
+
+
+## Returns all columns in this Table
+func get_columns() -> Array[Column]:
+	return _columns.duplicate()
+
+
+## Returns the number of rows
+func get_num_rows() -> int:
+	return _rows.size()
+
+
+## Returns the number of columns
+func get_num_columns() -> int:
+	return _columns.size()
+
+
 ## Returns all selected Cells in selection order
 func get_selected() -> Array[Cell]:
 	var selected: Array[Cell]
@@ -456,12 +504,100 @@ func get_table_size() -> Vector2:
 	return _size_cache
 
 
-## Gets the Cell at the given position
+## Returns the Vector2 where drawing the table main content starts
+func get_table_draw_start() -> Vector2:
+	return Vector2(
+		ROW_HEADDER_WIDTH + MARGIN,
+		COLUMN_HEADDER_HEIGHT + MARGIN
+	)
+
+
+## Returns the Rect2 for the table's main content
+func get_table_rect() -> Rect2:
+	return Rect2(
+		get_table_draw_start(),
+		_canvas.size
+	)
+
+
+## Returns the Rect2 for the index between row and colum headers
+func get_header_index_rect() -> Rect2:
+	return Rect2(
+		Vector2.ZERO,
+		Vector2(
+			ROW_HEADDER_WIDTH,
+			COLUMN_HEADDER_HEIGHT
+		)
+	)
+
+
+## Returns the Rect2 for the row headers
+func get_row_headers_rect() -> Rect2:
+	return Rect2(
+		Vector2(
+			0,
+			COLUMN_HEADDER_HEIGHT + MARGIN
+		),
+		Vector2(
+			ROW_HEADDER_WIDTH,
+			_canvas.size.y
+		)
+	)
+
+
+## Returns the Rect2 for the column headers
+func get_column_headers_rect() -> Rect2:
+	return Rect2(
+		Vector2(
+			ROW_HEADDER_WIDTH + MARGIN,
+			0
+		),
+		Vector2(
+			_canvas.size.x,
+			COLUMN_HEADDER_HEIGHT,
+		)
+	)
+
+
+## Returns the TableItem at the given position
+func get_item_at_position(p_position: Vector2) -> TableItem:
+	if get_table_rect().has_point(p_position):
+		return get_cell_at_position(p_position)
+	
+	elif get_row_headers_rect().has_point(p_position):
+		return get_row_at_position(p_position)
+	
+	elif get_column_headers_rect().has_point(p_position):
+		return get_column_at_position(p_position)
+	
+	else:
+		return null
+
+
+## Returns the Cell at the given position, or null
 func get_cell_at_position(p_position: Vector2) -> Cell:
 	for row: Row in _rows:
 		for cell: Cell in row.get_cells().values():
-			if cell.get_rect().has_point(p_position - _get_scroll_offset()):
+			if cell.get_rect(_get_scroll_offset()).has_point(p_position):
 				return cell
+	
+	return null
+
+
+## Returns the row at the given position, or null
+func get_row_at_position(p_position: Vector2) -> Row:
+	for row: Row in _rows:
+		if row.get_full_rect(_get_scroll_offset()).has_point(p_position):
+			return row
+	
+	return null
+
+
+## Returns the column at the given position, or null
+func get_column_at_position(p_position: Vector2) -> Column:
+	for column: Column in _columns:
+		if column.get_full_rect(_get_scroll_offset()).has_point(p_position):
+			return column
 	
 	return null
 
@@ -469,6 +605,16 @@ func get_cell_at_position(p_position: Vector2) -> Cell:
 ## Returns true if any cells are selected
 func is_any_selected() -> bool:
 	return bool(_selection.size())
+
+
+## Returns true if this Table has any rows
+func has_rows() -> bool:
+	return bool(_rows.size())
+
+
+## Returns true if this Table has any column
+func has_columns() -> bool:
+	return bool(_columns.size())
 
 
 ## Emits the selection changed signal, should be called with queue()
@@ -484,7 +630,7 @@ func _recompute_all() -> void:
 
 ## Recomputes row indexes and table height
 func _recompute_rows() -> void:
-	_size_cache.y = 0
+	_size_cache.y = get_table_draw_start().y + MARGIN
 	
 	for row_index: int in range(_rows.size()):
 		var row: Row = _rows[row_index]
@@ -497,7 +643,7 @@ func _recompute_rows() -> void:
 
 ## Recomputes row indexes and table height
 func _recompute_columns() -> void:
-	_size_cache.x = 0
+	_size_cache.x = get_table_draw_start().x + MARGIN
 	
 	for column_index: int in range(_columns.size()):
 		var column: Column = _columns[column_index]
@@ -517,21 +663,41 @@ func _get_scroll_offset() -> Vector2:
 
 
 ## Selects the cell at the given position
-func _select_cell_at_position(p_position: Vector2) -> void:
-	var cell: Cell = get_cell_at_position(p_position)
+func _select_item_at_position(p_position: Vector2) -> void:
+	var item: TableItem = get_item_at_position(p_position)
 	var control_pressed: bool = Input.is_key_pressed(KEY_CTRL)
 	
-	if not is_instance_valid(cell):
+	if not is_instance_valid(item):
 		if not control_pressed:
 			deselect_all()
+		
 		return
 	
-	var is_selected: bool = cell.is_selected()
+	var is_selected: bool = item.is_seleced()
+	var shift_pressed: bool = Input.is_key_pressed(KEY_SHIFT)
 	
 	if not control_pressed:
 		deselect_all()
 	
-	cell.set_selected(not is_selected if control_pressed else true)
+	item.set_selected(not is_selected if control_pressed else true, shift_pressed)
+	queue_redraw_table()
+
+
+## Sets the current hovered TableItem to the item under the given position
+func _hover_item_at_position(p_position: Vector2) -> void:
+	var hovered_item: TableItem = get_item_at_position(p_position)
+	
+	if hovered_item == _curent_hovered_item:
+		return 
+	
+	if _curent_hovered_item:
+		_curent_hovered_item._set_hovered(false)
+	
+	_curent_hovered_item = hovered_item
+	
+	if _curent_hovered_item:
+		_curent_hovered_item._set_hovered(true)
+	
 	queue_redraw_table()
 
 
@@ -546,17 +712,32 @@ func _on_select_box_selection_updated(p_selection: Rect2) -> void:
 	if not control_pressed:
 		deselect_all()
 	
-	p_selection.position -= _get_scroll_offset()
+	#p_selection.position -= _get_scroll_offset()
 	
-	for row_index: int in range(_rows.size() - 1, -1, -1) if flip_y else range(_rows.size()):
-		var row: Row = _rows[row_index]
-		var cells: Array = row.get_cells().values()
-		
-		for cell_index: int in range(cells.size() - 1, -1, -1) if flip_x else range(cells.size()):
-			var cell: Cell = cells[cell_index]
+	if get_table_rect().intersects(p_selection):
+		for row_index: int in range(_rows.size() - 1, -1, -1) if flip_y else range(_rows.size()):
+			var row: Row = _rows[row_index]
+			var cells: Array = row.get_cells().values()
 			
-			if p_selection.intersects(cell.get_rect()):
-				cell.set_selected(not shift_pressed)
+			for cell_index: int in range(cells.size() - 1, -1, -1) if flip_x else range(cells.size()):
+				var cell: Cell = cells[cell_index]
+				
+				if p_selection.intersects(cell.get_rect(_get_scroll_offset())):
+					cell.set_selected(not shift_pressed)
+	
+	if get_row_headers_rect().intersects(p_selection):
+		for row_index: int in range(_rows.size() - 1, -1, -1) if flip_y else range(_rows.size()):
+			var row: Row = _rows[row_index]
+			
+			if p_selection.intersects(row.get_headder_rect(_get_scroll_offset())):
+				row.set_selected(not shift_pressed)
+	
+	if get_column_headers_rect().intersects(p_selection):
+		for column_index: int in range(_columns.size() - 1, -1, -1) if flip_x else range(_columns.size()):
+			var column: Column = _columns[column_index]
+			
+			if p_selection.intersects(column.get_headder_rect(_get_scroll_offset())):
+				column.set_selected(not shift_pressed)
 
 
 ## Called when this table is resized
@@ -577,46 +758,38 @@ func _on_canvas_resized() -> void:
 ## Called for all input events on the canvas
 func _on_canvas_gui_input(p_event: InputEvent) -> void:
 	if p_event is InputEventMouseMotion:
-		if is_instance_valid(_hovered_cell):
-			_hovered_cell._set_hovored(false)
-			_hovered_cell = null
-		
-		var cell: Cell = get_cell_at_position(p_event.position)
-		
-		if is_instance_valid(cell):
-			_hovered_cell = cell
-			_hovered_cell._set_hovored(true)
-		
-		queue_redraw_table()
+		_hover_item_at_position(p_event.position)
 	
 	elif p_event is InputEventMouseButton and p_event.is_pressed():
 		match p_event.button_index:
 			MOUSE_BUTTON_LEFT:
-				_select_cell_at_position(p_event.position)
+				_select_item_at_position(p_event.position)
 			MOUSE_BUTTON_RIGHT:
 				_on_mouse_button_right_down(p_event)
 
 
 ## Called when MOUSE_BUTTON_RIGHT is pressed
 func _on_mouse_button_right_down(p_event: InputEventMouseButton) -> void:
-	var cell: Cell = get_cell_at_position(p_event.position)
+	var item: TableItem = get_item_at_position(p_event.position)
 	
 	if get_selection_size() == 1 and not Input.is_key_pressed(KEY_CTRL):
 		deselect_all()
 	
-	if is_instance_valid(cell) and not cell.is_selected():
-		cell.set_selected(true)
+	if is_instance_valid(item) and not item.is_seleced():
+		item.set_selected(true, Input.is_key_pressed(KEY_SHIFT))
 	
 	edit_selected()
 
 
 ## Called when the mouse exits the canvas
 func _on_canvas_mouse_exited() -> void:
-	if not is_instance_valid(_hovered_cell):
+	if not is_instance_valid(_curent_hovered_item):
 		return
 	
-	_hovered_cell._set_hovored(false)
-	queue_redraw()
+	_curent_hovered_item._set_hovered(false)
+	_curent_hovered_item = null
+	
+	queue_redraw_table()
 
 
 ## Called when the scroll position is changed on the VScrollBar
@@ -629,11 +802,61 @@ func _on_h_scroll_bar_value_changed(_p_value: float) -> void:
 	queue_redraw_table()
 
 
-## Class to repersent a Row in the table
-class Row extends Object:
-	## The Table this row is apart of 
-	var _table: Table2
+## Base class for all items rendered in this Table
+class TableItem extends Object:
+	## The table this TableItem is apart of
+	var _table: Table2 
 	
+	## True if this TableItem is selected
+	var _is_selected: bool = false
+	
+	## True if this TableItem is hovered
+	var _is_hovered: bool = false
+	
+	
+	## Returns the Table this TableItem is apart of
+	func get_table() -> Table2:
+		return _table
+	
+	
+	## Sets the selected state on this TableItem
+	## Selection is done in reverse order if p_reverse is true
+	func set_selected(p_selected: bool, p_reverse: bool = false) -> void:
+		_is_selected = p_selected
+	
+	
+	## Returns true if this TableItem is selected
+	func is_seleced() -> bool:
+		return _is_selected
+	
+	
+	## Returns true if this TableItem is hovered
+	func is_hovered() -> bool:
+		return _is_hovered
+	
+	
+	## Sets the table this TableItem is apart of
+	func _set_table(p_table: Table2) -> void:
+		_table = p_table
+	
+	
+	## Sets the selected state
+	func _set_selected(p_selected: bool) -> void:
+		_is_selected = p_selected
+	
+	
+	## Sets the hovered state
+	func _set_hovered(p_hovered: bool) -> void:
+		_is_hovered = p_hovered
+	
+	
+	## Handle deletion
+	func _delete() -> void:
+		free()
+
+
+## Class to repersent a Row in the table
+class Row extends TableItem:
 	## ID number of this Row
 	var _index: int = 0
 	
@@ -742,6 +965,19 @@ class Row extends Object:
 		return self 
 	
 	
+	## Sets the selected state of all the Cells in this Row
+	func set_selected(p_selected: bool, p_reverse: bool = false) -> void:
+		var cell_range: Array
+		
+		if p_reverse:
+			cell_range = range(_cells.size() -1, -1, -1)
+		else:
+			cell_range = range(_cells.size())
+		
+		for cell_index: int in cell_range:
+			_cells.values()[cell_index].set_selected(p_selected, p_reverse)
+	
+	
 	## Returns the index number of this row
 	func get_index() -> int:
 		return _index
@@ -780,28 +1016,48 @@ class Row extends Object:
 		return selected
 	
 	
-	## Returns the table this row in in
-	func get_table() -> Table2:
-		return _table
-	
-	
-	## Returns the Rect2 for this row
-	func get_rect() -> Rect2:
+	## Returns the Rect2 for all of this row's cells
+	func get_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		var x_offset: int = _table.ROW_HEADDER_WIDTH + (_table.MARGIN * 2)
 		return Rect2(
 			Vector2(
-				0,
+				x_offset,
 				_position
-			),
+			) + p_scroll,
 			Vector2(
-				_table.get_table_size().x,
+				_table.get_table_size().x - x_offset,
 				_height
 			)
 		)
 	
 	
+	## Returns the Rect2 for the headder
+	func get_headder_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return Rect2(
+			Vector2(
+				0,
+				_position + p_scroll.y
+			),
+			Vector2(
+				_table.ROW_HEADDER_WIDTH,
+				_height
+			)
+		)
+	
+	
+	## Returns the Rect2 for the full row, including the header
+	func get_full_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
+	
+	
 	## Returns true if any cells are selected in this row
 	func is_any_selected() -> bool:
 		return bool(_selected_cells.size())
+	
+	
+	## Returns true if all cells are selected in this row
+	func is_seleced() -> bool:
+		return _selected_cells.size() == _cells.size()
 	
 	
 	## Sets the index of this row
@@ -829,6 +1085,29 @@ class Row extends Object:
 	
 	## init
 	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
+		var rect: Rect2 = get_rect(p_scroll)
+		var header_rect: Rect2 = get_headder_rect(p_scroll)
+		var font_pos: Vector2 = header_rect.position + Vector2(
+			0, 
+			_height/2 + _table.get_font_size() / 2
+		) + _table.get_font_margin()
+		
+		if is_any_selected():
+			p_canvas.draw_rect(header_rect, _table.ROW_HILIGHT_COLOR)
+		
+		if _is_hovered:
+			p_canvas.draw_rect(header_rect, _table.CELL_HOVER_COLOR)
+		
+		p_canvas.draw_string(
+			_table.get_font(),
+			font_pos,
+			str(_index),
+			HORIZONTAL_ALIGNMENT_LEFT,
+			-1,
+			_table.get_font_size(),
+			_table.FONT_COLOR
+		)
+		
 		for cell: Cell in _cells.values():
 			var cell_rect: Rect2 = cell.get_rect()
 			
@@ -840,10 +1119,10 @@ class Row extends Object:
 			
 			cell._draw(p_canvas, p_scroll)
 		
-		if _border_color != Color.TRANSPARENT:
+		if _border_color != Color.TRANSPARENT and _index != _table.get_num_rows() -1:
 			p_canvas.draw_line(
-				Vector2(0, _position + _height) + p_scroll, 
-				Vector2(_table.get_table_size().x, _position + _height) + p_scroll, 
+				rect.position + Vector2(0, _height),
+				rect.position + Vector2(rect.size.x, _height),
 				_border_color
 			)
 	
@@ -858,10 +1137,7 @@ class Row extends Object:
 
 
 ## Class to repersent a Column in in the table
-class Column extends Object:
-	## The Table this Column is apart of
-	var _table: Table2
-	
+class Column extends TableItem:
 	## index of this column
 	var _index: int = 0
 	
@@ -875,7 +1151,7 @@ class Column extends Object:
 	var _title: String
 	
 	## Border color for coloumn lines
-	var _border_color: Color = Color.TRANSPARENT
+	var _border_color: Color = Color(0.29, 0.29, 0.29, 1.0)
 	
 	## Set for all selected cells in this Column
 	var _selected_cells: Set = Set.new(TYPE_OBJECT)
@@ -924,6 +1200,21 @@ class Column extends Object:
 		return self
 	
 	
+	## Sets the selected state of all cells in this column
+	func set_selected(p_selected: bool, p_reverse: bool = false) -> void:
+		var row_range: Array
+		
+		if p_reverse:
+			row_range = range(_table.get_num_rows() -1, -1, -1) 
+		else:
+			row_range = range(_table.get_num_rows())
+		
+		for row_index: int in row_range:
+			var cell: Cell = _table.get_row(row_index).get_cell_at_column(self)
+			if is_instance_valid(cell):
+				cell.set_selected(p_selected, p_reverse)
+	
+	
 	## Gets the index of this Column
 	func get_index() -> int:
 		return _index
@@ -944,11 +1235,6 @@ class Column extends Object:
 		return _position
 	
 	
-	## Returns the table this Column in in
-	func get_table() -> Table2:
-		return _table
-	
-	
 	## Returns all the selected cells in this column
 	func get_selected_cells() -> Array[Cell]:
 		var selected: Array[Cell]
@@ -957,9 +1243,49 @@ class Column extends Object:
 		return selected
 	
 	
+	## Returns the Rect2 of this Column
+	func get_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		var y_offset: int = _table.COLUMN_HEADDER_HEIGHT + (_table.MARGIN * 2)
+		
+		return Rect2(
+			Vector2(
+				_position,
+				y_offset
+			) + p_scroll,
+			Vector2(
+				_width,
+				_table.get_table_size().y - y_offset
+			)
+		)
+	
+	
+	## Returns the Rect2 for the column headder
+	func get_headder_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return Rect2(
+			Vector2(
+				_position + p_scroll.x, 
+				0
+			),
+			Vector2(
+				_width,
+				_table.COLUMN_HEADDER_HEIGHT
+			)
+		)
+	
+	
+	## Returns the Rect2 for the whole column, including the header
+	func get_full_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
+	
+	
 	## Returns true if any cells are selected in this column
 	func is_any_selected() -> bool:
 		return bool(_selected_cells.size())
+	
+	
+	## Returns true if all cells are selected in this column
+	func is_seleced() -> bool:
+		return _selected_cells.size() == _table.get_num_rows()
 	
 	
 	## Sets the index of this column
@@ -987,10 +1313,35 @@ class Column extends Object:
 	
 	## draw
 	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
-		if _border_color != Color.TRANSPARENT:
+		var rect: Rect2 = get_rect(p_scroll)
+		var header_rect: Rect2 = get_headder_rect(p_scroll)
+		
+		if is_any_selected():
+			p_canvas.draw_rect(header_rect, _table.ROW_HILIGHT_COLOR)
+		
+		if _is_hovered:
+			p_canvas.draw_rect(header_rect, _table.CELL_HOVER_COLOR)
+		
+		if _title:
+			var font_pos: Vector2 = header_rect.position + Vector2(
+				0, 
+				_table.COLUMN_HEADDER_HEIGHT/2 + _table.get_font_size() / 2
+			) + _table.get_font_margin()
+			
+			p_canvas.draw_string(
+				_table.get_font(),
+				font_pos,
+				_title,
+				HORIZONTAL_ALIGNMENT_CENTER,
+				-1, 
+				_table.get_font_size(), 
+				_table.FONT_COLOR
+			)
+		
+		if _border_color != Color.TRANSPARENT and _index != _table.get_num_columns() -1:
 			p_canvas.draw_line(
-				Vector2(_position + _width, 0) + p_scroll,
-				Vector2(_position + _width, _table.get_table_size().y) + p_scroll,
+				rect.position + Vector2(_width, 0),
+				rect.position + Vector2(_width, rect.size.y),
 				_border_color
 			)
 	
@@ -1002,10 +1353,7 @@ class Column extends Object:
 
 
 ## Class to repersent a cell in Row
-class Cell extends Object:
-	## The Table this Cell is in
-	var _table: Table2
-	
+class Cell extends TableItem:
 	## The row this Cell is in
 	var _row: Row
 	
@@ -1021,33 +1369,22 @@ class Cell extends Object:
 	## Background color of this Cell
 	var _bg_color: Color = Color.TRANSPARENT
 	
-	## Text color of this Cell
-	var _text_color: Color = Color(0.869, 0.869, 0.869, 1.0)
-	
 	## Border color
 	var _border_color: Color = Color.TRANSPARENT
 	
 	## Border width in px
 	var _border_width: int = 0
 	
-	## True if this cell is activley being hovored
-	var _is_hovored: bool = false
-	
-	## True if this cell is selected
-	var _is_selected: bool = false
-	
 	
 	## init
 	func _init(
 		p_value: String = _value, 
 		p_bg_color: Color = _bg_color, 
-		p_text_color: Color = _text_color,
 		p_border_color: Color = _border_color,
 		p_border_width: int = _border_width
 	) -> void:
 		_value = p_value
 		_bg_color = p_bg_color
-		_text_color = p_text_color
 		_border_color = p_border_color
 		_border_width = p_border_width
 	
@@ -1090,14 +1427,6 @@ class Cell extends Object:
 		return self
 	
 	
-	## Sets the text color
-	func set_text_color(p_text_color: Color) -> Cell:
-		_text_color = p_text_color
-		
-		_queue_redraw()
-		return self
-	
-	
 	## Sets the cell border color
 	func set_border_color(p_border_color: Color) -> Cell:
 		_border_color = p_border_color
@@ -1115,7 +1444,7 @@ class Cell extends Object:
 	
 	
 	## Sets the selected state
-	func set_selected(p_selected: bool) -> void:
+	func set_selected(p_selected: bool, p_reverse: bool = false) -> void:
 		if is_instance_valid(_table):
 			_table.set_cell_selected(self, p_selected)
 	
@@ -1135,11 +1464,6 @@ class Cell extends Object:
 		return _bg_color
 	
 	
-	## Returns the text color of this cell
-	func get_text_color() -> Color:
-		return _text_color
-	
-	
 	## Returns the border color of this cell
 	func get_border_color() -> Color:
 		return _border_color
@@ -1155,18 +1479,13 @@ class Cell extends Object:
 		return _is_selected
 	
 	
-	## Returns the hovored state
-	func get_hovored() -> bool:
-		return _is_hovored
-	
-	
 	## Returns a Rect2 with the position and size of this cell
-	func get_rect() -> Rect2:
+	func get_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
 		return Rect2(
 			Vector2(
 				_column.get_position(), 
 				_row.get_position()
-			),
+			) + p_scroll,
 			Vector2(
 				_column.get_width(),
 				_row.get_height()
@@ -1190,7 +1509,7 @@ class Cell extends Object:
 	
 	
 	## Returns the selected state of this Cell
-	func is_selected() -> bool:
+	func is_seleced() -> bool:
 		return _is_selected
 	
 	
@@ -1205,11 +1524,6 @@ class Cell extends Object:
 		
 		_row._set_cell_selected(self, p_selected)
 		_column._set_cell_selected(self, p_selected)
-	
-	
-	## Sets the hovored state
-	func _set_hovored(p_hovored: bool) -> void:
-		_is_hovored = p_hovored
 	
 	
 	## Sets the parent row
@@ -1235,9 +1549,8 @@ class Cell extends Object:
 	
 	## draw
 	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
-		var rect: Rect2 = get_rect()
+		var rect: Rect2 = get_rect(p_scroll)
 		var font_size: int = _table.get_font_size()
-		rect.position += p_scroll
 		
 		var font_pos: Vector2 = rect.position + Vector2(
 			0, 
@@ -1249,7 +1562,7 @@ class Cell extends Object:
 		if _is_selected:
 			p_canvas.draw_rect(rect, _table.CELL_SELECT_COLOR)
 		
-		if _is_hovored:
+		if _is_hovered:
 			p_canvas.draw_rect(rect, _table.CELL_HOVER_COLOR)
 		
 		if _row.is_any_selected() and not _is_selected:
@@ -1265,7 +1578,7 @@ class Cell extends Object:
 			HORIZONTAL_ALIGNMENT_LEFT, 
 			rect.size.x, 
 			font_size, 
-			_text_color.lightened(_table.CELL_TEXT_SELECTED_LIGHTEN if _is_selected else 0) 
+			_table.FONT_COLOR.lightened(_table.CELL_TEXT_SELECTED_LIGHTEN if _is_selected else 0.0) 
 		)
 	
 	
