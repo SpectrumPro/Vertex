@@ -27,7 +27,6 @@ size_flags_vertical = 3
 script = ExtResource("1_qasxj")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-clip_children = 2
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

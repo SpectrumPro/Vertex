@@ -100,6 +100,9 @@ var _headder_bar_theme: StyleBox = preload("uid://b0mo3v7qocc4r")
 ## The StyleBox used for the table background
 var _table_backgroud_theme: StyleBox = preload("uid://ivg5xu85gbgt")
 
+## Set to store the queue of canvas items that need to be cleared
+var _canvas_clear_queue: Set = Set.new(TYPE_RID)
+
 
 ## init
 func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
@@ -123,6 +126,11 @@ func _ready() -> void:
 ## draw
 func _draw_table() -> void:
 	var scroll: Vector2 = _get_scroll_offset()
+	
+	for item: RID in _canvas_clear_queue.get_as_array():
+		RenderingServer.canvas_item_clear(item)
+	
+	_canvas_clear_queue.clear()
 	
 	_canvas.draw_style_box(_headder_bar_theme, get_header_index_rect())
 	_canvas.draw_style_box(_headder_bar_theme, get_row_headers_rect())
@@ -516,7 +524,7 @@ func get_table_draw_start() -> Vector2:
 func get_table_rect() -> Rect2:
 	return Rect2(
 		get_table_draw_start(),
-		_canvas.size
+		_canvas.size - get_table_draw_start()
 	)
 
 
@@ -540,7 +548,7 @@ func get_row_headers_rect() -> Rect2:
 		),
 		Vector2(
 			ROW_HEADDER_WIDTH,
-			_canvas.size.y
+			_canvas.size.y - (COLUMN_HEADDER_HEIGHT + MARGIN)
 		)
 	)
 
@@ -553,7 +561,7 @@ func get_column_headers_rect() -> Rect2:
 			0
 		),
 		Vector2(
-			_canvas.size.x,
+			_canvas.size.x - (ROW_HEADDER_WIDTH + MARGIN),
 			COLUMN_HEADDER_HEIGHT,
 		)
 	)
@@ -699,6 +707,16 @@ func _hover_item_at_position(p_position: Vector2) -> void:
 		_curent_hovered_item._set_hovered(true)
 	
 	queue_redraw_table()
+
+
+## Adds a canvas item RID to the clear queue
+func _canvas_add_clear_queue(p_item: RID) -> void:
+	_canvas_clear_queue.add(p_item)
+
+
+## Removes an item from the clear queue
+func _canvas_remove_clear_queue(p_item: RID) -> void:
+	_canvas_clear_queue.remove(p_item)
 
 
 ## Called when the select box is moved
@@ -1050,6 +1068,11 @@ class Row extends TableItem:
 		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
 	
 	
+	## Returns a Rect2 containing the visible portion of this row on the screen
+	func get_visable_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return get_rect(p_scroll).intersection(_table.get_table_rect())
+	
+	
 	## Returns true if any cells are selected in this row
 	func is_any_selected() -> bool:
 		return bool(_selected_cells.size())
@@ -1086,7 +1109,10 @@ class Row extends TableItem:
 	## init
 	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
 		var rect: Rect2 = get_rect(p_scroll)
+		var visable_rect: Rect2 = get_visable_rect(p_scroll)
 		var header_rect: Rect2 = get_headder_rect(p_scroll)
+		var table_rect: Rect2 = _table.get_table_rect()
+		
 		var font_pos: Vector2 = header_rect.position + Vector2(
 			0, 
 			_height/2 + _table.get_font_size() / 2
@@ -1117,12 +1143,22 @@ class Row extends TableItem:
 			if cell_rect.position.x + cell_rect.size.x + p_scroll.x < 0:
 				continue
 			
-			cell._draw(p_canvas, p_scroll)
+			cell._draw(p_scroll)
 		
-		if _border_color != Color.TRANSPARENT and _index != _table.get_num_rows() -1:
+		if (
+			_border_color != Color.TRANSPARENT
+			and _index != _table.get_num_rows() -1
+			and visable_rect.end.y < table_rect.end.y
+		):
 			p_canvas.draw_line(
-				rect.position + Vector2(0, _height),
-				rect.position + Vector2(rect.size.x, _height),
+				Vector2(
+					visable_rect.position.x,
+					rect.position.y + _height,
+				),
+				Vector2(
+					visable_rect.end.x,
+					rect.position.y + _height
+				),
 				_border_color
 			)
 	
@@ -1278,6 +1314,11 @@ class Column extends TableItem:
 		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
 	
 	
+	## Returns a Rect2 containing the visible portion of this column on the screen
+	func get_visable_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return get_rect(p_scroll).intersection(_table.get_table_rect())
+	
+	
 	## Returns true if any cells are selected in this column
 	func is_any_selected() -> bool:
 		return bool(_selected_cells.size())
@@ -1314,7 +1355,9 @@ class Column extends TableItem:
 	## draw
 	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
 		var rect: Rect2 = get_rect(p_scroll)
+		var visable_rect: Rect2 = get_visable_rect(p_scroll)
 		var header_rect: Rect2 = get_headder_rect(p_scroll)
+		var table_rect: Rect2 = _table.get_table_rect()
 		
 		if is_any_selected():
 			p_canvas.draw_rect(header_rect, _table.ROW_HILIGHT_COLOR)
@@ -1338,10 +1381,22 @@ class Column extends TableItem:
 				_table.FONT_COLOR
 			)
 		
-		if _border_color != Color.TRANSPARENT and _index != _table.get_num_columns() -1:
+		if (
+			_border_color != Color.TRANSPARENT
+			and _index != _table.get_num_columns() -1
+			and visable_rect.end.x < table_rect.end.x
+		):
+			rect.position + Vector2(_width, 0)
+			rect.position + Vector2(_width, rect.size.y)
 			p_canvas.draw_line(
-				rect.position + Vector2(_width, 0),
-				rect.position + Vector2(_width, rect.size.y),
+				Vector2(
+					rect.position.x + _width,
+					visable_rect.position.y
+				),
+				Vector2(
+					rect.position.x + _width,
+					visable_rect.end.y
+				),
 				_border_color
 			)
 	
@@ -1374,6 +1429,12 @@ class Cell extends TableItem:
 	
 	## Border width in px
 	var _border_width: int = 0
+	
+	## RID for the canvas used to clip the cell
+	var _clip_canvas: RID
+	
+	## RID for the canvas used to draw the cell
+	var _draw_canvas: RID
 	
 	
 	## init
@@ -1495,19 +1556,7 @@ class Cell extends TableItem:
 	
 	## Returns the Rect2 inclosing the visable portion of this Cell on the screen
 	func get_visable_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
-		var rect: Rect2 = get_rect(p_scroll)
-		var clipped_pos: Vector2 = rect.position.clamp(
-			_table.get_table_draw_start(),
-			_table.get_table_size()
-		)
-		
-		return Rect2(
-			clipped_pos,
-			Vector2(
-				maxf(_column.get_rect(p_scroll).end.x - clipped_pos.x, 0),
-				maxf(_row.get_rect(p_scroll).end.y - clipped_pos.y, 0)
-			)
-		)
+		return _row.get_visable_rect(p_scroll).intersection(_column.get_visable_rect(p_scroll))
 	
 	
 	## Returns the Table this Cell is in
@@ -1556,6 +1605,16 @@ class Cell extends TableItem:
 	## Sets the parent table
 	func _set_table(p_table: Table2) -> void:
 		_table = p_table
+		
+		_clip_canvas = RenderingServer.canvas_item_create()
+		RenderingServer.canvas_item_set_parent(_clip_canvas, _table._canvas.get_canvas_item())
+		RenderingServer.canvas_item_set_canvas_group_mode(
+			_clip_canvas,
+			RenderingServer.CANVAS_GROUP_MODE_CLIP_ONLY
+		)
+		
+		_draw_canvas = RenderingServer.canvas_item_create()
+		RenderingServer.canvas_item_set_parent(_draw_canvas, _clip_canvas)
 	
 	
 	## Queue redraw the table if its valid
@@ -1565,38 +1624,80 @@ class Cell extends TableItem:
 	
 	
 	## draw
-	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
-		var rect: Rect2 = get_rect(p_scroll)
-		var font_size: int = _table.get_font_size()
+	func _draw(p_scroll: Vector2 = Vector2.ZERO) -> void:
+		RenderingServer.canvas_item_clear(_clip_canvas)
+		RenderingServer.canvas_item_clear(_draw_canvas)
 		
-		var font_pos: Vector2 = rect.position + Vector2(
+		_table._canvas_remove_clear_queue(_clip_canvas)
+		_table._canvas_remove_clear_queue(_draw_canvas)
+		
+		var cell_rect: Rect2 = get_rect(p_scroll)
+		var visable_rect: Rect2 = get_visable_rect(p_scroll)
+		var local_rect: Rect2 = Rect2(Vector2.ZERO, cell_rect.size)
+		
+		if not cell_rect:
+			return
+		
+		var font_size: int = _table.get_font_size()
+		var font_pos: Vector2 = local_rect.position + Vector2(
 			0, 
-			rect.size.y/2 + font_size / 2
+			local_rect.size.y/2 + font_size / 2
 		) + _table.get_font_margin()
 		
-		p_canvas.draw_rect(rect, _bg_color)
+		# Move clipper to visual cell position
+		RenderingServer.canvas_item_set_transform(
+			_clip_canvas, 
+			Transform2D.IDENTITY.translated(
+				visable_rect.position
+			)
+		)
+		
+		# Draw the mask to match visual size
+		RenderingServer.canvas_item_add_rect(
+			_clip_canvas, 
+			Rect2(
+				Vector2.ZERO, 
+				visable_rect.size
+			), Color.WHITE
+		)
+		
+		# Align draw canvas
+		RenderingServer.canvas_item_set_transform(
+			_draw_canvas, 
+			Transform2D.IDENTITY.translated(
+				cell_rect.position - visable_rect.position
+			)
+		)
 		
 		if _is_selected:
-			p_canvas.draw_rect(rect, _table.CELL_SELECT_COLOR)
+			RenderingServer.canvas_item_add_rect(
+				_draw_canvas, local_rect, _table.CELL_SELECT_COLOR
+			)
 		
 		if _is_hovered:
-			p_canvas.draw_rect(rect, _table.CELL_HOVER_COLOR)
+			RenderingServer.canvas_item_add_rect(
+				_draw_canvas, local_rect, _table.CELL_HOVER_COLOR
+			)
 		
 		if _row.is_any_selected() and not _is_selected:
-			p_canvas.draw_rect(rect, _table.ROW_HILIGHT_COLOR)
+			RenderingServer.canvas_item_add_rect(
+				_draw_canvas, local_rect, _table.ROW_HILIGHT_COLOR
+			)
 		
-		if _border_width and _border_color != Color.TRANSPARENT:
-			p_canvas.draw_rect(rect.grow(-_border_width / 2), _border_color, false, _border_width)
-		
-		p_canvas.draw_string(
-			_table.get_font(), 
+		_table.get_font().draw_string(
+			_draw_canvas, 
 			font_pos, 
 			_value, 
-			HORIZONTAL_ALIGNMENT_LEFT, 
-			rect.size.x, 
+			HORIZONTAL_ALIGNMENT_FILL, 
+			-1, 
 			font_size, 
-			_table.FONT_COLOR.lightened(_table.CELL_TEXT_SELECTED_LIGHTEN if _is_selected else 0.0) 
+			_table.FONT_COLOR.lightened(
+				_table.CELL_TEXT_SELECTED_LIGHTEN if _is_selected else 0.0
+			)
 		)
+		
+		_table._canvas_add_clear_queue(_clip_canvas)
+		_table._canvas_add_clear_queue(_draw_canvas)
 	
 	
 	## Cleanup before deletion
