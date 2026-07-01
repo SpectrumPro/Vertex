@@ -43,6 +43,9 @@ const CELL_TEXT_SELECTED_LIGHTEN: float = 1
 ## Font color
 const FONT_COLOR: Color = Color(0.869, 0.869, 0.869, 1.0)
 
+## Scroll step in pixels
+const SCROLL_STEP: Vector2 = Vector2(20, 10)
+
 
 ## Enum for SortDirection
 enum SortDirection {
@@ -405,6 +408,12 @@ func set_sort_direction(p_direction: SortDirection) -> void:
 	queue_sort()
 
 
+## Sets the scroll on the table
+func set_scroll(p_scroll: Vector2) -> void:
+	_h_scroll_bar.set_value(p_scroll.x)
+	_v_scroll_bar.set_value(p_scroll.y)
+
+
 ## Returns the row at the given index, or null
 func get_row(p_index: int) -> Row:
 	if p_index < 0 or p_index >= _rows.size():
@@ -494,6 +503,14 @@ func get_sort_column() -> Column:
 ## Returns the sort direction
 func get_sort_direction() -> SortDirection:
 	return _sort_direction
+
+
+## Gets the current scroll position
+func get_scroll() -> Vector2:
+	return Vector2(
+		_h_scroll_bar.get_value(),
+		_v_scroll_bar.get_value()
+	)
 
 
 ## Returns the font used by this table
@@ -793,6 +810,14 @@ func _on_canvas_gui_input(p_event: InputEvent) -> void:
 				_select_item_at_position(p_event.position)
 			MOUSE_BUTTON_RIGHT:
 				_on_mouse_button_right_down(p_event)
+			MOUSE_BUTTON_WHEEL_DOWN:
+				set_scroll(get_scroll() + Vector2(0, SCROLL_STEP.y))
+			MOUSE_BUTTON_WHEEL_UP:
+				set_scroll(get_scroll() - Vector2(0, SCROLL_STEP.y))
+			MOUSE_BUTTON_WHEEL_LEFT:
+				set_scroll(get_scroll() - Vector2(SCROLL_STEP.x, 0))
+			MOUSE_BUTTON_WHEEL_RIGHT:
+				set_scroll(get_scroll() + Vector2(SCROLL_STEP.y, 0))
 
 
 ## Called when MOUSE_BUTTON_RIGHT is pressed
