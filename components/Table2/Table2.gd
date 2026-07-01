@@ -893,6 +893,12 @@ class Row extends TableItem:
 	## Set to store all selected cells in this row
 	var _selected_cells: Set = Set.new()
 	
+	## RID for the canvas used to clip the title
+	var _clip_canvas: RID
+	
+	## RID for the canvas used to draw the title
+	var _draw_canvas: RID
+	
 	
 	## init
 	func _init(
@@ -905,6 +911,16 @@ class Row extends TableItem:
 		_index = p_index
 		_height = p_height
 		_position = p_position
+		
+		_clip_canvas = RenderingServer.canvas_item_create()
+		RenderingServer.canvas_item_set_parent(_clip_canvas, _table._canvas.get_canvas_item())
+		RenderingServer.canvas_item_set_canvas_group_mode(
+			_clip_canvas,
+			RenderingServer.CANVAS_GROUP_MODE_CLIP_ONLY
+		)
+		
+		_draw_canvas = RenderingServer.canvas_item_create()
+		RenderingServer.canvas_item_set_parent(_draw_canvas, _clip_canvas)
 	
 	
 	## Returns, or creates then returns the cell in the given column
@@ -1063,14 +1079,19 @@ class Row extends TableItem:
 		)
 	
 	
-	## Returns the Rect2 for the full row, including the header
-	func get_full_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
-		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
-	
-	
 	## Returns a Rect2 containing the visible portion of this row on the screen
 	func get_visable_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
 		return get_rect(p_scroll).intersection(_table.get_table_rect())
+	
+	
+	## Returns a Rect2 containing the visable portion of the row header on screen
+	func get_visable_header_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return get_headder_rect(p_scroll).intersection(_table.get_row_headers_rect())
+	
+	
+	## Returns the Rect2 for the full row, including the header
+	func get_full_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
 	
 	
 	## Returns true if any cells are selected in this row
@@ -1108,31 +1129,72 @@ class Row extends TableItem:
 	
 	## init
 	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
+		RenderingServer.canvas_item_clear(_clip_canvas)
+		RenderingServer.canvas_item_clear(_draw_canvas)
+		
+		_table._canvas_remove_clear_queue(_clip_canvas)
+		_table._canvas_remove_clear_queue(_draw_canvas)
+		
 		var rect: Rect2 = get_rect(p_scroll)
 		var visable_rect: Rect2 = get_visable_rect(p_scroll)
-		var header_rect: Rect2 = get_headder_rect(p_scroll)
-		var table_rect: Rect2 = _table.get_table_rect()
 		
-		var font_pos: Vector2 = header_rect.position + Vector2(
+		var header_rect: Rect2 = get_headder_rect(p_scroll)
+		var visable_header_rect: Rect2 = get_visable_header_rect(p_scroll)
+		
+		var table_rect: Rect2 = _table.get_table_rect()
+		var local_header_rect: Rect2 = Rect2(Vector2.ZERO, header_rect.size)
+		
+		var font_size: int = _table.get_font_size()
+		var font_pos: Vector2 = local_header_rect.position + Vector2(
 			0, 
-			_height/2 + _table.get_font_size() / 2
+			_height/2 + font_size / 2
 		) + _table.get_font_margin()
 		
-		if is_any_selected():
-			p_canvas.draw_rect(header_rect, _table.ROW_HILIGHT_COLOR)
 		
-		if _is_hovered:
-			p_canvas.draw_rect(header_rect, _table.CELL_HOVER_COLOR)
+		# Move clipper to visual cell position
+		RenderingServer.canvas_item_set_transform(
+			_clip_canvas, 
+			Transform2D.IDENTITY.translated(
+				visable_header_rect.position
+			)
+		)
 		
-		p_canvas.draw_string(
-			_table.get_font(),
+		# Draw the mask to match visual size
+		RenderingServer.canvas_item_add_rect(
+			_clip_canvas, 
+			Rect2(
+				Vector2.ZERO, 
+				visable_header_rect.size
+			), Color.WHITE
+		)
+		
+		# Align draw canvas
+		RenderingServer.canvas_item_set_transform(
+			_draw_canvas, 
+			Transform2D.IDENTITY.translated(
+				header_rect.position - visable_header_rect.position
+			)
+		)
+		
+		_table.get_font().draw_string(
+			_draw_canvas,
 			font_pos,
 			str(_index),
 			HORIZONTAL_ALIGNMENT_LEFT,
 			-1,
-			_table.get_font_size(),
+			font_size, 
 			_table.FONT_COLOR
 		)
+		
+		if is_any_selected():
+			RenderingServer.canvas_item_add_rect(
+				_draw_canvas, local_header_rect, _table.ROW_HILIGHT_COLOR
+			)
+		
+		if _is_hovered:
+			RenderingServer.canvas_item_add_rect(
+				_draw_canvas, local_header_rect, _table.CELL_HOVER_COLOR
+			)
 		
 		for cell: Cell in _cells.values():
 			var cell_rect: Rect2 = cell.get_rect()
@@ -1161,6 +1223,9 @@ class Row extends TableItem:
 				),
 				_border_color
 			)
+		
+		_table._canvas_add_clear_queue(_clip_canvas)
+		_table._canvas_add_clear_queue(_draw_canvas)
 	
 	
 	## Cleanup before deletion
@@ -1192,6 +1257,12 @@ class Column extends TableItem:
 	## Set for all selected cells in this Column
 	var _selected_cells: Set = Set.new(TYPE_OBJECT)
 	
+	## RID for the canvas used to clip the title
+	var _clip_canvas: RID
+	
+	## RID for the canvas used to draw the title
+	var _draw_canvas: RID
+	
 	
 	## init
 	func _init(
@@ -1206,6 +1277,16 @@ class Column extends TableItem:
 		_width = p_width
 		_position = p_position
 		_title = p_title
+		
+		_clip_canvas = RenderingServer.canvas_item_create()
+		RenderingServer.canvas_item_set_parent(_clip_canvas, _table._canvas.get_canvas_item())
+		RenderingServer.canvas_item_set_canvas_group_mode(
+			_clip_canvas,
+			RenderingServer.CANVAS_GROUP_MODE_CLIP_ONLY
+		)
+		
+		_draw_canvas = RenderingServer.canvas_item_create()
+		RenderingServer.canvas_item_set_parent(_draw_canvas, _clip_canvas)
 	
 	
 	## Sets the index of this column, moves the column to that index
@@ -1309,14 +1390,19 @@ class Column extends TableItem:
 		)
 	
 	
-	## Returns the Rect2 for the whole column, including the header
-	func get_full_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
-		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
-	
-	
 	## Returns a Rect2 containing the visible portion of this column on the screen
 	func get_visable_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
 		return get_rect(p_scroll).intersection(_table.get_table_rect())
+	
+	
+	## Returns a Rect2 containing the visable portion of this columns header
+	func get_header_visable_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return get_headder_rect(p_scroll).intersection(_table.get_column_headers_rect())
+	
+	
+	## Returns the Rect2 for the whole column, including the header
+	func get_full_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
+		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
 	
 	
 	## Returns true if any cells are selected in this column
@@ -1354,31 +1440,71 @@ class Column extends TableItem:
 	
 	## draw
 	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
+		RenderingServer.canvas_item_clear(_clip_canvas)
+		RenderingServer.canvas_item_clear(_draw_canvas)
+		
+		_table._canvas_remove_clear_queue(_clip_canvas)
+		_table._canvas_remove_clear_queue(_draw_canvas)
+		
 		var rect: Rect2 = get_rect(p_scroll)
 		var visable_rect: Rect2 = get_visable_rect(p_scroll)
+		
 		var header_rect: Rect2 = get_headder_rect(p_scroll)
+		var visable_header_rect: Rect2 = get_header_visable_rect(p_scroll)
+		
 		var table_rect: Rect2 = _table.get_table_rect()
+		var local_header_rect: Rect2 = Rect2(Vector2.ZERO, header_rect.size)
 		
-		if is_any_selected():
-			p_canvas.draw_rect(header_rect, _table.ROW_HILIGHT_COLOR)
+		# Move clipper to visual cell position
+		RenderingServer.canvas_item_set_transform(
+			_clip_canvas, 
+			Transform2D.IDENTITY.translated(
+				visable_header_rect.position
+			)
+		)
 		
-		if _is_hovered:
-			p_canvas.draw_rect(header_rect, _table.CELL_HOVER_COLOR)
+		# Draw the mask to match visual size
+		RenderingServer.canvas_item_add_rect(
+			_clip_canvas, 
+			Rect2(
+				Vector2.ZERO, 
+				visable_header_rect.size
+			), Color.WHITE
+		)
+		
+		# Align draw canvas
+		RenderingServer.canvas_item_set_transform(
+			_draw_canvas, 
+			Transform2D.IDENTITY.translated(
+				header_rect.position - visable_header_rect.position
+			)
+		)
 		
 		if _title:
-			var font_pos: Vector2 = header_rect.position + Vector2(
+			var font_size: int = _table.get_font_size()
+			var font_pos: Vector2 = local_header_rect.position + Vector2(
 				0, 
-				_table.COLUMN_HEADDER_HEIGHT/2 + _table.get_font_size() / 2
+				local_header_rect.size.y/2 + font_size / 2
 			) + _table.get_font_margin()
 			
-			p_canvas.draw_string(
-				_table.get_font(),
+			_table.get_font().draw_string(
+				_draw_canvas,
 				font_pos,
 				_title,
-				HORIZONTAL_ALIGNMENT_CENTER,
+				HORIZONTAL_ALIGNMENT_LEFT,
 				-1, 
-				_table.get_font_size(), 
+				font_size, 
 				_table.FONT_COLOR
+			)
+		
+		if is_any_selected():
+			RenderingServer.canvas_item_add_rect(
+				_draw_canvas, local_header_rect, _table.ROW_HILIGHT_COLOR
+			)
+		
+		if _is_hovered:
+			RenderingServer.canvas_item_add_rect(
+				_draw_canvas, local_header_rect, _table.CELL_HOVER_COLOR
 			)
 		
 		if (
@@ -1399,6 +1525,10 @@ class Column extends TableItem:
 				),
 				_border_color
 			)
+		
+		
+		_table._canvas_add_clear_queue(_clip_canvas)
+		_table._canvas_add_clear_queue(_draw_canvas)
 	
 	
 	## Cleanup before deletion
