@@ -162,6 +162,7 @@ func create_row() -> Row:
 	
 	_size_cache.y += new_row.get_height()
 	queue_redraw_table()
+	queue(_update_scroll_bars)
 	
 	_rows.append(new_row)
 	return new_row
@@ -173,6 +174,7 @@ func create_column() -> Column:
 	
 	_size_cache.x += new_column.get_width()
 	queue_redraw_table()
+	queue(_update_scroll_bars)
 	
 	_columns.append(new_column)
 	return new_column
@@ -187,6 +189,7 @@ func remove_row(p_row: Row) -> void:
 	p_row._delete()
 	
 	queue(_recompute_rows)
+	queue(_update_scroll_bars)
 	queue_redraw_table()
 
 
@@ -202,6 +205,7 @@ func remove_column(p_column: Column) -> void:
 		set_sort_column(null)
 	
 	queue(_recompute_columns)
+	queue(_update_scroll_bars)
 	queue_redraw_table()
 
 
@@ -662,6 +666,18 @@ func _recompute_columns() -> void:
 		_size_cache.x += column.get_width()
 
 
+## Updates the visability and value of scroll bars
+func _update_scroll_bars() -> void:
+	_h_scroll_bar.set_visible(_size_cache.x > _canvas.size.x)
+	_v_scroll_bar.set_visible(_size_cache.y > _canvas.size.y)
+	
+	_h_scroll_bar.max_value = _size_cache.x
+	_v_scroll_bar.max_value = _size_cache.y
+	
+	_h_scroll_bar.page = _canvas.size.x
+	_v_scroll_bar.page = _canvas.size.y
+
+
 ## Returns the draw offset, based on scroll
 func _get_scroll_offset() -> Vector2:
 	return Vector2(
@@ -763,14 +779,7 @@ func _on_canvas_resized() -> void:
 	if not is_node_ready():
 		return
 	
-	_h_scroll_bar.set_visible(_size_cache.x > _canvas.size.x)
-	_v_scroll_bar.set_visible(_size_cache.y > _canvas.size.y)
-	
-	_h_scroll_bar.max_value = _size_cache.x
-	_v_scroll_bar.max_value = _size_cache.y
-	
-	_h_scroll_bar.page = _canvas.size.x
-	_v_scroll_bar.page = _canvas.size.y
+	_update_scroll_bars()
 
 
 ## Called for all input events on the canvas
