@@ -82,7 +82,6 @@ grow_horizontal = 0
 grow_vertical = 2
 size_flags_horizontal = 8
 
-[connection signal="draw" from="PanelContainer/Canvas" to="." method="_draw_table"]
 [connection signal="selection_updated" from="PanelContainer/Canvas/SelectBox" to="." method="_on_select_box_selection_updated"]
 [connection signal="value_changed" from="HScrollBar" to="." method="_on_h_scroll_bar_value_changed"]
 [connection signal="value_changed" from="VScrollBar" to="." method="_on_v_scroll_bar_value_changed"]
