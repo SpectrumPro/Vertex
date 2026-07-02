@@ -46,6 +46,9 @@ const FONT_COLOR: Color = Color(0.869, 0.869, 0.869, 1.0)
 ## Scroll step in pixels
 const SCROLL_STEP: Vector2 = Vector2(20, 10)
 
+## Width in px for column borders when they are pinned
+const PINNED_BORDER_WIDTH: int = 4
+
 
 ## Enum for SortDirection
 enum SortDirection {
@@ -97,6 +100,9 @@ var _font_size: int
 ## Margin to add when rendering font from bottom left cornor 
 var _text_margin: Vector2 = Vector2(5, -1)
 
+## The column up to which is pinned
+var _pinned_column: Column
+
 ## The StyleBox used for headder bars
 var _headder_bar_theme: StyleBox = preload("uid://b0mo3v7qocc4r")
 
@@ -141,21 +147,9 @@ func _draw_table() -> void:
 	_canvas.draw_style_box(_table_backgroud_theme, get_table_rect())
 	
 	for row: Row in _rows:
-		if row.get_position() > _canvas.size.y - scroll.y:
-			break
-		
-		if row.get_position() + row.get_height() + scroll.y < 0:
-			continue
-		
 		row._draw(_canvas, scroll)
 	
 	for column: Column in _columns:
-		if column.get_position() > _canvas.size.x - scroll.x:
-			break
-		
-		if column.get_position() + column.get_width() + scroll.x < 0:
-			continue
-		
 		column._draw(_canvas, scroll)
 
 
@@ -414,6 +408,15 @@ func set_scroll(p_scroll: Vector2) -> void:
 	_v_scroll_bar.set_value(p_scroll.y)
 
 
+## Sets the column to pinn, all colums before it will also be pinned
+func set_pinned_column(p_column: Column) -> void:
+	if is_instance_valid(p_column) and p_column.get_table() != self:
+		return
+	
+	_pinned_column = p_column
+	queue_redraw_table()
+
+
 ## Returns the row at the given index, or null
 func get_row(p_index: int) -> Row:
 	if p_index < 0 or p_index >= _rows.size():
@@ -511,6 +514,19 @@ func get_scroll() -> Vector2:
 		_h_scroll_bar.get_value(),
 		_v_scroll_bar.get_value()
 	)
+
+
+## Gets the pinned column
+func get_pinned_column() -> Column:
+	return _pinned_column
+
+
+## Returns the position on screeen where pinning ends
+func get_pinned_position() -> int:
+	if not _pinned_column:
+		return 0
+	
+	return _pinned_column.get_rect().end.x
 
 
 ## Returns the font used by this table
@@ -773,7 +789,7 @@ func _on_select_box_selection_updated(p_selection: Rect2) -> void:
 			for cell_index: int in range(cells.size() - 1, -1, -1) if flip_x else range(cells.size()):
 				var cell: Cell = cells[cell_index]
 				
-				if p_selection.intersects(cell.get_rect(_get_scroll_offset())):
+				if p_selection.intersects(cell.get_visable_rect(_get_scroll_offset())):
 					cell.set_selected(not shift_pressed)
 	
 	if get_row_headers_rect().intersects(p_selection):
@@ -1166,11 +1182,11 @@ class Row extends TableItem:
 		RenderingServer.canvas_item_clear(_clip_canvas)
 		RenderingServer.canvas_item_clear(_draw_canvas)
 		
-		_table._canvas_remove_clear_queue(_clip_canvas)
-		_table._canvas_remove_clear_queue(_draw_canvas)
-		
 		var rect: Rect2 = get_rect(p_scroll)
 		var visable_rect: Rect2 = get_visable_rect(p_scroll)
+		
+		if not visable_rect.get_area():
+			return
 		
 		var header_rect: Rect2 = get_headder_rect(p_scroll)
 		var visable_header_rect: Rect2 = get_visable_header_rect(p_scroll)
@@ -1231,14 +1247,6 @@ class Row extends TableItem:
 			)
 		
 		for cell: Cell in _cells.values():
-			var cell_rect: Rect2 = cell.get_rect()
-			
-			if cell_rect.position.x > _table._canvas.size.x - p_scroll.x:
-				break
-			
-			if cell_rect.position.x + cell_rect.size.x + p_scroll.x < 0:
-				continue
-			
 			cell._draw(p_scroll)
 		
 		if (
@@ -1257,9 +1265,6 @@ class Row extends TableItem:
 				),
 				_border_color
 			)
-		
-		_table._canvas_add_clear_queue(_clip_canvas)
-		_table._canvas_add_clear_queue(_draw_canvas)
 	
 	
 	## Cleanup before deletion
@@ -1402,7 +1407,10 @@ class Column extends TableItem:
 			Vector2(
 				_position,
 				y_offset
-			) + p_scroll,
+			) + Vector2(
+				0.0 if is_pinned() else p_scroll.x,
+				p_scroll.y
+			),
 			Vector2(
 				_width,
 				_table.get_table_size().y - y_offset
@@ -1414,7 +1422,7 @@ class Column extends TableItem:
 	func get_headder_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
 		return Rect2(
 			Vector2(
-				_position + p_scroll.x, 
+				_position + (0.0 if is_pinned() else p_scroll.x), 
 				0
 			),
 			Vector2(
@@ -1426,12 +1434,30 @@ class Column extends TableItem:
 	
 	## Returns a Rect2 containing the visible portion of this column on the screen
 	func get_visable_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
-		return get_rect(p_scroll).intersection(_table.get_table_rect())
+		var visable: Rect2 = get_rect(p_scroll).intersection(_table.get_table_rect())
+		
+		if not is_pinned():
+			var difference: float = _table.get_pinned_position() - visable.position.x
+			
+			if difference > 0:
+				visable.position.x += difference
+				visable.size.x = max(visable.size.x - difference, 0.0)
+		
+		return visable
 	
 	
 	## Returns a Rect2 containing the visable portion of this columns header
 	func get_header_visable_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
-		return get_headder_rect(p_scroll).intersection(_table.get_column_headers_rect())
+		var visable: Rect2 = get_headder_rect(p_scroll).intersection(_table.get_column_headers_rect())
+		
+		if not is_pinned():
+			var difference: float = _table.get_pinned_position() - visable.position.x
+			
+			if difference > 0:
+				visable.position.x += difference
+				visable.size.x = max(visable.size.x - difference, 0.0)
+		
+		return visable
 	
 	
 	## Returns the Rect2 for the whole column, including the header
@@ -1442,6 +1468,12 @@ class Column extends TableItem:
 	## Returns true if any cells are selected in this column
 	func is_any_selected() -> bool:
 		return bool(_selected_cells.size())
+	
+	
+	## Returns true if this column is pinned. or is behind a pinned column
+	func is_pinned() -> bool:
+		var pinned: Column = _table.get_pinned_column()
+		return is_instance_valid(pinned) and pinned.get_index() >= _index
 	
 	
 	## Returns true if all cells are selected in this column
@@ -1477,11 +1509,11 @@ class Column extends TableItem:
 		RenderingServer.canvas_item_clear(_clip_canvas)
 		RenderingServer.canvas_item_clear(_draw_canvas)
 		
-		_table._canvas_remove_clear_queue(_clip_canvas)
-		_table._canvas_remove_clear_queue(_draw_canvas)
-		
 		var rect: Rect2 = get_rect(p_scroll)
 		var visable_rect: Rect2 = get_visable_rect(p_scroll)
+		
+		if not visable_rect.get_area():
+			return
 		
 		var header_rect: Rect2 = get_headder_rect(p_scroll)
 		var visable_header_rect: Rect2 = get_header_visable_rect(p_scroll)
@@ -1546,23 +1578,24 @@ class Column extends TableItem:
 			and _index != _table.get_num_columns() -1
 			and visable_rect.end.x < table_rect.end.x
 		):
+			var self_pinned: bool = _table.get_pinned_column() == self
+			var thickness: int = _table.PINNED_BORDER_WIDTH if self_pinned else 1
+			
 			rect.position + Vector2(_width, 0)
 			rect.position + Vector2(_width, rect.size.y)
+			
 			p_canvas.draw_line(
 				Vector2(
-					rect.position.x + _width,
+					rect.position.x + _width - thickness + 1,
 					visable_rect.position.y
 				),
 				Vector2(
-					rect.position.x + _width,
+					rect.position.x + _width - thickness + 1,
 					visable_rect.end.y
 				),
-				_border_color
+				_border_color, 
+				thickness
 			)
-		
-		
-		_table._canvas_add_clear_queue(_clip_canvas)
-		_table._canvas_add_clear_queue(_draw_canvas)
 	
 	
 	## Cleanup before deletion
@@ -1706,16 +1739,7 @@ class Cell extends TableItem:
 	
 	## Returns a Rect2 with the position and size of this cell
 	func get_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
-		return Rect2(
-			Vector2(
-				_column.get_position(), 
-				_row.get_position()
-			) + p_scroll,
-			Vector2(
-				_column.get_width(),
-				_row.get_height()
-			)
-		)
+		return _column.get_rect(p_scroll).intersection(_row.get_rect(p_scroll))
 	
 	
 	## Returns the Rect2 inclosing the visable portion of this Cell on the screen
@@ -1792,9 +1816,6 @@ class Cell extends TableItem:
 		RenderingServer.canvas_item_clear(_clip_canvas)
 		RenderingServer.canvas_item_clear(_draw_canvas)
 		
-		_table._canvas_remove_clear_queue(_clip_canvas)
-		_table._canvas_remove_clear_queue(_draw_canvas)
-		
 		var cell_rect: Rect2 = get_rect(p_scroll)
 		var visable_rect: Rect2 = get_visable_rect(p_scroll)
 		var local_rect: Rect2 = Rect2(Vector2.ZERO, cell_rect.size)
@@ -1859,9 +1880,6 @@ class Cell extends TableItem:
 				_table.CELL_TEXT_SELECTED_LIGHTEN if _is_selected else 0.0
 			)
 		)
-		
-		_table._canvas_add_clear_queue(_clip_canvas)
-		_table._canvas_add_clear_queue(_draw_canvas)
 	
 	
 	## Cleanup before deletion
