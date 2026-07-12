@@ -80,12 +80,9 @@ func get_view_mode() -> ViewMode:
 	return _view_mode
 
 
-##0 Returns the last selected SettingsManager
+## Returns the last selected SettingsManager
 func get_selected_manager() -> SettingsManager:
-	if not _table_view.is_any_selected():
-		return null
-	
-	return _table_view.get_selected_managers()[0]
+	return _table_view.get_selected_manager()
 
 
 ## Returns all selected SettingsManagers
