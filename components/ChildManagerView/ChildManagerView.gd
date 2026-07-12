@@ -30,9 +30,6 @@ var _child_manager: ChildManager
 ## The class filter used when in Mode.GBCIndex
 var _class_filter: String
 
-## Defines what SettingsModule entrys to show in the Table
-var _column_entrys: Array[String] = ["name"]
-
 ## The NewComponent Button
 var _new_button: Button
 
@@ -41,6 +38,9 @@ var _delete_button: Button
 
 ## The DuplicateComponent Button
 var _duplicate_button: Button
+
+## The ViewModeOption OptionButton
+var _view_mode_button: OptionButton
 
 
 ## init
@@ -87,7 +87,7 @@ func mode_child_manager(p_child_manager: ChildManager) -> void:
 
 ## Reloads all objects shown in this ComponentManagerView
 func reload() -> void:
-	_settings_manager_multi_view.reset()
+	_settings_manager_multi_view.clear()
 	
 	match _mode:
 		Mode.GBCINDEX:
@@ -101,7 +101,7 @@ func reload() -> void:
 
 ## Resets this ComponentManagerView
 func reset() -> void:
-	_settings_manager_multi_view.reset()
+	_settings_manager_multi_view.clear()
 	
 	match _mode:
 		Mode.GBCINDEX when is_instance_valid(_gbc_index_config):
@@ -116,31 +116,9 @@ func reset() -> void:
 	_update_buttons()
 
 
-## Returns the SettingsModule entry IDs to show in the table
-func get_column_entrys() -> Array[String]:
-	return _column_entrys.duplicate()
-
-
-## Returns the NewComponent Button
-func get_new_button() -> Button:
-	return _new_button
-
-
-## Returns the DeleteComponent Button
-func get_delete_button() -> Button:
-	return _delete_button
-
-
-## Returns the DuplicateComponent Button
-func get_duplicate_button() -> Button:
-	return _duplicate_button
-
-
-## Sets the SettingsModule entry IDs to show in the table
-func set_column_entrys(p_entrys: Array[String]) -> void:
-	_column_entrys = p_entrys.duplicate()
-	_settings_manager_multi_view.table_column_names = _column_entrys
-	reload()
+## Sets the ViewMode on the SettingsManagerMultiView
+func set_view_mode(p_view_mode: SettingsManagerMultiView.ViewMode):
+	_settings_manager_multi_view.set_view_mode(p_view_mode)
 
 
 ## Sets the NewComponent Button
@@ -180,6 +158,48 @@ func set_duplicate_button(p_button: Button) -> void:
 		_duplicate_button.pressed.connect(_on_duplicate_button_pressed)
 	
 	queue(_update_buttons)
+
+
+## Sets the ViewModeButton
+func set_view_mode_button(p_button: OptionButton) -> void:
+	if is_instance_valid(_view_mode_button):
+		_view_mode_button.item_selected.disconnect(_on_view_mode_button_item_selected)
+	
+	_view_mode_button = p_button
+	
+	if is_instance_valid(_view_mode_button):
+		_view_mode_button.item_selected.connect(_on_view_mode_button_item_selected)
+		_view_mode_button.clear()
+		
+		for view_mode: String in SettingsManagerMultiView.ViewMode.keys():
+			_view_mode_button.add_item(view_mode.capitalize())
+		
+		_view_mode_button.select(_settings_manager_multi_view.get_view_mode())
+
+
+## Returns the NewComponent Button
+func get_new_button() -> Button:
+	return _new_button
+
+
+## Returns the DeleteComponent Button
+func get_delete_button() -> Button:
+	return _delete_button
+
+
+## Returns the DuplicateComponent Button
+func get_duplicate_button() -> Button:
+	return _duplicate_button
+
+
+## Returns the ViewModeButton
+func get_view_mode_button() -> OptionButton:
+	return _view_mode_button
+
+
+## Returns the internal SettingsManagerMultiView
+func get_settings_manager_multi_view() -> SettingsManagerMultiView:
+	return _settings_manager_multi_view
 
 
 ## Called when objects are added or removed from
@@ -238,3 +258,8 @@ func _on_duplicate_button_pressed() -> void:
 	
 	if is_instance_valid(selected):
 		_child_manager.duplicate_child(selected)
+
+
+## Called when the ViewModeButton changed selected item
+func _on_view_mode_button_item_selected(p_item: int) -> void:
+	set_view_mode(p_item as SettingsManagerMultiView.ViewMode)

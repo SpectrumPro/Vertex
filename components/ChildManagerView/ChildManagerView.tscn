@@ -23,5 +23,3 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-
-[connection signal="manager_selected" from="VBoxContainer/SettingsManagerMultiView" to="." method="_update_buttons" unbinds=1]
