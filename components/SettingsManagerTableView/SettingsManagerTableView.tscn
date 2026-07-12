@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cvpds8rurfl1t"]
+
+[ext_resource type="Script" uid="uid://c22mvvjcafqm0" path="res://modules/Vertex/components/SettingsManagerTableView/SettingsManagerTableView.gd" id="1_fnqj8"]
+[ext_resource type="PackedScene" uid="uid://c7lh26am36j5n" path="res://modules/Vertex/components/Table2/Table2.tscn" id="2_fnqj8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fnqj8"]
+
+[node name="SettingsManagerTableView" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fnqj8")
+script = ExtResource("1_fnqj8")
+
+[node name="Table" parent="." instance=ExtResource("2_fnqj8")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="selection_changed" from="Table" to="." method="_on_table_selection_changed"]
