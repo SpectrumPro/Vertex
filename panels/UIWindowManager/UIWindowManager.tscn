@@ -90,6 +90,6 @@ size_flags_vertical = 3
 [connection signal="pressed" from="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer/FocusWindow" to="." method="_on_focus_window_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer/DeleteWindow" to="." method="_on_delete_window_pressed"]
 [connection signal="toggled" from="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2/HBoxContainer/IdentifyWindows" to="." method="_on_identify_windows_toggled"]
-[connection signal="manager_selected" from="VBoxContainer/HBoxContainer/SettingsManagerMultiView" to="." method="_update_buttons" unbinds=1]
+[connection signal="selection_changed" from="VBoxContainer/HBoxContainer/SettingsManagerMultiView" to="." method="_update_buttons" unbinds=1]
 
 [editable path="VBoxContainer/PanelMenuBar"]

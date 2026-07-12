@@ -29,9 +29,6 @@ func _ready() -> void:
 	Interface.window_added.connect(_add_window)
 	Interface.window_removed.connect(_remove_window)
 	
-	settings_manager_multi_view.set_column_entrys(["Title"])
-	settings_manager_multi_view.reset()
-	
 	for window: UIWindow in Interface.get_all_windows():
 		_add_window(window)
 
@@ -66,22 +63,31 @@ func _on_add_window_pressed() -> void:
 
 ## Called when the FocusWindow button is pressed
 func _on_focus_window_pressed() -> void:
-	var selected_window: UIWindow = settings_manager_multi_view.get_selected_owner()
-	
-	if is_instance_valid(selected_window):
-		selected_window.set_window_visible(true)
-		selected_window.grab_focus()
+	for window: UIWindow in settings_manager_multi_view.get_selected_owners():
+		window.set_window_visible(true)
+		window.grab_focus()
 
 
 ## Called when the DeleteWindow button is pressed
 func _on_delete_window_pressed() -> void:
-	var selected_window: UIWindow = settings_manager_multi_view.get_selected_owner()
+	var selected_windows: Array = settings_manager_multi_view.get_selected_owners()
 	
-	if is_instance_valid(selected_window):
-		Interface.create_popup_dialog(self).preset(UIPopupDialog.Preset.DELETE, str("Delete: ", selected_window.get_window_title(), "?")).then(func ():
-			Interface.remove_window(selected_window)
-			_update_buttons()
-		)
+	if not selected_windows.size():
+		return
+	
+	var title: String
+	
+	if selected_windows.size() > 1:
+		title = str("Delete: ", selected_windows.size()," Windows?")
+	else:
+		title = str("Delete: ", selected_windows[0].get_window_title(), "?")
+	
+	Interface.create_popup_dialog(self).preset(UIPopupDialog.Preset.DELETE, title).then(func ():
+		for window: UIWindow in selected_windows:
+			Interface.remove_window(window)
+		
+		_update_buttons()
+	)
 
 
 ## Called when the IdentifyWindows button is pressed
