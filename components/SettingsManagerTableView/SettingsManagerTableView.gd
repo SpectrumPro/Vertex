@@ -124,12 +124,30 @@ func set_column_display(p_column_display: ColumnDisplay) -> void:
 
 ## Returns all selected SettingsManagers
 func get_selected_managers() -> Array[SettingsManager]:
-	return []
+	var result: Array[SettingsManager]
+	
+	for row: Table2.Row in _table.get_selected_rows():
+		result.append(_managers.right(row))
+	
+	return result
+
+
+## Returns the current first selected SettingsManager, or null
+func get_selected_manager() -> SettingsManager:
+	var first: Table2.Cell = _table.get_first_selected()
+	
+	if is_instance_valid(first):
+		return _managers.right(first.get_row(), null)
+	else:
+		return null
 
 
 ## Returns all SettingsManagers in this table
 func get_managers() -> Array[SettingsManager]:
-	return []
+	var result: Array[SettingsManager]
+	
+	result.assign(_managers.get_left())
+	return result
 
 
 ## Returns the ColumnDisplay mode
@@ -144,7 +162,7 @@ func has_manager(p_manager: SettingsManager) -> bool:
 
 ## Returns true if any SettingsManagers are seleced
 func is_any_selected() -> bool:
-	return false
+	return _table.is_any_selected()
 
 
 ## Returns true if the given SettingsModule is allowed to be displayed
