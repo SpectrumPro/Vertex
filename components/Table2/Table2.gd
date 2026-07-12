@@ -468,7 +468,7 @@ func get_selected_rows() -> Array[Row]:
 	var result: Array[Row]
 	
 	for cell: Cell in _selection.get_as_array():
-		selected.add(cell)
+		selected.add(cell.get_row())
 	
 	result.assign(selected.get_as_array())
 	return result
