@@ -195,11 +195,12 @@ func remove_column(p_column: Column) -> void:
 	if p_column.get_table() != self:
 		return
 	
-	_columns.erase(p_column)
-	p_column._delete()
-	
 	if _sort_column == p_column:
 		set_sort_column(null)
+	
+	_columns.erase(p_column)
+	p_column._delete()
+	p_column.free()
 	
 	queue(_recompute_columns)
 	queue(_update_scroll_bars)
@@ -210,13 +211,13 @@ func remove_column(p_column: Column) -> void:
 func clear() -> void:
 	clear_data()
 	
-	for column: Column in _columns:
+	for column: Column in _columns.duplicate():
 		remove_column(column)
 
 
 ## Clears all rows, keeping columns
 func clear_data() -> void:
-	for row: Row in _rows:
+	for row: Row in _rows.duplicate():
 		remove_row(row)
 
 
@@ -1270,10 +1271,13 @@ class Row extends TableItem:
 	## Cleanup before deletion
 	func _delete() -> void:
 		_selected_cells.clear()
+		
+		RenderingServer.canvas_item_clear(_clip_canvas)
+		RenderingServer.canvas_item_clear(_draw_canvas)
+		
 		for cell: Cell in _cells.values():
 			cell._delete()
-		
-		free()
+			cell.free()
 
 
 ## Class to repersent a Column in in the table
@@ -1601,7 +1605,9 @@ class Column extends TableItem:
 	## Cleanup before deletion
 	func _delete() -> void:
 		_selected_cells.clear()
-		free()
+		
+		RenderingServer.canvas_item_clear(_clip_canvas)
+		RenderingServer.canvas_item_clear(_draw_canvas)
 
 
 ## Class to repersent a cell in Row
@@ -1890,7 +1896,8 @@ class Cell extends TableItem:
 		if is_instance_valid(_settings_module):
 			use_settings_module(null)
 		
-		free()
+		RenderingServer.canvas_item_clear(_clip_canvas)
+		RenderingServer.canvas_item_clear(_draw_canvas)
 	
 	
 	## Called when the settings module value is changed
