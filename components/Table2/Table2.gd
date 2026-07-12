@@ -150,6 +150,9 @@ func _draw_table() -> void:
 		row._draw(_canvas, scroll)
 	
 	for column: Column in _columns:
+		if not column.is_visable():
+			continue
+		
 		column._draw(_canvas, scroll)
 
 
@@ -184,6 +187,7 @@ func remove_row(p_row: Row) -> void:
 	
 	_rows.erase(p_row)
 	p_row._delete()
+	p_row.free()
 	
 	queue(_recompute_rows)
 	queue(_update_scroll_bars)
@@ -364,6 +368,17 @@ func set_column_width(p_column: Column, p_width: int) -> void:
 		return
 	
 	p_column._set_width(p_width)
+	
+	_recompute_columns()
+	queue_redraw_table()
+
+
+## Sets a columns visable state
+func set_column_visable(p_column: Column, p_visable: bool) -> void:
+	if p_column.get_table() != self:
+		return
+	
+	p_column._set_visable(p_visable)
 	
 	_recompute_columns()
 	queue_redraw_table()
@@ -555,7 +570,7 @@ func get_table_draw_start() -> Vector2:
 	return Vector2(
 		ROW_HEADDER_WIDTH + MARGIN,
 		COLUMN_HEADDER_HEIGHT + MARGIN
-	)
+	).abs()
 
 
 ## Returns the Rect2 for the table's main content
@@ -563,7 +578,7 @@ func get_table_rect() -> Rect2:
 	return Rect2(
 		get_table_draw_start(),
 		_canvas.size - get_table_draw_start()
-	)
+	).abs()
 
 
 ## Returns the Rect2 for the index between row and colum headers
@@ -574,7 +589,7 @@ func get_header_index_rect() -> Rect2:
 			ROW_HEADDER_WIDTH,
 			COLUMN_HEADDER_HEIGHT
 		)
-	)
+	).abs()
 
 
 ## Returns the Rect2 for the row headers
@@ -588,7 +603,7 @@ func get_row_headers_rect() -> Rect2:
 			ROW_HEADDER_WIDTH,
 			_canvas.size.y - (COLUMN_HEADDER_HEIGHT + MARGIN)
 		)
-	)
+	).abs()
 
 
 ## Returns the Rect2 for the column headers
@@ -602,7 +617,7 @@ func get_column_headers_rect() -> Rect2:
 			_canvas.size.x - (ROW_HEADDER_WIDTH + MARGIN),
 			COLUMN_HEADDER_HEIGHT,
 		)
-	)
+	).abs()
 
 
 ## Returns the TableItem at the given position
@@ -624,7 +639,7 @@ func get_item_at_position(p_position: Vector2) -> TableItem:
 func get_cell_at_position(p_position: Vector2) -> Cell:
 	for row: Row in _rows:
 		for cell: Cell in row.get_cells().values():
-			if cell.get_rect(_get_scroll_offset()).has_point(p_position):
+			if cell.get_rect(_get_scroll_offset()).has_point(p_position) and cell.is_visable():
 				return cell
 	
 	return null
@@ -633,7 +648,7 @@ func get_cell_at_position(p_position: Vector2) -> Cell:
 ## Returns the row at the given position, or null
 func get_row_at_position(p_position: Vector2) -> Row:
 	for row: Row in _rows:
-		if row.get_full_rect(_get_scroll_offset()).has_point(p_position):
+		if row.get_full_rect(_get_scroll_offset()).has_point(p_position) and row.is_visable():
 			return row
 	
 	return null
@@ -642,7 +657,7 @@ func get_row_at_position(p_position: Vector2) -> Row:
 ## Returns the column at the given position, or null
 func get_column_at_position(p_position: Vector2) -> Column:
 	for column: Column in _columns:
-		if column.get_full_rect(_get_scroll_offset()).has_point(p_position):
+		if column.get_full_rect(_get_scroll_offset()).has_point(p_position) and column.is_visable():
 			return column
 	
 	return null
@@ -697,7 +712,8 @@ func _recompute_columns() -> void:
 		column._set_index(column_index)
 		column._set_position(_size_cache.x)
 		
-		_size_cache.x += column.get_width()
+		if column.is_visable():
+			_size_cache.x += column.get_width()
 
 
 ## Updates the visability and value of scroll bars
@@ -790,21 +806,21 @@ func _on_select_box_selection_updated(p_selection: Rect2) -> void:
 			for cell_index: int in range(cells.size() - 1, -1, -1) if flip_x else range(cells.size()):
 				var cell: Cell = cells[cell_index]
 				
-				if p_selection.intersects(cell.get_visable_rect(_get_scroll_offset())):
+				if cell.is_visable() and p_selection.intersects(cell.get_visable_rect(_get_scroll_offset())):
 					cell.set_selected(not shift_pressed)
 	
 	if get_row_headers_rect().intersects(p_selection):
 		for row_index: int in range(_rows.size() - 1, -1, -1) if flip_y else range(_rows.size()):
 			var row: Row = _rows[row_index]
 			
-			if p_selection.intersects(row.get_headder_rect(_get_scroll_offset())):
+			if row.is_visable() and p_selection.intersects(row.get_headder_rect(_get_scroll_offset())):
 				row.set_selected(not shift_pressed)
 	
 	if get_column_headers_rect().intersects(p_selection):
 		for column_index: int in range(_columns.size() - 1, -1, -1) if flip_x else range(_columns.size()):
 			var column: Column = _columns[column_index]
 			
-			if p_selection.intersects(column.get_headder_rect(_get_scroll_offset())):
+			if column.is_visable() and p_selection.intersects(column.get_headder_rect(_get_scroll_offset())):
 				column.set_selected(not shift_pressed)
 
 
@@ -882,6 +898,9 @@ class TableItem extends Object:
 	## True if this TableItem is hovered
 	var _is_hovered: bool = false
 	
+	## True if this TableItem is visable
+	var _is_visable: bool = true
+	
 	
 	## Returns the Table this TableItem is apart of
 	func get_table() -> Table2:
@@ -894,6 +913,12 @@ class TableItem extends Object:
 		_is_selected = p_selected
 	
 	
+	## Sets the visability state of this TableItem
+	func set_visable(p_visable: bool) -> TableItem:
+		_is_visable = p_visable
+		return self
+	
+	
 	## Returns true if this TableItem is selected
 	func is_seleced() -> bool:
 		return _is_selected
@@ -902,6 +927,11 @@ class TableItem extends Object:
 	## Returns true if this TableItem is hovered
 	func is_hovered() -> bool:
 		return _is_hovered
+	
+	
+	## Returns true if this TableItem is visable
+	func is_visable() -> bool:
+		return _is_visable
 	
 	
 	## Sets the table this TableItem is apart of
@@ -917,6 +947,11 @@ class TableItem extends Object:
 	## Sets the hovered state
 	func _set_hovered(p_hovered: bool) -> void:
 		_is_hovered = p_hovered
+	
+	
+	## Sets the visable state
+	func _set_visable(p_visable: bool) -> void:
+		_is_visable = p_visable
 	
 	
 	## Handle deletion
@@ -1060,7 +1095,9 @@ class Row extends TableItem:
 			cell_range = range(_cells.size())
 		
 		for cell_index: int in cell_range:
-			_cells.values()[cell_index].set_selected(p_selected, p_reverse)
+			var cell: Cell = _cells.values()[cell_index]
+			if is_instance_valid(cell) and cell.is_visable():
+				cell.set_selected(p_selected, p_reverse)
 	
 	
 	## Returns the index number of this row
@@ -1113,7 +1150,7 @@ class Row extends TableItem:
 				_table.get_table_size().x - x_offset,
 				_height
 			)
-		)
+		).abs()
 	
 	
 	## Returns the Rect2 for the headder
@@ -1127,7 +1164,7 @@ class Row extends TableItem:
 				_table.ROW_HEADDER_WIDTH,
 				_height
 			)
-		)
+		).abs()
 	
 	
 	## Returns a Rect2 containing the visible portion of this row on the screen
@@ -1360,6 +1397,14 @@ class Column extends TableItem:
 		return self
 	
 	
+	## Sets the visable state of this Column
+	func set_visable(p_visable: bool) -> Column:
+		if p_visable != _is_visable:
+			_table.set_column_visable(self, p_visable)
+		
+		return self
+	
+	
 	## Sets the selected state of all cells in this column
 	func set_selected(p_selected: bool, p_reverse: bool = false) -> void:
 		var row_range: Array
@@ -1371,7 +1416,7 @@ class Column extends TableItem:
 		
 		for row_index: int in row_range:
 			var cell: Cell = _table.get_row(row_index).get_cell_at_column(self)
-			if is_instance_valid(cell):
+			if is_instance_valid(cell) and cell.is_visable():
 				cell.set_selected(p_selected, p_reverse)
 	
 	
@@ -1419,7 +1464,7 @@ class Column extends TableItem:
 				_width,
 				_table.get_table_size().y - y_offset
 			)
-		)
+		).abs()
 	
 	
 	## Returns the Rect2 for the column headder
@@ -1433,7 +1478,7 @@ class Column extends TableItem:
 				_width,
 				_table.COLUMN_HEADDER_HEIGHT
 			)
-		)
+		).abs()
 	
 	
 	## Returns a Rect2 containing the visible portion of this column on the screen
