@@ -92,6 +92,8 @@ func _init() -> void:
 	_settings.register_status("Root", Data.Type.BOOL, is_window_root, [])\
 	.display("UIWindow", 7)
 	
+	_settings.add_primary_module("Title")
+	
 	close_requested.connect(_on_close_request)
 
 
