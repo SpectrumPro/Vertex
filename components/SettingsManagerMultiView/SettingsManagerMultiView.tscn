@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bobrutb83r27e"]
 
 [ext_resource type="Script" uid="uid://cv7a3xtevftpm" path="res://modules/Vertex/components/SettingsManagerMultiView/SettingsManagerMultiView.gd" id="1_fmitj"]
-[ext_resource type="PackedScene" uid="uid://bf3cbsyaotnnq" path="res://modules/Vertex/components/Table/Table.tscn" id="2_0b5xi"]
+[ext_resource type="PackedScene" uid="uid://cvpds8rurfl1t" path="res://modules/Vertex/components/SettingsManagerTableView/SettingsManagerTableView.tscn" id="2_fmitj"]
 [ext_resource type="PackedScene" uid="uid://kjup3yrjifr5" path="res://modules/Vertex/components/SettingsManagerBlockView/SettingsManagerBlockView.tscn" id="3_h5qm2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kje12"]
@@ -28,19 +28,14 @@ script = ExtResource("1_fmitj")
 layout_mode = 2
 split_offset = -140
 
-[node name="Table" parent="HSplitContainer" instance=ExtResource("2_0b5xi")]
+[node name="SettingsManagerTableView" parent="HSplitContainer" instance=ExtResource("2_fmitj")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SettingsManagerBlockView" parent="HSplitContainer/ScrollContainer" instance=ExtResource("3_h5qm2")]
+[node name="SettingsManagerBlockView" parent="HSplitContainer" instance=ExtResource("3_h5qm2")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[connection signal="selection_changed" from="HSplitContainer/Table" to="." method="_on_table_selection_changed"]
+[connection signal="selection_changed" from="HSplitContainer/SettingsManagerTableView" to="." method="_on_settings_manager_table_view_selection_changed"]

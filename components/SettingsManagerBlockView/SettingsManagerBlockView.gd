@@ -26,8 +26,8 @@ func _init() -> void:
 	_set_class_name("SettingsManagerBlockView")
 
 
-## Resets this SettingsManagerBlockView
-func reset() -> void:
+## Clears this SettingsManagerBlockView
+func clear() -> void:
 	for view: Control in _view_container.get_children():
 		_view_container.remove_child(view)
 		view.queue_free()
@@ -38,7 +38,7 @@ func reset() -> void:
 
 ## Sets the SettingsManager
 func set_manager(p_manager: SettingsManager) -> void:
-	reset()	
+	clear()
 	_manager = p_manager
 	
 	for classname: String in _manager.get_inheritance_list():

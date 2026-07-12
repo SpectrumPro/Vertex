@@ -3,38 +3,30 @@
 # See the LICENSE file for details.
 
 class_name SettingsManagerMultiView extends UIComponent
-## Displays mutiple SettingsManagers in a Table and SettingsManagerBlock view, 
+## Displays mutiple SettingsManagers in a SettingsManager TableView and BlockView view, 
 ## syncing selection between both
 
 
-## Emitted when a SettingsManager is selected
-signal manager_selected(manager: SettingsManager)
+## Emitted when the selection is changed
+signal selection_changed(selected_managers: Array)
 
 
-## The Table
-@onready var _table: Table = %Table
+## Emum for ViewMode
+enum ViewMode {
+	TABLE,		## Show only the table, with all SettingsModules
+	COMBINED	## Show table and block view, with table only showing Primary modules
+}
+
+
+## The SettingsManagerTableView
+@onready var _table_view: SettingsManagerTableView = %SettingsManagerTableView
 
 ## The SettingsManagerBlockView
-@onready var _settings_manager_view: SettingsManagerBlockView = %SettingsManagerBlockView
+@onready var _block_view: SettingsManagerBlockView = %SettingsManagerBlockView
 
 
-## Defines what SettingsModule entrys to show in the Table
-var _column_entrys: Array[String] = ["Name"]
-
-## The column index to sort by
-var _sort_column: int = 0
-
-## True if icons should be auto added based on an object type
-var _display_icons: bool = false
-
-## RefMap for Table.Column: String
-var _table_columns: RefMap = RefMap.new()
-
-## RefMap for Table.Row: SettingsManager
-var _manager_rows: RefMap = RefMap.new()
-
-## The current selected manager
-var _selected_manager: SettingsManager
+## Current ViewMode
+var _view_mode: ViewMode = ViewMode.COMBINED
 
 
 ## init
@@ -44,103 +36,61 @@ func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
 	_set_class_name("SettingsManagerMultiView")
 
 
-## Ready
-func _ready() -> void:
-	reset()
-
-
 ## Adds a manager
 func add_manager(p_manager: SettingsManager) -> void:
-	if _manager_rows.has_right(p_manager):
-		return
-	
-	var rows: Dictionary[int, Variant]
-	var icon: Texture2D
-	
-	for column_name: String in _table_columns.get_right():
-		if not p_manager.get_entry(column_name):
-			continue
-		
-		var entry: SettingsModule = p_manager.get_entry(column_name)
-		var column: Table.Column = _table_columns.right(column_name)
-		
-		if entry.get_data_type() == column.get_data_type():
-			rows[column.get_id()] = entry
-		elif column.get_data_type() == Data.Type.NULL:
-			column.set_data_type(entry.get_data_type())
-			rows[column.get_id()] = entry
-	
-	if _display_icons:
-		icon = UIDB.get_class_icon(p_manager.get_inheritance_child())
-	
-	_manager_rows.map(_table.add_row(rows, icon), p_manager)
+	_table_view.add_manager(p_manager)
 
 
 ## Removes a manager
 func remove_manager(p_manager: SettingsManager) -> void:
-	if not _manager_rows.has_right(p_manager):
-		return
-	
-	if _table.get_selected_row() == _manager_rows.right(p_manager):
-		_settings_manager_view.reset()
-	
-	_table.remove_row(_manager_rows.right(p_manager))
-	_manager_rows.erase_right(p_manager)
+	_table_view.remove_manager(p_manager)
 
 
 ## Selects a manager
 func select_manager(p_manager: SettingsManager) -> void:
-	if not _manager_rows.has_right(p_manager):
-		return
-	
-	_manager_rows.right(p_manager).select()
+	_table_view.select_managers([p_manager])
 
 
 ## Resets 
-func reset() -> void:
-	_table_columns.clear()
-	_manager_rows.clear()
-	_selected_manager = null
+func clear() -> void:
+	_table_view.clear()
+	_block_view.clear()
+
+
+## Sets the ViewMode
+func set_view_mode(p_view_mode: ViewMode) -> void:
+	_view_mode = p_view_mode
 	
-	_table.clear()
-	_table.clear_columns()
-	_settings_manager_view.reset()
-	
-	for column_index: int in range(_column_entrys.size()):
-		var column_name: String = _column_entrys[column_index]
-		var new_column: Table.Column = _table.add_column(column_name.capitalize(), Data.Type.NULL)
+	match _view_mode:
+		ViewMode.TABLE:
+			_table_view.show()
+			_block_view.hide()
+			
+			_table_view.set_column_display(SettingsManagerTableView.ColumnDisplay.ALL)
 		
-		if column_index == _sort_column:
-			_table.set_column_sort(new_column)
-		
-		_table_columns.map(new_column, column_name)
-	
-	
+		ViewMode.COMBINED:
+			_table_view.show()
+			_block_view.show()
+			
+			_table_view.set_column_display(SettingsManagerTableView.ColumnDisplay.PRIMARY)
 
 
-## Returns the display icons state
-func get_display_icons() -> bool:
-	return _display_icons
-
-
-## Returns the SettingsModule entry IDs to show in the table
-func get_column_entrys() -> Array[String]:
-	return _column_entrys.duplicate()
+## Returns the current ViewMode
+func get_view_mode() -> ViewMode:
+	return _view_mode
 
 
 ##0 Returns the last selected SettingsManager
 func get_selected_manager() -> SettingsManager:
-	return _selected_manager
+	if not _table_view.is_any_selected():
+		return null
+	
+	return _table_view.get_selected_managers()[0]
 
 
 ## Returns all selected SettingsManagers
 func get_selected_managers() -> Array[SettingsManager]:
-	var result: Array[SettingsManager]
-	
-	for selected: Table.Row in _table.get_selected_rows():
-		result.append(_manager_rows.left(selected))
-	
-	return result
+	return _table_view.get_selected_managers()
 
 
 ## Gets the owner of the selected SettingsManager, or null
@@ -157,36 +107,22 @@ func get_selected_owner() -> Object:
 func get_selected_owners() -> Array[Object]:
 	var result: Array[Object]
 	
-	for selected: Table.Row in _table.get_selected_rows():
-		result.append(_manager_rows.left(selected).get_owner())
+	for manager: SettingsManager in _table_view.get_selected_managers():
+		result.append(manager.get_owner())
 	
 	return result
 
 
-## Sets the display icons state. a full reset() is needed to update already visable rows
-func set_display_icons(p_display_icons: bool) -> void:
-	_display_icons = p_display_icons
-
-
-## Sets the SettingsModule entry IDs to show in the table, a full reset() is needed to reload the rows
-func set_column_entrys(p_entrys: Array[String]) -> void:
-	_column_entrys = p_entrys.duplicate()
-
-
 ## Returns true if there is a selected SettingsManager
 func is_any_selected() -> bool:
-	return is_instance_valid(_selected_manager)
+	return _table_view.is_any_selected()
 
 
-## Called when the selection is changed on the table
-func _on_table_selection_changed() -> void:
-	if _table.is_any_selected():
-		_selected_manager = _manager_rows.left(_table.get_selected_row())
-		
-		_settings_manager_view.set_manager(_selected_manager)
-		manager_selected.emit(_selected_manager)
-	
+## Called when the selection changes in the TableView
+func _on_settings_manager_table_view_selection_changed(selected_managers: Array) -> void:
+	if not selected_managers:
+		_block_view.clear()
 	else:
-		_selected_manager = null
-		_settings_manager_view.reset()
-		manager_selected.emit(null)
+		_block_view.set_manager(selected_managers[0])
+	
+	selection_changed.emit(selected_managers)
