@@ -11,7 +11,7 @@ class_name SettingsManagerBlockView extends UIComponent
 @export var module_type_denylist: Array[Data.Type]
 
 ## The VBox for all SettingsManagerClassBlock
-@onready var _view_container: VBoxContainer = $VBoxContainer
+@onready var _view_container: VBoxContainer = %ViewContainer
 
 
 ## The current SettingsManager
