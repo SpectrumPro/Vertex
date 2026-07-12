@@ -214,20 +214,24 @@ func set_window_visible(p_visible: bool, p_no_signal: bool = false) -> void:
 		
 		show()
 		
-		## Im gonna blame this shit show on X11
-		await get_tree().process_frame
-		await get_tree().process_frame
+		# Bullshit ass 80s software :(
+		var i_hate_x11: Callable = (func ():
+			await get_tree().process_frame
+			await get_tree().process_frame
+			
+			set_mode(Mode.MODE_WINDOWED)
+			
+			set_window_position(current_pos, true)
+			set_window_size(current_size, true)
+			
+			await get_tree().process_frame
+			await get_tree().process_frame
+			
+			set_display_mode(current_mode)
+		)
 		
-		set_mode(Mode.MODE_WINDOWED)
-		
-		set_window_position(current_pos, true)
-		set_window_size(current_size, true)
-		
-		## Bullshit ass window manager
-		await get_tree().process_frame
-		await get_tree().process_frame
-		
-		set_display_mode(current_mode)
+		if DisplayServer.get_name() == "X11":
+			i_hate_x11.call()
 	
 	else:
 		hide()
