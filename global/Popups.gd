@@ -101,7 +101,7 @@ func USettingsModule(p_source: Node, p_modules: Variant) -> Promise:
 func show_data_input(p_source: Node, p_data_type: Data.Type, p_default: Variant, p_label: String) -> Promise:
 	var promise: Promise = Interface.show_window_popup(UIPopupSettingsModule, p_source, [])
 	var module_view: UIPopupSettingsModule = promise.get_object_refernce()
-	var dummy_module: SettingsModule = SettingsModule.new(p_label, p_label, p_data_type, SettingsModule.Type.SETTING, promise.resolvev, func (): return p_default, [], p_source)
+	var dummy_module: SettingsModule = SettingsModule.new(p_label, p_label, p_data_type, SettingsModule.Type.SETTING, promise.resolvev, func (): return p_default, [], p_source, null)
 	
 	module_view.set_module([dummy_module])
 	module_view.focus()
