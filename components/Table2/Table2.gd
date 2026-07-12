@@ -1545,6 +1545,14 @@ class Column extends TableItem:
 		_position = p_position
 	
 	
+	## Sets the visabile state of this column
+	func _set_visable(p_visable: bool) -> void:
+		super._set_visable(p_visable)
+		
+		if not p_visable:
+			_clear_canvas()
+	
+	
 	## Adds or removes the given cell from the selected cells in this column
 	func _set_cell_selected(p_cell: Cell, p_selected: bool) -> void:
 		if p_selected:
@@ -1553,10 +1561,15 @@ class Column extends TableItem:
 			_selected_cells.remove(p_cell)
 	
 	
-	## draw
-	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
+	## Clears both canvases
+	func _clear_canvas() -> void:
 		RenderingServer.canvas_item_clear(_clip_canvas)
 		RenderingServer.canvas_item_clear(_draw_canvas)
+	
+	
+	## draw
+	func _draw(p_canvas: CanvasItem, p_scroll: Vector2 = Vector2.ZERO) -> void:
+		_clear_canvas()
 		
 		var rect: Rect2 = get_rect(p_scroll)
 		var visable_rect: Rect2 = get_visable_rect(p_scroll)
@@ -1650,9 +1663,7 @@ class Column extends TableItem:
 	## Cleanup before deletion
 	func _delete() -> void:
 		_selected_cells.clear()
-		
-		RenderingServer.canvas_item_clear(_clip_canvas)
-		RenderingServer.canvas_item_clear(_draw_canvas)
+		_clear_canvas()
 
 
 ## Class to repersent a cell in Row
