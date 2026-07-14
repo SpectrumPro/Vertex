@@ -116,12 +116,12 @@ func show_delete_confirmation(p_source: Node, p_title: String = "Confirm Deletio
 ## Prompts the user to delete the given engine components
 func confirm_delete_components(p_source: Node, p_components: Array, p_auto_delete: bool = true) -> Promise:
 	var title: PackedStringArray
-	title.append("Delete")
+	title.append("Delete: ")
 	
 	if p_components.size() > 1:
-		title.append(": " + str(p_components.size()) + " Components?")
+		title.append(str(p_components.size()) + " Components?")
 	elif p_components.size() and Data.is_gbc_complient(p_components[0]):
-		title.append(" Selected " + p_components[0].get_class_name() + "?")
+		title.append(p_components[0].get_uname() + "?")
 	else:
 		return
 	
@@ -133,6 +133,7 @@ func confirm_delete_components(p_source: Node, p_components: Array, p_auto_delet
 			if not Data.is_gbc_complient(component):
 				continue
 			
+			## TODO
 			component.delete_rpc()
 	)
 
