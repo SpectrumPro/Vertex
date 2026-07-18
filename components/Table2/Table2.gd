@@ -956,7 +956,7 @@ class TableItem extends Object:
 	
 	## Handle deletion
 	func _delete() -> void:
-		free()
+		return
 
 
 ## Class to repersent a Row in the table
