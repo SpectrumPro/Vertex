@@ -169,7 +169,11 @@ func activate_selected() -> void:
 		return
 	
 	if _tree_nulls.has_right(selected):
-		object_selected.emit(null)
+		match _search_mode:
+			SearchMode.OBJECT:
+				object_selected.emit(null)
+			SearchMode.CLASS:
+				class_selected.emit("")
 	
 	match _search_mode:
 		SearchMode.CLASS:
