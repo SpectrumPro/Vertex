@@ -24,59 +24,59 @@ const ICON_LOCATION: String = "res://modules/Vertex/assets/icons/"
 
 ## All UIPanels
 var _panels: Dictionary[String, PackedScene] = {
-	"UIWindowManager":		load(_p("UIWindowManager")),
-	"UISettingsManager":	load(_p("UISettingsManager")),
-	"UIPanelSettings":		load(_p("UIPanelSettings")),
-	"UIChildManager":		load(_p("UIChildManager")),
-	"UIIndexViewer":		load(_p("UIIndexViewer")),
+	"UIWindowManager":		load(_p(UIWindowManager)),
+	"UISettingsManager":	load(_p(UISettingsManager)),
+	"UIPanelSettings":		load(_p(UIPanelSettings)),
+	"UIChildManager":		load(_p(UIChildManager)),
+	"UIIndexViewer":		load(_p(UIIndexViewer)),
 }
 
 
 ## All UIPopups
 var _popups: Dictionary[String, PackedScene] = {
-	"UICommandPalette": 		load(_u("UICommandPalette")),
-	"UINetworkSelector": 		load(_u("UINetworkSelector")),
-	"UIObjectSelector": 		load(_u("UIObjectSelector")),
-	"UIPanelSelector": 			load(_u("UIPanelSelector")),
-	"UIPopupDialog": 			load(_u("UIPopupDialog")),
-	"UIPopupSettingsModule": 	load(_u("UIPopupSettingsModule")),
-	"UIWindowID": 				load(_u("UIWindowID")),
+	"UICommandPalette": 		load(_u(UICommandPalette)),
+	"UINetworkSelector": 		load(_u(UINetworkSelector)),
+	"UIObjectSelector": 		load(_u(UIObjectSelector)),
+	"UIPanelSelector": 			load(_u(UIPanelSelector)),
+	"UIPopupDialog": 			load(_u(UIPopupDialog)),
+	"UIPopupSettingsModule": 	load(_u(UIPopupSettingsModule)),
+	"UIWindowID": 				load(_u(UIWindowID)),
 }
 
 
 ## All UIComponents
 var _components: Dictionary[String, PackedScene] = {
-	"ComponentButton":			load(_c("ComponentButton")),
-	"ChildManagerView":			load(_c("ChildManagerView")),
-	"SearchableClassTree":		load(_c("SearchableClassTree")),
-	"SelectBox":				load(_c("SelectBox")),
-	"SettingsManagerMultiView":	load(_c("SettingsManagerMultiView")),
-	"SettingsManagerBlockView":	load(_c("SettingsManagerBlockView")),
-	"SettingsManagerClassBlock":load(_c("SettingsManagerClassBlock")),
-	"StartUpNoticeContainer":	load(_c("StartUpNoticeContainer")),
-	"Table":					load(_c("Table")),
+	"ComponentButton":			load(_c(ComponentButton)),
+	"ChildManagerView":			load(_c(ChildManagerView)),
+	"SearchableClassTree":		load(_c(SearchableClassTree)),
+	"SelectBox":				load(_c(SelectBox)),
+	"SettingsManagerMultiView":	load(_c(SettingsManagerMultiView)),
+	"SettingsManagerBlockView":	load(_c(SettingsManagerBlockView)),
+	"SettingsManagerClassBlock":load(_c(SettingsManagerClassBlock)),
+	"StartUpNoticeContainer":	load(_c(StartUpNoticeContainer)),
+	"Table":					load(_c(Table)),
 }
 
 
 ## All DataInputs by DataType
 var _data_inputs: Dictionary[Data.Type, Variant] = {
-	Data.Type.NULL:				load(_d("DataInputNull")),
-	Data.Type.STRING:			load(_d("DataInputString")),
-	Data.Type.BOOL:				load(_d("DataInputBool")),
-	Data.Type.INT:				load(_d("DataInputInt")),
-	Data.Type.FLOAT:			load(_d("DataInputFloat")),
-	Data.Type.VECTOR2:			load(_d("DataInputVector2")),
-	Data.Type.VECTOR2I:			load(_d("DataInputVector2")),
-	Data.Type.COLOR:			load(_d("DataInputColor")),
-	Data.Type.ENUM:				load(_d("DataInputEnum")),
-	Data.Type.BITFLAGS:			load(_d("DataInputBitFlags")),
-	Data.Type.IP:				load(_d("DataInputIPAddr")),
-	Data.Type.SETTINGSMANAGER:	load(_d("DataInputSettingsManager")),
-	Data.Type.ACTION:			load(_d("DataInputAction")),
-	Data.Type.OBJECT:			load(_d("DataInputObject")),
+	Data.Type.NULL:				load(_d(DataInputNull)),
+	Data.Type.STRING:			load(_d(DataInputString)),
+	Data.Type.BOOL:				load(_d(DataInputBool)),
+	Data.Type.INT:				load(_d(DataInputInt)),
+	Data.Type.FLOAT:			load(_d(DataInputFloat)),
+	Data.Type.VECTOR2:			load(_d(DataInputVector2)),
+	Data.Type.VECTOR2I:			load(_d(DataInputVector2)),
+	Data.Type.COLOR:			load(_d(DataInputColor)),
+	Data.Type.ENUM:				load(_d(DataInputEnum)),
+	Data.Type.BITFLAGS:			load(_d(DataInputBitFlags)),
+	Data.Type.IP:				load(_d(DataInputIPAddr)),
+	Data.Type.SETTINGSMANAGER:	load(_d(DataInputSettingsManager)),
+	Data.Type.ACTION:			load(_d(DataInputAction)),
+	Data.Type.OBJECT:			load(_d(DataInputObject)),
 	Data.Type.PACKEDSCENE: 		{
-		Data.Sub.Type.NULL:						load(_d("DataInputCustomPanel")),
-		Data.Sub.Type.PACKEDSCENE_UIPANEL:		load(_d("DataInputUIPanel")),
+		Data.Sub.Type.NULL:						load(_d(DataInputCustomPanel)),
+		Data.Sub.Type.PACKEDSCENE_UIPANEL:		load(_d(DataInputUIPanel)),
 	}
 }
 
@@ -124,28 +124,32 @@ func _ready() -> void:
 
 
 ## Returns the file path of a UIPanel
-static func _p(p_panel_class: String) -> String:
-	return str(UI_PANEL_LOCATION, p_panel_class, "/", p_panel_class, ".tscn")
+static func _p(p_panel_script: Script) -> String:
+	var panel_class: String = p_panel_script.get_global_name()
+	return str(UI_PANEL_LOCATION, panel_class, "/", panel_class, ".tscn")
 
 
 ## Returns the file path of a UIPopup
-static func _u(p_popup_class: String) -> String:
-	return str(UI_POPUP_LOCATION, p_popup_class, "/", p_popup_class, ".tscn")
+static func _u(p_popup_script: Script) -> String:
+	var popup_class: String = p_popup_script.get_global_name()
+	return str(UI_POPUP_LOCATION, popup_class, "/", popup_class, ".tscn")
 
 
 ## Returns the file path of a UIComponent
-static func _c(p_component_class: String) -> String:
-	return str(UI_COMPONENT_LOCATION, p_component_class, "/", p_component_class, ".tscn")
+static func _c(p_component_script: Script) -> String:
+	var component_class: String = p_component_script.get_global_name()
+	return str(UI_COMPONENT_LOCATION, component_class, "/", component_class, ".tscn")
 
 
 ## Returns the file path of a DataInput
-static func _d(p_data_input_class: String) -> String:
-	return str(DATA_INPUT_LOCATION, p_data_input_class, "/", p_data_input_class, ".tscn")
+static func _d(p_data_input_script: Script) -> String:
+	var data_input_class: String = p_data_input_script.get_global_name()
+	return str(DATA_INPUT_LOCATION, data_input_class, "/", data_input_class, ".tscn")
 
 
 ## Returns the file path of a Icon
-static func _i(p_data_input_class: String) -> String:
-	return str(ICON_LOCATION, p_data_input_class, ".svg")
+static func _i(p_icon_name: String) -> String:
+	return str(ICON_LOCATION, p_icon_name, ".svg")
 
 
 ## Returns the PackedScene for a UIPanel
