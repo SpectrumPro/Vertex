@@ -346,15 +346,20 @@ func _handle_activated() -> void:
 		SelectMode.GBC_INDEX:
 			var gbc_index: GBCIndexConfig = _gbc_index_items.right(_gbc_index_tree.get_selected(), null)
 			
-			match _previous_select_mode:
-				SelectMode.GBC_OBJECT when is_instance_valid(gbc_index):
-					_set_select_mode_object(gbc_index.get_base_class(), "")
-				
-				SelectMode.GBC_CLASS when is_instance_valid(gbc_index):
-					_set_select_mode_class(gbc_index.get_base_class())
-				
-				_:
-					accept(gbc_index)
+			if is_instance_valid(gbc_index):
+				match _previous_select_mode:
+					SelectMode.GBC_OBJECT:
+						_set_select_mode_object(gbc_index.get_base_class(), "")
+					SelectMode.GBC_CLASS:
+						_set_select_mode_class(gbc_index.get_base_class())
+					_:
+						accept(gbc_index)
+			else:
+				match _previous_select_mode:
+					SelectMode.GBC_CLASS:
+						accept("")
+					_:
+						accept(null)
 		
 		SelectMode.OBJECT, SelectMode.CLASS when is_instance_valid(_current_index):
 			_current_index.activate_selected()
