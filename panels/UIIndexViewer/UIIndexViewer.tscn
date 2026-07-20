@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://cjo7qw31h3bt2"]
+
+[ext_resource type="Theme" uid="uid://cyua45ur0ijqo" path="res://modules/Vertex/assets/themes/Main.theme" id="1_fqu1p"]
+[ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://modules/Vertex/assets/styles/UIPanelBase.tres" id="2_c3lrq"]
+[ext_resource type="Script" uid="uid://of4guhddqp43" path="res://modules/Vertex/panels/UIIndexViewer/UIIndexViewer.gd" id="3_iqbho"]
+[ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="4_swha6"]
+[ext_resource type="Texture2D" uid="uid://dqr6mygroiluf" path="res://modules/Vertex/assets/icons/NewPanel.svg" id="6_rgyqr"]
+[ext_resource type="Texture2D" uid="uid://dfrrs2dnvlvsu" path="res://modules/Vertex/assets/icons/Delete.svg" id="7_rh3ik"]
+[ext_resource type="Texture2D" uid="uid://cuvwwbojtcpg6" path="res://modules/Vertex/assets/icons/Duplicate.svg" id="8_prete"]
+[ext_resource type="PackedScene" uid="uid://7prnynnrdn4n" path="res://modules/Vertex/components/ChildManagerView/ChildManagerView.tscn" id="9_qls7d"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sf6va"]
+
+[node name="UIIndexViewer" type="PanelContainer" unique_id=1108330204]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_fqu1p")
+theme_override_styles/panel = ExtResource("2_c3lrq")
+script = ExtResource("3_iqbho")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=489679149]
+layout_mode = 2
+
+[node name="PanelMenuBar" parent="VBoxContainer" unique_id=1975148834 instance=ExtResource("4_swha6")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="0"]
+text = "Index"
+enable_resolve_mode = true
+enabled = true
+mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer" index="0" unique_id=138676918]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=1790558499]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer" unique_id=750110945]
+layout_mode = 2
+
+[node name="NewComponent" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer" unique_id=55737124]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "New"
+icon = ExtResource("6_rgyqr")
+
+[node name="DeleteComponent" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer" unique_id=867544703]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Delete"
+icon = ExtResource("7_rh3ik")
+
+[node name="DuplicateComponent" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer" unique_id=1049268834]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Duplicate"
+icon = ExtResource("8_prete")
+
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=486405512]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2" unique_id=826581918]
+layout_mode = 2
+
+[node name="ViewModeButton" type="OptionButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2/HBoxContainer" unique_id=1466852638]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ChildManagerView" parent="VBoxContainer" unique_id=1342865235 instance=ExtResource("9_qls7d")]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_sf6va")
+
+[connection signal="class_selected" from="VBoxContainer/PanelMenuBar/HBoxContainer/ComponentButton" to="." method="_on_component_button_class_selected"]
+
+[editable path="VBoxContainer/PanelMenuBar"]
