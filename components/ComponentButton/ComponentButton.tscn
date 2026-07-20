@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bbpvsnjbak1p3"]
+[gd_scene format=3 uid="uid://bbpvsnjbak1p3"]
 
 [ext_resource type="Texture2D" uid="uid://c8ia6s2pwy1wm" path="res://modules/Vertex/assets/icons/Component.svg" id="1_y4kxc"]
 [ext_resource type="Script" uid="uid://cqo73g57e2ntd" path="res://modules/Vertex/components/ComponentButton/ComponentButton.gd" id="2_g0d4m"]
@@ -10,16 +10,14 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[node name="ComponentButton" type="Button" node_paths=PackedStringArray("underline")]
+[node name="ComponentButton" type="Button" unique_id=1767625921]
 size_flags_horizontal = 0
 text = "PanelMenuBar"
 icon = ExtResource("1_y4kxc")
 script = ExtResource("2_g0d4m")
-enable_resolve_mode = null
-enabled = null
-underline = NodePath("NameUnderline")
 
-[node name="NameUnderline" type="Panel" parent="."]
+[node name="NameUnderline" type="Panel" parent="." unique_id=882255250]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
