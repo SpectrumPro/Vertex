@@ -1179,7 +1179,11 @@ class Row extends TableItem:
 	
 	## Returns the Rect2 for the full row, including the header
 	func get_full_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
-		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
+		var headder_rect: Rect2 = get_headder_rect(p_scroll)
+		return Rect2(
+			headder_rect.position, 
+			get_rect(p_scroll).size.clamp(headder_rect.size, Vector2.INF)
+		)
 	
 	
 	## Returns true if any cells are selected in this row
@@ -1223,7 +1227,7 @@ class Row extends TableItem:
 		var rect: Rect2 = get_rect(p_scroll)
 		var visable_rect: Rect2 = get_visable_rect(p_scroll)
 		
-		if not visable_rect.get_area():
+		if not get_full_rect(p_scroll).get_area():
 			return
 		
 		var header_rect: Rect2 = get_headder_rect(p_scroll)
@@ -1511,7 +1515,11 @@ class Column extends TableItem:
 	
 	## Returns the Rect2 for the whole column, including the header
 	func get_full_rect(p_scroll: Vector2 = Vector2.ZERO) -> Rect2:
-		return Rect2(get_headder_rect(p_scroll).position, get_rect(p_scroll).size)
+		var headder_rect: Rect2 = get_headder_rect(p_scroll)
+		return Rect2(
+			headder_rect.position, 
+			get_rect(p_scroll).size.clamp(headder_rect.size, Vector2.INF)
+		)
 	
 	
 	## Returns true if any cells are selected in this column
@@ -1574,7 +1582,7 @@ class Column extends TableItem:
 		var rect: Rect2 = get_rect(p_scroll)
 		var visable_rect: Rect2 = get_visable_rect(p_scroll)
 		
-		if not visable_rect.get_area():
+		if not get_full_rect(p_scroll).get_area():
 			return
 		
 		var header_rect: Rect2 = get_headder_rect(p_scroll)
