@@ -54,6 +54,7 @@ func clear() -> void:
 	_managers.clear()
 	_columns.clear()
 	_table.clear()
+	_column_users.clear()
 
 
 ## Adds a manager to the table
