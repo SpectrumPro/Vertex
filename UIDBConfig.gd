@@ -10,7 +10,7 @@ static var components: Dictionary[String, PackedScene]
 ## All user defined UIPanels
 static var data_inputs: Dictionary[Data.Type, Variant] = {
 	Data.Type.PACKEDSCENE: {
-		Data.Sub.Type.PACKEDSCENE_UIPANEL:		load(CoreUIDB._d("DataInputUIPanel")),
+		Data.Sub.Type.PACKEDSCENE_UIPANEL:		load(CoreUIDB._d(DataInputUIPanel)),
 	}
 }
 
