@@ -1,11 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://bco281crc32wf"]
+[gd_scene format=3 uid="uid://bco281crc32wf"]
 
 [ext_resource type="Script" uid="uid://e1d8bxcgh6tx" path="res://modules/Vertex/components/DataInputs/DataInputCustomPanel/DataInputCustomPanel.gd" id="1_bil8u"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="3_xplwq"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qyj0o"]
 
-[node name="DataInputCustomPanel" type="PanelContainer"]
+[node name="DataInputCustomPanel" type="PanelContainer" unique_id=1666745002]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 363.0
 offset_bottom = 233.0
@@ -14,7 +14,7 @@ size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_qyj0o")
 script = ExtResource("1_bil8u")
 
-[node name="Outline" type="Panel" parent="."]
+[node name="Outline" type="Panel" parent="." unique_id=1845657533]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 2

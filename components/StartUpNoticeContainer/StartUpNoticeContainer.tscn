@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://bwkkeg4iicguk"]
+[gd_scene format=3 uid="uid://bwkkeg4iicguk"]
 
 [ext_resource type="StyleBox" uid="uid://drpfuhk8y61xk" path="res://modules/Vertex/assets/styles/UIPanelPopup.tres" id="1_ddcup"]
 [ext_resource type="Script" uid="uid://f0gvkaeqmstu" path="res://modules/Vertex/components/StartUpNoticeContainer/StartUpNoticeContainer.gd" id="2_n2he5"]
 [ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://modules/Vertex/assets/styles/PanelMenuBar.tres" id="2_qlvgm"]
 [ext_resource type="Texture2D" uid="uid://oojb1425vofd" path="res://modules/Vertex/assets/icons/OpenInNew.svg" id="3_03egk"]
 
-[node name="StartUpNoticeContainer" type="PanelContainer" node_paths=PackedStringArray("rich_text_label", "link_button", "confirm_button", "dont_show_again_button")]
+[node name="StartUpNoticeContainer" type="PanelContainer" unique_id=1861822604 node_paths=PackedStringArray("rich_text_label", "link_button", "confirm_button", "dont_show_again_button")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -26,17 +26,17 @@ link_button = NodePath("VBoxContainer/PanelContainer/LinkButton")
 confirm_button = NodePath("VBoxContainer/PanelContainer/ConfirmButton")
 dont_show_again_button = NodePath("VBoxContainer/PanelContainer/DontShowAgain")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1035694296]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=2079972284]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/MarginContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/MarginContainer" unique_id=352634410]
 custom_minimum_size = Vector2(470, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -44,24 +44,24 @@ size_flags_vertical = 4
 bbcode_enabled = true
 fit_content = true
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=188009915]
 layout_mode = 2
 size_flags_vertical = 10
 theme_override_styles/panel = ExtResource("2_qlvgm")
 
-[node name="LinkButton" type="Button" parent="VBoxContainer/PanelContainer"]
+[node name="LinkButton" type="Button" parent="VBoxContainer/PanelContainer" unique_id=954393990]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Link"
 icon = ExtResource("3_03egk")
 flat = true
 
-[node name="ConfirmButton" type="Button" parent="VBoxContainer/PanelContainer"]
+[node name="ConfirmButton" type="Button" parent="VBoxContainer/PanelContainer" unique_id=711476133]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Confirm"
 
-[node name="DontShowAgain" type="CheckBox" parent="VBoxContainer/PanelContainer"]
+[node name="DontShowAgain" type="CheckBox" parent="VBoxContainer/PanelContainer" unique_id=1362209678]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Dont show again"

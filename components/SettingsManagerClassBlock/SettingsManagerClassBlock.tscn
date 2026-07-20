@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dwbgitej5f6yc"]
+[gd_scene format=3 uid="uid://dwbgitej5f6yc"]
 
 [ext_resource type="Theme" uid="uid://cyua45ur0ijqo" path="res://modules/Vertex/assets/themes/Main.theme" id="1_1kik6"]
 [ext_resource type="StyleBox" uid="uid://bxwylw4uk8cyk" path="res://modules/Vertex/assets/styles/ClassSettingsBG.tres" id="2_uforb"]
@@ -10,44 +10,44 @@ font_size = 18
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1rgix"]
 
-[node name="SettingsManagerClassBlock" type="PanelContainer"]
+[node name="SettingsManagerClassBlock" type="PanelContainer" unique_id=1423907955]
 offset_right = 254.0
 offset_bottom = 64.0
 theme = ExtResource("1_1kik6")
 theme_override_styles/panel = ExtResource("2_uforb")
 script = ExtResource("3_asyqc")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1492961396]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=834450085]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Title" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=516963002]
 unique_name_in_owner = true
 layout_mode = 2
 text = "EngineComponent:"
 label_settings = SubResource("LabelSettings_hbu47")
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer" unique_id=1985040149]
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_styles/panel = SubResource("StyleBoxEmpty_1rgix")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/PanelContainer" unique_id=1076076833]
 layout_mode = 2
 
-[node name="ChildButtonPanel" type="PanelContainer" parent="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="ChildButtonPanel" type="PanelContainer" parent="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer" unique_id=735784061]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="ChildButtonContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer/ChildButtonPanel"]
+[node name="ChildButtonContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer/ChildButtonPanel" unique_id=1933958256]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ExpandHide" type="Button" parent="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="ExpandHide" type="Button" parent="VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer" unique_id=1722836101]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
@@ -56,7 +56,7 @@ toggle_mode = true
 icon = ExtResource("4_cku2m")
 flat = true
 
-[node name="SettingContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="SettingContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=94950553]
 unique_name_in_owner = true
 layout_mode = 2
 

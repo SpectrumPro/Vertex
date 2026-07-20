@@ -1,32 +1,32 @@
-[gd_scene load_steps=5 format=3 uid="uid://dr0kfolsg46yu"]
+[gd_scene format=3 uid="uid://dr0kfolsg46yu"]
 
 [ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://modules/Vertex/assets/styles/PanelMenuBar.tres" id="1_1h8qn"]
 [ext_resource type="Script" uid="uid://beinnuh0d12qh" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.gd" id="2_fnf3r"]
 [ext_resource type="PackedScene" uid="uid://bbpvsnjbak1p3" path="res://modules/Vertex/components/ComponentButton/ComponentButton.tscn" id="3_dnle8"]
 [ext_resource type="PackedScene" uid="uid://dfu5s8fjy0ex4" path="res://modules/Vertex/panels/UIPanel/EditControls/EditControls.tscn" id="3_fnf3r"]
 
-[node name="PanelMenuBar" type="PanelContainer"]
+[node name="PanelMenuBar" type="PanelContainer" unique_id=184993663]
 custom_minimum_size = Vector2(0, 60)
 size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_styles/panel = ExtResource("1_1h8qn")
 script = ExtResource("2_fnf3r")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1200457394]
 layout_mode = 2
 
-[node name="ComponentButton" parent="HBoxContainer" instance=ExtResource("3_dnle8")]
+[node name="ComponentButton" parent="HBoxContainer" unique_id=495491944 instance=ExtResource("3_dnle8")]
 unique_name_in_owner = true
 layout_mode = 2
 flat = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer" unique_id=1637369951]
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 
-[node name="EditControls" parent="HBoxContainer" instance=ExtResource("3_fnf3r")]
+[node name="EditControls" parent="HBoxContainer" unique_id=1876457925 instance=ExtResource("3_fnf3r")]
 unique_name_in_owner = true
 layout_mode = 2
 show_edit = false

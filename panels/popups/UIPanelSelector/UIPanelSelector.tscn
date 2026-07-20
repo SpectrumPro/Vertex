@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bojo5mnmadf4j"]
+[gd_scene format=3 uid="uid://bojo5mnmadf4j"]
 
 [ext_resource type="Script" uid="uid://d4dsdaciau43e" path="res://modules/Vertex/panels/popups/UIPanelSelector/UIPanelSelector.gd" id="2_ktnxn"]
 [ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://modules/Vertex/assets/styles/UIPanelBase.tres" id="2_xgsr8"]
@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://c6lkkp6akoipw" path="res://modules/Vertex/classes/TaggedLineEdit.gd" id="4_lx25v"]
 [ext_resource type="PackedScene" uid="uid://dfu5s8fjy0ex4" path="res://modules/Vertex/panels/UIPanel/EditControls/EditControls.tscn" id="5_xgsr8"]
 
-[node name="UIPanelSelector" type="PanelContainer" node_paths=PackedStringArray("categorised_tree", "panel_tree", "search_bar")]
+[node name="UIPanelSelector" type="PanelContainer" unique_id=2064102070 node_paths=PackedStringArray("categorised_tree", "panel_tree", "search_bar")]
 custom_minimum_size = Vector2(0, 60)
 anchors_preset = 8
 anchor_left = 0.5
@@ -27,24 +27,24 @@ categorised_tree = NodePath("VBoxContainer/HBoxContainer2/CategorisedTree")
 panel_tree = NodePath("VBoxContainer/HBoxContainer2/PanelTree")
 search_bar = NodePath("VBoxContainer/HBoxContainer/ScrollContainer/LineEdit")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1894227836]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1539578584]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=46649268]
 layout_mode = 2
 icon = ExtResource("3_kjule")
 flat = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer" unique_id=413593954]
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 3
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/ScrollContainer"]
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/ScrollContainer" unique_id=451595434]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
@@ -52,25 +52,25 @@ placeholder_text = "Select Panel"
 select_all_on_focus = true
 script = ExtResource("4_lx25v")
 
-[node name="EditControls" parent="VBoxContainer/HBoxContainer" instance=ExtResource("5_xgsr8")]
+[node name="EditControls" parent="VBoxContainer/HBoxContainer" unique_id=1892729220 instance=ExtResource("5_xgsr8")]
 unique_name_in_owner = true
 layout_mode = 2
 show_edit = false
 show_settings = false
 show_close = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=2038917278]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CategorisedTree" type="Tree" parent="VBoxContainer/HBoxContainer2"]
+[node name="CategorisedTree" type="Tree" parent="VBoxContainer/HBoxContainer2" unique_id=306916046]
 layout_mode = 2
 size_flags_horizontal = 3
 columns = 2
 hide_root = true
 select_mode = 1
 
-[node name="PanelTree" type="Tree" parent="VBoxContainer/HBoxContainer2"]
+[node name="PanelTree" type="Tree" parent="VBoxContainer/HBoxContainer2" unique_id=1259947333]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3

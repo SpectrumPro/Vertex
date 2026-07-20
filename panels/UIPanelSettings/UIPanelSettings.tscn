@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cgkb6rh0joakn"]
+[gd_scene format=3 uid="uid://cgkb6rh0joakn"]
 
 [ext_resource type="Script" uid="uid://bpl4u3k0igkrf" path="res://modules/Vertex/panels/UIPanelSettings/UIPanelSettings.gd" id="1_4hx28"]
 [ext_resource type="StyleBox" uid="uid://drpfuhk8y61xk" path="res://modules/Vertex/assets/styles/UIPanelPopup.tres" id="1_i7um0"]
@@ -11,7 +11,7 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_i7um0"]
 
-[node name="UIPanelSettings" type="PanelContainer" node_paths=PackedStringArray("_shortcuts_panel", "_settings_panel")]
+[node name="UIPanelSettings" type="PanelContainer" unique_id=842770674 node_paths=PackedStringArray("_shortcuts_panel", "_settings_panel")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,26 +22,26 @@ script = ExtResource("1_4hx28")
 _shortcuts_panel = NodePath("VBoxContainer/Shortcuts")
 _settings_panel = NodePath("VBoxContainer/Settings/SettingsManagerView")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1619585729]
 layout_mode = 2
 
-[node name="PanelMenuBar" parent="VBoxContainer" instance=ExtResource("3_ct4k6")]
+[node name="PanelMenuBar" parent="VBoxContainer" unique_id=13387954 instance=ExtResource("3_ct4k6")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="0"]
+[node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" parent_id_path=PackedInt32Array(13387954, 1200457394) index="0" unique_id=495491944]
 text = "Panel Settings"
 icon = ExtResource("4_ct4k6")
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer" index="0"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer" parent_id_path=PackedInt32Array(13387954, 1637369951) index="0" unique_id=1894509666]
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/PanelContainer" unique_id=596233331]
 layout_mode = 2
 
-[node name="SettingsTab" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/PanelContainer/HBoxContainer"]
+[node name="SettingsTab" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/PanelContainer/HBoxContainer" unique_id=698689767]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 toggle_mode = true
@@ -49,23 +49,23 @@ button_pressed = true
 button_group = SubResource("ButtonGroup_i7um0")
 text = "Settings"
 
-[node name="ShortcutsTab" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/PanelContainer/HBoxContainer"]
+[node name="ShortcutsTab" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/PanelContainer/HBoxContainer" unique_id=1067841165]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_i7um0")
 text = "Shortcuts"
 
-[node name="Settings" type="ScrollContainer" parent="VBoxContainer"]
+[node name="Settings" type="ScrollContainer" parent="VBoxContainer" unique_id=151918086]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SettingsManagerView" parent="VBoxContainer/Settings" instance=ExtResource("6_a0kig")]
+[node name="SettingsManagerView" parent="VBoxContainer/Settings" unique_id=1414004198 instance=ExtResource("6_a0kig")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Shortcuts" type="PanelContainer" parent="VBoxContainer" node_paths=PackedStringArray("_button_tree", "_action_tree", "_add_action_button", "_remove_action_button")]
+[node name="Shortcuts" type="PanelContainer" parent="VBoxContainer" unique_id=1913479572 node_paths=PackedStringArray("_button_tree", "_action_tree", "_add_action_button", "_remove_action_button")]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
@@ -75,33 +75,33 @@ _action_tree = NodePath("HBoxContainer/VBoxContainer/ActionTree")
 _add_action_button = NodePath("HBoxContainer/VBoxContainer/PanelContainer/HBoxContainer/AddAction")
 _remove_action_button = NodePath("HBoxContainer/VBoxContainer/PanelContainer/HBoxContainer/RemoveAction")
 
-[node name="HBoxContainer" type="HSplitContainer" parent="VBoxContainer/Shortcuts"]
+[node name="HBoxContainer" type="HSplitContainer" parent="VBoxContainer/Shortcuts" unique_id=1092555964]
 layout_mode = 2
 
-[node name="ButtonList" type="Tree" parent="VBoxContainer/Shortcuts/HBoxContainer"]
+[node name="ButtonList" type="Tree" parent="VBoxContainer/Shortcuts/HBoxContainer" unique_id=873985347]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 hide_root = true
 select_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Shortcuts/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Shortcuts/HBoxContainer" unique_id=1718845478]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ActionTree" type="Tree" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer"]
+[node name="ActionTree" type="Tree" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer" unique_id=446155692]
 layout_mode = 2
 size_flags_vertical = 3
 hide_root = true
 select_mode = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer" unique_id=1122566523]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer/PanelContainer" unique_id=2020205692]
 layout_mode = 2
 
-[node name="AddAction" type="Button" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="AddAction" type="Button" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer/PanelContainer/HBoxContainer" unique_id=25387106]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -109,7 +109,7 @@ disabled = true
 text = "Add"
 icon = ExtResource("6_i3a75")
 
-[node name="RemoveAction" type="Button" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="RemoveAction" type="Button" parent="VBoxContainer/Shortcuts/HBoxContainer/VBoxContainer/PanelContainer/HBoxContainer" unique_id=2031091557]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3

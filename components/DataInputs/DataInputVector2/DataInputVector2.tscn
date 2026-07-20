@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cxbqxm3fqcfn0"]
+[gd_scene format=3 uid="uid://cxbqxm3fqcfn0"]
 
 [ext_resource type="Script" uid="uid://cdvs0gwuejx8j" path="res://modules/Vertex/components/DataInputs/DataInputVector2/DataInputVector2.gd" id="1_62qn1"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_n355l"]
@@ -73,28 +73,28 @@ bg_color = Color(0, 0.5254902, 0, 1)
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
-[node name="DataInputVector2" type="PanelContainer"]
+[node name="DataInputVector2" type="PanelContainer" unique_id=870478363]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
 script = ExtResource("1_62qn1")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=111394456]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBox"]
+[node name="Label" type="Label" parent="HBox" unique_id=1637861608]
 visible = false
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="HBox"]
+[node name="PanelContainer" type="PanelContainer" parent="HBox" unique_id=1480681560]
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_styles/panel = SubResource("StyleBoxEmpty_p4wjb")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBox/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBox/PanelContainer" unique_id=1240687408]
 layout_mode = 2
 
-[node name="XAxis" type="SpinBox" parent="HBox/PanelContainer/HBoxContainer"]
+[node name="XAxis" type="SpinBox" parent="HBox/PanelContainer/HBoxContainer" unique_id=1487093657]
 layout_mode = 2
 theme_override_colors/up_pressed_icon_modulate = Color(1, 0, 0, 1)
 theme_override_colors/down_pressed_icon_modulate = Color(1, 0, 0, 1)
@@ -111,7 +111,7 @@ prefix = "x:"
 custom_arrow_step = 1.0
 select_all_on_focus = true
 
-[node name="YAxis" type="SpinBox" parent="HBox/PanelContainer/HBoxContainer"]
+[node name="YAxis" type="SpinBox" parent="HBox/PanelContainer/HBoxContainer" unique_id=1875331404]
 layout_mode = 2
 theme_override_colors/up_pressed_icon_modulate = Color(0, 1, 0, 1)
 theme_override_colors/down_pressed_icon_modulate = Color(0, 1, 0, 1)
@@ -128,7 +128,7 @@ prefix = "y:"
 custom_arrow_step = 1.0
 select_all_on_focus = true
 
-[node name="Outline" type="Panel" parent="HBox/PanelContainer"]
+[node name="Outline" type="Panel" parent="HBox/PanelContainer" unique_id=803964693]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 2

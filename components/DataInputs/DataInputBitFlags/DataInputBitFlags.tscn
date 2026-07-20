@@ -1,34 +1,34 @@
-[gd_scene load_steps=4 format=3 uid="uid://bqpg0ue4l0dma"]
+[gd_scene format=3 uid="uid://bqpg0ue4l0dma"]
 
 [ext_resource type="Script" uid="uid://dljvnleo8cfh2" path="res://modules/Vertex/components/DataInputs/DataInputBitFlags/DataInputBitFlags.gd" id="1_edcki"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_4v1rf"]
 [ext_resource type="Texture2D" uid="uid://cauhar0guyod0" path="res://modules/Vertex/assets/icons/UnfoldMore.svg" id="3_4qght"]
 
-[node name="DataInputBitFlags" type="PanelContainer"]
+[node name="DataInputBitFlags" type="PanelContainer" unique_id=31078884]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 354.0
 offset_bottom = 59.0
 script = ExtResource("1_edcki")
 
-[node name="Outline" type="Panel" parent="."]
+[node name="Outline" type="Panel" parent="." unique_id=688272681]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = ExtResource("2_4v1rf")
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="VBox" type="VBoxContainer" parent="." unique_id=1023326827]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBox"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBox" unique_id=1113214771]
 custom_minimum_size = Vector2(0, 49)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBox/HBoxContainer"]
+[node name="Label" type="Label" parent="VBox/HBoxContainer" unique_id=10748345]
 layout_mode = 2
 size_flags_vertical = 6
 vertical_alignment = 1
 
-[node name="FlagLabel" type="Label" parent="VBox/HBoxContainer"]
+[node name="FlagLabel" type="Label" parent="VBox/HBoxContainer" unique_id=1506971966]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 1
@@ -36,14 +36,14 @@ text = "
 "
 vertical_alignment = 1
 
-[node name="Expand" type="Button" parent="VBox/HBoxContainer"]
+[node name="Expand" type="Button" parent="VBox/HBoxContainer" unique_id=791170121]
 layout_mode = 2
 size_flags_horizontal = 8
 toggle_mode = true
 icon = ExtResource("3_4qght")
 flat = true
 
-[node name="ButtonContainer" type="VBoxContainer" parent="VBox"]
+[node name="ButtonContainer" type="VBoxContainer" parent="VBox" unique_id=1747257534]
 visible = false
 layout_mode = 2
 

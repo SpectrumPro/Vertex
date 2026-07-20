@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bf3cbsyaotnnq"]
+[gd_scene format=3 uid="uid://bf3cbsyaotnnq"]
 
 [ext_resource type="Script" uid="uid://bj1pr3vtvr11u" path="res://modules/Vertex/components/Table/Table.gd" id="1_bfqnh"]
 [ext_resource type="Script" uid="uid://dk54djvowcfpt" path="res://modules/Vertex/components/Table/TableTitleButton.gd" id="2_xi7fw"]
@@ -155,7 +155,7 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[node name="Table" type="PanelContainer"]
+[node name="Table" type="PanelContainer" unique_id=55312734]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -163,46 +163,46 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_bfqnh")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=847986959]
 layout_mode = 2
 
-[node name="IndexBar" type="VBoxContainer" parent="HBoxContainer"]
+[node name="IndexBar" type="VBoxContainer" parent="HBoxContainer" unique_id=932402392]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(42, 0)
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="PanelContainer2" type="PanelContainer" parent="HBoxContainer/IndexBar"]
+[node name="PanelContainer2" type="PanelContainer" parent="HBoxContainer/IndexBar" unique_id=70948248]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_gp3vw")
 
-[node name="DeSelectAll" type="Button" parent="HBoxContainer/IndexBar/PanelContainer2"]
+[node name="DeSelectAll" type="Button" parent="HBoxContainer/IndexBar/PanelContainer2" unique_id=1515931358]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 flat = true
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/IndexBar"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/IndexBar" unique_id=1057198250]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_gp3vw")
 
-[node name="SideBarScroll" type="ScrollContainer" parent="HBoxContainer/IndexBar/PanelContainer"]
+[node name="SideBarScroll" type="ScrollContainer" parent="HBoxContainer/IndexBar/PanelContainer" unique_id=837207041]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/IndexBar/PanelContainer/SideBarScroll"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/IndexBar/PanelContainer/SideBarScroll" unique_id=444132870]
 layout_mode = 2
 
-[node name="SideBarContainer" type="VBoxContainer" parent="HBoxContainer/IndexBar/PanelContainer/SideBarScroll/VBoxContainer"]
+[node name="SideBarContainer" type="VBoxContainer" parent="HBoxContainer/IndexBar/PanelContainer/SideBarScroll/VBoxContainer" unique_id=536368982]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 1
 
-[node name="TemplateSideBarButton" type="Button" parent="HBoxContainer/IndexBar/PanelContainer/SideBarScroll/VBoxContainer/SideBarContainer"]
+[node name="TemplateSideBarButton" type="Button" parent="HBoxContainer/IndexBar/PanelContainer/SideBarScroll/VBoxContainer/SideBarContainer" unique_id=45767806]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
@@ -219,31 +219,31 @@ alignment = 0
 icon_alignment = 2
 script = ExtResource("3_iqbhn")
 
-[node name="ScrollPadding" type="Control" parent="HBoxContainer/IndexBar/PanelContainer/SideBarScroll/VBoxContainer"]
+[node name="ScrollPadding" type="Control" parent="HBoxContainer/IndexBar/PanelContainer/SideBarScroll/VBoxContainer" unique_id=2019746098]
 custom_minimum_size = Vector2(0, 7)
 layout_mode = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="HBoxContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="HBoxContainer" unique_id=847278723]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="FreezeTreeContainer" type="VBoxContainer" parent="HBoxContainer/HSplitContainer"]
+[node name="FreezeTreeContainer" type="VBoxContainer" parent="HBoxContainer/HSplitContainer" unique_id=919535393]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/HSplitContainer/FreezeTreeContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/HSplitContainer/FreezeTreeContainer" unique_id=857779483]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_n27pe")
 
-[node name="FreezeTitleContainer" type="HBoxContainer" parent="HBoxContainer/HSplitContainer/FreezeTreeContainer/PanelContainer"]
+[node name="FreezeTitleContainer" type="HBoxContainer" parent="HBoxContainer/HSplitContainer/FreezeTreeContainer/PanelContainer" unique_id=387609253]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="FreezeTree" type="Tree" parent="HBoxContainer/HSplitContainer/FreezeTreeContainer"]
+[node name="FreezeTree" type="Tree" parent="HBoxContainer/HSplitContainer/FreezeTreeContainer" unique_id=518195724]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -263,11 +263,11 @@ hide_folding = true
 hide_root = true
 select_mode = 2
 
-[node name="CoreTreeContainer" type="Control" parent="HBoxContainer/HSplitContainer"]
+[node name="CoreTreeContainer" type="Control" parent="HBoxContainer/HSplitContainer" unique_id=748423584]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TitleScroll" type="ScrollContainer" parent="HBoxContainer/HSplitContainer/CoreTreeContainer"]
+[node name="TitleScroll" type="ScrollContainer" parent="HBoxContainer/HSplitContainer/CoreTreeContainer" unique_id=409863379]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 10
@@ -276,18 +276,18 @@ grow_horizontal = 2
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/HSplitContainer/CoreTreeContainer/TitleScroll"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/HSplitContainer/CoreTreeContainer/TitleScroll" unique_id=1998789082]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_n27pe")
 
-[node name="CoreTitleContainer" type="HBoxContainer" parent="HBoxContainer/HSplitContainer/CoreTreeContainer/TitleScroll/PanelContainer"]
+[node name="CoreTitleContainer" type="HBoxContainer" parent="HBoxContainer/HSplitContainer/CoreTreeContainer/TitleScroll/PanelContainer" unique_id=1990487877]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="TemplateTitleButton" type="Button" parent="HBoxContainer/HSplitContainer/CoreTreeContainer/TitleScroll/PanelContainer/CoreTitleContainer"]
+[node name="TemplateTitleButton" type="Button" parent="HBoxContainer/HSplitContainer/CoreTreeContainer/TitleScroll/PanelContainer/CoreTitleContainer" unique_id=2036013722]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -298,7 +298,7 @@ text = "Column Name"
 alignment = 0
 script = ExtResource("2_xi7fw")
 
-[node name="CoreTree" type="Tree" parent="HBoxContainer/HSplitContainer/CoreTreeContainer"]
+[node name="CoreTree" type="Tree" parent="HBoxContainer/HSplitContainer/CoreTreeContainer" unique_id=934710344]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -324,11 +324,11 @@ hide_folding = true
 hide_root = true
 select_mode = 2
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=181034063]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="SelectContainer" type="Control" parent="Control"]
+[node name="SelectContainer" type="Control" parent="Control" unique_id=880494937]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -340,7 +340,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="SelectBox" parent="Control/SelectContainer" node_paths=PackedStringArray("event_control") instance=ExtResource("3_6x34v")]
+[node name="SelectBox" parent="Control/SelectContainer" unique_id=746167521 node_paths=PackedStringArray("event_control") instance=ExtResource("3_6x34v")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

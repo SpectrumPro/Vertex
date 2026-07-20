@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bgos7cwjodq8j"]
+[gd_scene format=3 uid="uid://bgos7cwjodq8j"]
 
 [ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://modules/Vertex/assets/styles/PanelMenuBar.tres" id="1_hucp2"]
 [ext_resource type="Script" uid="uid://dufng2l6kp0bo" path="res://modules/Vertex/panels/popups/UICommandPalette/UICommandPalette.gd" id="2_hucp2"]
@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dfu5s8fjy0ex4" path="res://modules/Vertex/panels/UIPanel/EditControls/EditControls.tscn" id="4_2ap7d"]
 [ext_resource type="Script" uid="uid://c6lkkp6akoipw" path="res://modules/Vertex/classes/TaggedLineEdit.gd" id="4_blvx6"]
 
-[node name="UICommandPalette" type="PanelContainer" node_paths=PackedStringArray("line_edit", "command_tree")]
+[node name="UICommandPalette" type="PanelContainer" unique_id=35789905 node_paths=PackedStringArray("line_edit", "command_tree")]
 custom_minimum_size = Vector2(0, 60)
 offset_right = 604.0
 offset_bottom = 60.0
@@ -18,24 +18,24 @@ line_edit = NodePath("VBoxContainer/HBoxContainer/ScrollContainer/LineEdit")
 command_tree = NodePath("VBoxContainer/ScrollContainer/CommandTree")
 display_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1229306253]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=406625943]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=731289823]
 layout_mode = 2
 icon = ExtResource("3_v07wq")
 flat = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer" unique_id=2023378516]
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 3
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/ScrollContainer"]
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/ScrollContainer" unique_id=748812272]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
@@ -44,18 +44,18 @@ placeholder_text = "Command Palette"
 select_all_on_focus = true
 script = ExtResource("4_blvx6")
 
-[node name="EditControls" parent="VBoxContainer/HBoxContainer" instance=ExtResource("4_2ap7d")]
+[node name="EditControls" parent="VBoxContainer/HBoxContainer" unique_id=784702875 instance=ExtResource("4_2ap7d")]
 unique_name_in_owner = true
 layout_mode = 2
 show_edit = false
 show_settings = false
 show_close = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=342544567]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CommandTree" type="Tree" parent="VBoxContainer/ScrollContainer"]
+[node name="CommandTree" type="Tree" parent="VBoxContainer/ScrollContainer" unique_id=540472137]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

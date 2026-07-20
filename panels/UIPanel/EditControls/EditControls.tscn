@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dfu5s8fjy0ex4"]
+[gd_scene format=3 uid="uid://dfu5s8fjy0ex4"]
 
 [ext_resource type="Theme" uid="uid://cyua45ur0ijqo" path="res://modules/Vertex/assets/themes/Main.theme" id="1_bsx7u"]
 [ext_resource type="Texture2D" uid="uid://rqf8w11gk6ud" path="res://modules/Vertex/assets/icons/Edit.svg" id="1_x4jel"]
@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://deii2wkil5fsl" path="res://modules/Vertex/assets/icons/Close.svg" id="5_x6bqw"]
 [ext_resource type="StyleBox" uid="uid://yvrvbisemb20" path="res://modules/Vertex/assets/styles/ResolveBox.tres" id="7_q35ym"]
 
-[node name="EditControls" type="PanelContainer" node_paths=PackedStringArray("back_button", "edit_button", "settings_button", "close_button", "move_resize_handle", "resolve_box")]
+[node name="EditControls" type="PanelContainer" unique_id=650485317 node_paths=PackedStringArray("back_button", "edit_button", "settings_button", "close_button", "move_resize_handle", "resolve_box")]
 custom_minimum_size = Vector2(25, 50)
 offset_right = 118.0
 offset_bottom = 50.0
@@ -24,35 +24,35 @@ close_button = NodePath("HBoxContainer/Close")
 move_resize_handle = NodePath("HBoxContainer/Handle")
 resolve_box = NodePath("Control/Panel")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1619460274]
 layout_mode = 2
 
-[node name="Back" type="Button" parent="HBoxContainer"]
+[node name="Back" type="Button" parent="HBoxContainer" unique_id=1677329030]
 visible = false
 layout_mode = 2
 icon = ExtResource("3_aen3s")
 
-[node name="Edit" type="Button" parent="HBoxContainer"]
+[node name="Edit" type="Button" parent="HBoxContainer" unique_id=730573990]
 layout_mode = 2
 toggle_mode = true
 icon = ExtResource("1_x4jel")
 
-[node name="Settings" type="Button" parent="HBoxContainer"]
+[node name="Settings" type="Button" parent="HBoxContainer" unique_id=657827926]
 layout_mode = 2
 icon = ExtResource("2_1xcge")
 
-[node name="Close" type="Button" parent="HBoxContainer"]
+[node name="Close" type="Button" parent="HBoxContainer" unique_id=500669009]
 visible = false
 layout_mode = 2
 icon = ExtResource("5_x6bqw")
 
-[node name="Handle" type="Control" parent="HBoxContainer"]
+[node name="Handle" type="Control" parent="HBoxContainer" unique_id=1112770427]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_default_cursor_shape = 13
 
-[node name="MoveResize" type="TextureRect" parent="HBoxContainer/Handle"]
+[node name="MoveResize" type="TextureRect" parent="HBoxContainer/Handle" unique_id=568917722]
 modulate = Color(0.255659, 0.255659, 0.255659, 1)
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 1
@@ -67,11 +67,11 @@ texture = ExtResource("3_vg853")
 expand_mode = 4
 stretch_mode = 5
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=2095615000]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Panel" type="Panel" parent="Control"]
+[node name="Panel" type="Panel" parent="Control" unique_id=933925293]
 visible = false
 layout_mode = 1
 anchors_preset = 15

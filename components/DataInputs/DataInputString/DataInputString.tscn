@@ -1,28 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://gf4tsoprrt22"]
+[gd_scene format=3 uid="uid://gf4tsoprrt22"]
 
 [ext_resource type="Script" uid="uid://ifecefhoqn2l" path="res://modules/Vertex/components/DataInputs/DataInputString/DataInputString.gd" id="1_jl6kc"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_vrvg8"]
 
-[node name="DataInputString" type="PanelContainer"]
+[node name="DataInputString" type="PanelContainer" unique_id=1611575402]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
 script = ExtResource("1_jl6kc")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=1522373909]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBox"]
+[node name="Label" type="Label" parent="HBox" unique_id=1681892218]
 visible = false
 layout_mode = 2
 
-[node name="LineEdit" type="LineEdit" parent="HBox"]
+[node name="LineEdit" type="LineEdit" parent="HBox" unique_id=2086371431]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 select_all_on_focus = true
 
-[node name="Outline" type="Panel" parent="HBox/LineEdit"]
+[node name="Outline" type="Panel" parent="HBox/LineEdit" unique_id=361416343]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15

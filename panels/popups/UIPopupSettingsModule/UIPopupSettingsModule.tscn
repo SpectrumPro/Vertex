@@ -1,17 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://b1kltq456o7pj"]
+[gd_scene format=3 uid="uid://b1kltq456o7pj"]
 
 [ext_resource type="Script" uid="uid://bjkkdqknobjvl" path="res://modules/Vertex/panels/popups/UIPopupSettingsModule/UIPopupSettingsModule.gd" id="1_kmprp"]
 [ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="2_vmvni"]
 
-[node name="UIPopupSettingsModule" type="PanelContainer" node_paths=PackedStringArray("title", "module_container")]
+[node name="UIPopupSettingsModule" type="PanelContainer" unique_id=834406565 node_paths=PackedStringArray("title", "module_container")]
 script = ExtResource("1_kmprp")
 title = NodePath("VBoxContainer/PanelMenuBar/HBoxContainer/ComponentButton")
 module_container = NodePath("VBoxContainer")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=531130837]
 layout_mode = 2
 
-[node name="PanelMenuBar" parent="VBoxContainer" instance=ExtResource("2_vmvni")]
+[node name="PanelMenuBar" parent="VBoxContainer" unique_id=22454264 instance=ExtResource("2_vmvni")]
 unique_name_in_owner = true
 layout_mode = 2
 

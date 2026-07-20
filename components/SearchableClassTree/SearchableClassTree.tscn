@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://dvu1pq6kvuc3t"]
+[gd_scene format=3 uid="uid://dvu1pq6kvuc3t"]
 
 [ext_resource type="Script" uid="uid://c3dka6m08sjkx" path="res://modules/Vertex/components/SearchableClassTree/SearchableClassTree.gd" id="1_i1ig3"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i1ig3"]
 
-[node name="SearchableClassTree" type="PanelContainer"]
+[node name="SearchableClassTree" type="PanelContainer" unique_id=1214380198]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -14,7 +14,7 @@ size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_i1ig3")
 script = ExtResource("1_i1ig3")
 
-[node name="ClassInhrTree" type="Tree" parent="."]
+[node name="ClassInhrTree" type="Tree" parent="." unique_id=1388167053]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -22,7 +22,7 @@ columns = 2
 hide_root = true
 select_mode = 1
 
-[node name="ClassList" type="Tree" parent="."]
+[node name="ClassList" type="Tree" parent="." unique_id=678701899]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -30,14 +30,14 @@ columns = 2
 hide_root = true
 select_mode = 1
 
-[node name="ObjectInhrTree" type="Tree" parent="."]
+[node name="ObjectInhrTree" type="Tree" parent="." unique_id=782893839]
 unique_name_in_owner = true
 layout_mode = 2
 columns = 2
 hide_root = true
 select_mode = 1
 
-[node name="ObjectList" type="Tree" parent="."]
+[node name="ObjectList" type="Tree" parent="." unique_id=682971903]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

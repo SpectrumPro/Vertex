@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dbindagv7rpfp"]
+[gd_scene format=3 uid="uid://dbindagv7rpfp"]
 
 [ext_resource type="StyleBox" uid="uid://daxhx5qr5qdeu" path="res://modules/Vertex/assets/styles/UIPanelBase.tres" id="1_eoc6a"]
 [ext_resource type="PackedScene" uid="uid://dr0kfolsg46yu" path="res://modules/Vertex/panels/UIPanel/PanelMenuBar.tscn" id="2_a3hd6"]
@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dfrrs2dnvlvsu" path="res://modules/Vertex/assets/icons/Delete.svg" id="11_ukpiy"]
 [ext_resource type="Texture2D" uid="uid://dylarrrwlpxwu" path="res://modules/Vertex/assets/icons/Search.svg" id="13_fsmei"]
 
-[node name="UIWindowManager" type="PanelContainer" node_paths=PackedStringArray("settings_manager_multi_view", "focus_window_button", "delete_window_button")]
+[node name="UIWindowManager" type="PanelContainer" unique_id=1404793217 node_paths=PackedStringArray("settings_manager_multi_view", "focus_window_button", "delete_window_button")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,66 +22,66 @@ settings_manager_multi_view = NodePath("VBoxContainer/HBoxContainer/SettingsMana
 focus_window_button = NodePath("VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer/FocusWindow")
 delete_window_button = NodePath("VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer/DeleteWindow")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=102774165]
 layout_mode = 2
 
-[node name="PanelMenuBar" parent="VBoxContainer" instance=ExtResource("2_a3hd6")]
+[node name="PanelMenuBar" parent="VBoxContainer" unique_id=1277375975 instance=ExtResource("2_a3hd6")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" index="0"]
+[node name="ComponentButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer" parent_id_path=PackedInt32Array(1277375975, 1200457394) index="0" unique_id=495491944]
 text = "WindowManager"
 icon = ExtResource("3_0pdyn")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer" parent_id_path=PackedInt32Array(1277375975, 1637369951) index="0" unique_id=1277590528]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=1982553454]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer" unique_id=634996926]
 layout_mode = 2
 
-[node name="AddWindow" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="AddWindow" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer" unique_id=881784467]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "New"
 icon = ExtResource("9_qropn")
 
-[node name="FocusWindow" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="FocusWindow" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer" unique_id=875070477]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 disabled = true
 text = "Focus"
 icon = ExtResource("11_qropn")
 
-[node name="DeleteWindow" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="DeleteWindow" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer" unique_id=166250736]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 disabled = true
 text = "Delete"
 icon = ExtResource("11_ukpiy")
 
-[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer"]
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=372792333]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2" unique_id=1709224550]
 layout_mode = 2
 
-[node name="IdentifyWindows" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2/HBoxContainer"]
+[node name="IdentifyWindows" type="Button" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer2/HBoxContainer" unique_id=1569119801]
 layout_mode = 2
 toggle_mode = true
 text = "Identify"
 icon = ExtResource("13_fsmei")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=844626331]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SettingsManagerMultiView" parent="VBoxContainer/HBoxContainer" instance=ExtResource("11_38pb3")]
+[node name="SettingsManagerMultiView" parent="VBoxContainer/HBoxContainer" unique_id=768532034 instance=ExtResource("11_38pb3")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

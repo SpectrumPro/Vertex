@@ -1,28 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://dnmaohm68kyaq"]
+[gd_scene format=3 uid="uid://dnmaohm68kyaq"]
 
 [ext_resource type="Script" uid="uid://cb65th3fqydbk" path="res://modules/Vertex/components/DataInputs/DataInputObject/DataInputObject.gd" id="1_7s3cj"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_55hg5"]
 
-[node name="DataInputObject" type="PanelContainer"]
+[node name="DataInputObject" type="PanelContainer" unique_id=471483440]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
 script = ExtResource("1_7s3cj")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=1349405682]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBox"]
+[node name="Label" type="Label" parent="HBox" unique_id=707740188]
 visible = false
 layout_mode = 2
 
-[node name="Button" type="Button" parent="HBox"]
+[node name="Button" type="Button" parent="HBox" unique_id=928630419]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_color = Color(0.8745098, 0.8745098, 0.8745098, 0.5019608)
 
-[node name="Outline" type="Panel" parent="HBox/Button"]
+[node name="Outline" type="Panel" parent="HBox/Button" unique_id=464680628]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15

@@ -1,23 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://cva4naeuvb2wk"]
+[gd_scene format=3 uid="uid://cva4naeuvb2wk"]
 
 [ext_resource type="Script" uid="uid://b3s7eut4t3w0j" path="res://modules/Vertex/components/DataInputs/DataInputNull/DataInputNull.gd" id="1_rk5jp"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_sywd1"]
 
-[node name="DataInputNull" type="PanelContainer"]
+[node name="DataInputNull" type="PanelContainer" unique_id=1122790360]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
 script = ExtResource("1_rk5jp")
 
-[node name="Outline" type="Panel" parent="."]
+[node name="Outline" type="Panel" parent="." unique_id=145277295]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = ExtResource("2_sywd1")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=1576669618]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBox"]
+[node name="Label" type="Label" parent="HBox" unique_id=1753964200]
 visible = false
 layout_mode = 2

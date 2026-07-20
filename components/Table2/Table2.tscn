@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://c7lh26am36j5n"]
+[gd_scene format=3 uid="uid://c7lh26am36j5n"]
 
 [ext_resource type="Script" uid="uid://cnk2n16dnamqb" path="res://modules/Vertex/components/Table2/Table2.gd" id="1_qasxj"]
 [ext_resource type="PackedScene" uid="uid://b6eijsxlis7r3" path="res://modules/Vertex/components/SelectBox/SelectBox.tscn" id="2_hfnc6"]
@@ -15,7 +15,7 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="Table2" type="Control"]
+[node name="Table2" type="Control" unique_id=899136984]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +26,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_qasxj")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1009068206]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,11 +35,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_qasxj")
 
-[node name="Canvas" type="Control" parent="PanelContainer"]
+[node name="Canvas" type="Control" parent="PanelContainer" unique_id=320732681]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SelectBox" parent="PanelContainer/Canvas" node_paths=PackedStringArray("event_control") instance=ExtResource("2_hfnc6")]
+[node name="SelectBox" parent="PanelContainer/Canvas" unique_id=812190021 node_paths=PackedStringArray("event_control") instance=ExtResource("2_hfnc6")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -58,7 +58,7 @@ size_flags_vertical = 4
 mouse_filter = 2
 event_control = NodePath("..")
 
-[node name="HScrollBar" type="HScrollBar" parent="."]
+[node name="HScrollBar" type="HScrollBar" parent="." unique_id=920632569]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 12
@@ -70,7 +70,7 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_vertical = 8
 
-[node name="VScrollBar" type="VScrollBar" parent="."]
+[node name="VScrollBar" type="VScrollBar" parent="." unique_id=671591028]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 11

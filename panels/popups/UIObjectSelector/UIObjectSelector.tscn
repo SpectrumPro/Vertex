@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bfdb7diyn2pub"]
+[gd_scene format=3 uid="uid://bfdb7diyn2pub"]
 
 [ext_resource type="StyleBox" uid="uid://csle20exwqtti" path="res://modules/Vertex/assets/styles/PanelMenuBar.tres" id="1_153al"]
 [ext_resource type="Script" uid="uid://divcghy56dg8s" path="res://modules/Vertex/panels/popups/UIObjectSelector/UIObjectSelector.gd" id="2_2b4al"]
@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://c6lkkp6akoipw" path="res://modules/Vertex/classes/TaggedLineEdit.gd" id="4_ijqba"]
 [ext_resource type="PackedScene" uid="uid://dfu5s8fjy0ex4" path="res://modules/Vertex/panels/UIPanel/EditControls/EditControls.tscn" id="5_ujykt"]
 
-[node name="UIObjectSelector" type="PanelContainer"]
+[node name="UIObjectSelector" type="PanelContainer" unique_id=1243660597]
 custom_minimum_size = Vector2(0, 60)
 offset_right = 604.0
 offset_bottom = 60.0
@@ -15,24 +15,24 @@ size_flags_vertical = 0
 theme_override_styles/panel = ExtResource("1_153al")
 script = ExtResource("2_2b4al")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=708704933]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=292584597]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1358703128]
 layout_mode = 2
 icon = ExtResource("3_1cpnu")
 flat = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer" unique_id=1635001674]
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 3
 
-[node name="SearchBar" type="LineEdit" parent="VBoxContainer/HBoxContainer/ScrollContainer"]
+[node name="SearchBar" type="LineEdit" parent="VBoxContainer/HBoxContainer/ScrollContainer" unique_id=486762977]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -41,7 +41,7 @@ placeholder_text = "Object Picker"
 select_all_on_focus = true
 script = ExtResource("4_ijqba")
 
-[node name="EditControls" parent="VBoxContainer/HBoxContainer" instance=ExtResource("5_ujykt")]
+[node name="EditControls" parent="VBoxContainer/HBoxContainer" unique_id=1424709198 instance=ExtResource("5_ujykt")]
 unique_name_in_owner = true
 layout_mode = 2
 show_back = true
@@ -49,12 +49,12 @@ show_edit = false
 show_settings = false
 show_close = true
 
-[node name="IndexContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="IndexContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1992150136]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="GBCIndexTree" type="Tree" parent="VBoxContainer/IndexContainer"]
+[node name="GBCIndexTree" type="Tree" parent="VBoxContainer/IndexContainer" unique_id=882904167]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3

@@ -1,28 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://b6mp1p6u86nny"]
+[gd_scene format=3 uid="uid://b6mp1p6u86nny"]
 
 [ext_resource type="Script" uid="uid://dr4gsaklwif8u" path="res://modules/Vertex/components/DataInputs/DataInputAction/DataInputAction.gd" id="1_m5rbk"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_k4big"]
 
-[node name="DataInputAction" type="PanelContainer"]
+[node name="DataInputAction" type="PanelContainer" unique_id=296332724]
 custom_minimum_size = Vector2(0, 50)
 offset_right = 86.5625
 offset_bottom = 49.0
 script = ExtResource("1_m5rbk")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=1128994108]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBox"]
+[node name="Label" type="Label" parent="HBox" unique_id=1618900830]
 visible = false
 layout_mode = 2
 
-[node name="Button" type="Button" parent="HBox"]
+[node name="Button" type="Button" parent="HBox" unique_id=1218850192]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Action"
 
-[node name="Outline" type="Panel" parent="HBox/Button"]
+[node name="Outline" type="Panel" parent="HBox/Button" unique_id=457346602]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
