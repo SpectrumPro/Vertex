@@ -217,12 +217,16 @@ func clear() -> void:
 	
 	for column: Column in _columns.duplicate():
 		remove_column(column)
+	
+	_recompute_columns()
 
 
 ## Clears all rows, keeping columns
 func clear_data() -> void:
 	for row: Row in _rows.duplicate():
 		remove_row(row)
+	
+	_recompute_rows()
 
 
 ## Sorts the rows in the table based on cells in the given column
@@ -1837,6 +1841,11 @@ class Cell extends TableItem:
 		return _is_selected
 	
 	
+	## Returns true if this Cell is visable
+	func is_visable() -> bool:
+		return _column.is_visable() and _row.is_visable()
+	
+	
 	## Returns true if this Cell is displaying a SettingsModule
 	func is_using_settings_module() -> bool:
 		return is_instance_valid(_settings_module)
@@ -1890,7 +1899,7 @@ class Cell extends TableItem:
 		var visable_rect: Rect2 = get_visable_rect(p_scroll)
 		var local_rect: Rect2 = Rect2(Vector2.ZERO, cell_rect.size)
 		
-		if not cell_rect:
+		if not cell_rect or not is_visable():
 			return
 		
 		var font_size: int = _table.get_font_size()
