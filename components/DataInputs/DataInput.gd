@@ -27,7 +27,7 @@ var _quantity_button: Button
 var _module: SettingsModule
 
 ## All settings modules when multi editing
-var _modules: Array[SettingsModule]
+var _modules: Set = Set.new(TYPE_OBJECT)
 
 ## Currently value unsaved state
 var _unsaved: bool = false
@@ -55,7 +55,7 @@ func reset() -> void:
 	
 	_unsaved = false
 	_module = null
-	_modules = []
+	_modules.clear()
 	
 	_reset()
 
@@ -66,17 +66,31 @@ func focus() -> void:
 		_focus_node.grab_focus()
 
 
+## Adds a SettingsModule to the list of moduled to multiedit
+func add_module(p_module: SettingsModule) -> bool:
+	if _modules.has(p_module):
+		return false
+	
+	_modules.add(p_module)
+	_update_quantity_button()
+	
+	return true
+
+
 ## Sets the SettingsMoudle to edit
 func set_module(p_modules: Array[SettingsModule]) -> bool:
-	if not p_modules.size():
+	if not p_modules.size() or not is_instance_valid(p_modules[0]):
 		return false
 	
 	reset()
 	_module = p_modules[0]
 	
 	for module: Variant in p_modules:
-		if module is SettingsModule and Data.do_types_match_base(module.get_data_type(), _data_type):
-			_modules.append(module)
+		if is_instance_valid(module) \
+			and not _modules.has(module) \
+			and Data.do_types_match_base(module.get_data_type(), _data_type) \
+		:
+			_modules.add(module)
 	
 	_module.subscribe(_module_value_changed)
 	_settings_module_changed(_module)
@@ -84,10 +98,9 @@ func set_module(p_modules: Array[SettingsModule]) -> bool:
 	if _module.get_getter().is_valid():
 		_module_value_changed(_module.get_getter().call())
 	
-	if _quantity_button and _modules.size() > 1:
-		_quantity_button.set_text(str("x", _modules.size()))
-	
+	_update_quantity_button()
 	set_editable(_module.is_editable())
+	
 	return true
 
 
@@ -111,15 +124,15 @@ func set_editable(p_editable: bool) -> void:
 
 ## Sets the value on the settings modules
 func set_value(p_values: Array[Variant] = [null]) -> void:
-	if not _modules or (p_values.size() != 1 and p_values.size() != _modules.size()):
+	if not _modules.size() or (p_values.size() != 1 and p_values.size() != _modules.size()):
 		return
 	
 	var use_single: bool = p_values.size() == 1
 	
-	_update_outline_feedback(_modules[0].get_setter().callv(p_values[0]))
+	_update_outline_feedback(_module.get_setter().callv(p_values[0]))
 	
 	for index: int in range(1, _modules.size()):
-		_modules[index].get_setter().callv(p_values[0] if use_single else p_values[index])
+		_modules.get_at(index).get_setter().callv(p_values[0] if use_single else p_values[index])
 
 
 ## Gets the SettingsMoudle
@@ -184,6 +197,12 @@ func _make_unsaved() -> void:
 	if not _unsaved:
 		_unsaved = true
 		_outline.set_modulate(ThemeManager.Colors.Statuses.UnsavedData)
+
+
+## Updated the number on the quantity button
+func _update_quantity_button() -> void:
+	if _quantity_button and _modules.size() > 1:
+		_quantity_button.set_text(str("x", _modules.size()))
 
 
 ## Override this function to provide a SettingsModule to display
