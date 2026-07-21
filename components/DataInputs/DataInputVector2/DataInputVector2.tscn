@@ -86,9 +86,16 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="HBox" unique_id=1480681560]
+[node name="Quantity" type="Button" parent="HBox" unique_id=94646294]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
+theme_override_colors/font_color = Color(0.73300546, 0.7330054, 0.7330054, 1)
+flat = true
+
+[node name="PanelContainer" type="PanelContainer" parent="HBox" unique_id=1480681560]
+layout_mode = 2
+size_flags_horizontal = 8
 theme_override_styles/panel = SubResource("StyleBoxEmpty_p4wjb")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBox/PanelContainer" unique_id=1240687408]

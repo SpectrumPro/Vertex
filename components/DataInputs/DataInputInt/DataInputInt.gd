@@ -17,6 +17,7 @@ func _ready() -> void:
 	_line_edit.text_changed.connect(func (_p_text): _make_unsaved())
 	_label = $HBox/Label
 	_outline = $HBox/LineEdit/Outline
+	_quantity_button = %Quantity
 	_focus_node = _line_edit
 
 

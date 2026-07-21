@@ -11,6 +11,7 @@ func _ready() -> void:
 	_data_type = Data.Type.NULL
 	_label = $HBox/Label
 	_outline = $Outline
+	_quantity_button = %Quantity
 
 
 ## Sets the label to show the unsupported DataType

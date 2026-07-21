@@ -16,10 +16,17 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
+[node name="Quantity" type="Button" parent="HBox" unique_id=1603277465]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_color = Color(0.73300546, 0.7330054, 0.7330054, 1)
+flat = true
+
 [node name="LineEdit" type="LineEdit" parent="HBox" unique_id=1277849465]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 select_all_on_focus = true
 
 [node name="Outline" type="Panel" parent="HBox/LineEdit" unique_id=234145952]

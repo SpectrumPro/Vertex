@@ -28,9 +28,16 @@ layout_mode = 2
 size_flags_vertical = 6
 vertical_alignment = 1
 
-[node name="FlagLabel" type="Label" parent="VBox/HBoxContainer" unique_id=1506971966]
+[node name="Quantity" type="Button" parent="VBox/HBoxContainer" unique_id=457320621]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
+theme_override_colors/font_color = Color(0.73300546, 0.7330054, 0.7330054, 1)
+flat = true
+
+[node name="FlagLabel" type="Label" parent="VBox/HBoxContainer" unique_id=1506971966]
+layout_mode = 2
+size_flags_horizontal = 8
 size_flags_vertical = 1
 text = "
 "
