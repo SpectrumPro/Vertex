@@ -20,6 +20,9 @@ var _outline: Panel
 ## The Control node to focus
 var _focus_node: Control = self
 
+## The Button used to show the quantity of modules
+var _quantity_button: Button
+
 ## The currentl SettingsModle
 var _module: SettingsModule
 
@@ -46,6 +49,9 @@ func reset() -> void:
 	
 	if _outline:
 		_outline.set_modulate(Color.TRANSPARENT)
+	
+	if _quantity_button:
+		_quantity_button.set_text("")
 	
 	_unsaved = false
 	_module = null
@@ -77,6 +83,9 @@ func set_module(p_modules: Array[SettingsModule]) -> bool:
 	
 	if _module.get_getter().is_valid():
 		_module_value_changed(_module.get_getter().call())
+	
+	if _quantity_button and _modules.size() > 1:
+		_quantity_button.set_text(str("x", _modules.size()))
 	
 	set_editable(_module.is_editable())
 	return true

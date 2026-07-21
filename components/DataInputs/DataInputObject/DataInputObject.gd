@@ -24,6 +24,7 @@ func _ready() -> void:
 	_button = $HBox/Button
 	_label = $HBox/Label
 	_outline = $HBox/Button/Outline
+	_quantity_button = %Quantity
 	_focus_node = _button
 
 

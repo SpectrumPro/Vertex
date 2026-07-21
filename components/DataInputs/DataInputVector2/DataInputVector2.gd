@@ -19,6 +19,8 @@ func _ready() -> void:
 	
 	_label = $HBox/Label
 	_outline = $HBox/PanelContainer/Outline
+	_quantity_button = %Quantity
+	
 	x_axis = $HBox/PanelContainer/HBoxContainer/XAxis
 	y_axis = $HBox/PanelContainer/HBoxContainer/YAxis
 	
