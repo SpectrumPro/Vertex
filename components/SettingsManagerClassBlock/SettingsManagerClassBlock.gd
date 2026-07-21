@@ -22,6 +22,16 @@ class_name SettingsManagerClassBlock extends UIComponent
 @onready var _child_button_container: BoxContainer = %ChildButtonContainer
 
 
+## Stores the ID of all ChildManagers shown
+var _visable_child_managers: Set = Set.new(TYPE_STRING)
+
+## Stores all DataInput shown by SettingsModule ID
+var _visable_data_inputs: Dictionary[String, DataInput]
+
+## Current disabled state
+var _disabled: bool = false
+
+
 ## init
 func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
 	super._init(p_uuid, p_args)
@@ -29,19 +39,12 @@ func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
 	_set_class_name("SettingsManagerClassBlock")
 
 
-## Disables this settings module
-func set_disabled(state: bool) -> void:
-	_on_expand_hide_toggled(state)
-	_expand_hide_button.disabled = state
-
-
-## Sets the title
-func set_title(title: String) -> void:
-	_title.text = title
-
-
 ## Shows a setting
 func show_module(p_module: SettingsModule) -> void:
+	if _visable_data_inputs.has(p_module.get_id()):
+		_visable_data_inputs[p_module.get_id()].add_module(p_module)
+		return
+	
 	var data_input: DataInput = UIDB.instance_data_input(p_module.get_data_type(), p_module.get_sub_type())
 	
 	if data_input is not DataInputNull:
@@ -52,14 +55,20 @@ func show_module(p_module: SettingsModule) -> void:
 		, CONNECT_ONE_SHOT)
 	
 	_settings_container.add_child(data_input)
+	_visable_data_inputs[p_module.get_id()] = data_input
 
 
 ## Adds a button to open the given ChildManager
-func show_child_manager(p_manager: ChildManager, p_id: String) -> void:
+func show_child_manager(p_manager: ChildManager) -> void:
+	var manager_id: String = p_manager.get_id()
+	
+	if _visable_child_managers.has(manager_id):
+		return
+	
 	var button: Button = Button.new()
 	var child_count: int = len(p_manager.get_children())
 	
-	button.set_text(p_id + " (%s)" % child_count)
+	button.set_text(manager_id + " (%s)" % child_count)
 	button.set_button_icon(preload("res://modules/Vertex/assets/icons/OpenInNew.svg"))
 	button.set_icon_alignment(HORIZONTAL_ALIGNMENT_LEFT)
 	button.set_flat(true)
@@ -68,6 +77,30 @@ func show_child_manager(p_manager: ChildManager, p_id: String) -> void:
 	
 	_child_button_container.add_child(button)
 	_child_button_panel.show()
+	_visable_child_managers.add(manager_id)
+
+
+## Disables this settings module
+func set_disabled(p_state: bool) -> void:
+	_disabled = p_state
+	
+	_on_expand_hide_toggled(_disabled)
+	_expand_hide_button.disabled = _disabled
+
+
+## Sets the title
+func set_title(p_title: String) -> void:
+	_title.set_text(p_title)
+
+
+## Returns the title text
+func get_title() -> String:
+	return _title.get_text()
+
+
+## Returns the disabled state
+func is_disabled() -> bool:
+	return _disabled
 
 
 ## Called when the ExpandHide button is toggled
