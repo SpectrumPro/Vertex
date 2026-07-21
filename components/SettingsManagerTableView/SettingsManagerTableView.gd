@@ -85,6 +85,9 @@ func add_manager(p_manager: SettingsManager) -> void:
 		
 		if is_module_visable(module):
 			column.set_visable(true)
+		
+		if not _table.get_sort_column() and p_manager.get_sort_module() == module:
+			_table.set_sort_column(column)
 	
 	_managers.map(p_manager, _table.create_row().load_data(data_to_add))
 	queue(_update_visable_columns)
