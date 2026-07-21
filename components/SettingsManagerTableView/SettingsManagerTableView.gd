@@ -171,9 +171,6 @@ func is_module_allowed(p_module: SettingsModule) -> bool:
 	if p_module.get_data_type() in DISALLOWED_DATA_TYPES:
 		return false
 	
-	if p_module.get_type() == SettingsModule.Type.STATUS:
-		return false
-	
 	return true
 
 
