@@ -74,6 +74,16 @@ disabled = true
 text = "Duplicate"
 icon = ExtResource("6_shc3j")
 
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer" unique_id=1657312782]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer" unique_id=289879488]
+layout_mode = 2
+
+[node name="ViewMode" type="OptionButton" parent="VBoxContainer/PanelMenuBar/HBoxContainer/ScrollContainer/HBoxContainer/PanelContainer/HBoxContainer" unique_id=1934126932]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="ChildManagerView" parent="VBoxContainer" unique_id=2125904978 instance=ExtResource("4_h7s3y")]
 unique_name_in_owner = true
 visible = false

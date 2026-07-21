@@ -47,6 +47,7 @@ func _ready() -> void:
 	_component_manager.set_new_button(%NewChild)
 	_component_manager.set_delete_button(%DeleteChild)
 	_component_manager.set_duplicate_button(%DuplicateChild)
+	_component_manager.set_view_mode_button(%ViewMode)
 
 
 ## Sets the component to show ChildManagers from
