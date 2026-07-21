@@ -8,14 +8,14 @@ class_name SettingsManagerBlockView extends UIComponent
 
 
 ## List of Data.Types that wont be displayed
-@export var module_type_denylist: Array[Data.Type]
+@export var module_type_denylist: Array[Data.Type] = [Data.Type.ACTION]
 
 ## The VBox for all SettingsManagerClassBlock
 @onready var _view_container: VBoxContainer = %ViewContainer
 
 
-## The current SettingsManager
-var _manager: SettingsManager
+## All SettingsManager currently displayed
+var _managers: Array[SettingsManager]
 
 ## Stores each ModuleView by its class
 var _views_by_class: Dictionary[String, SettingsManagerClassBlock]
@@ -32,61 +32,85 @@ func clear() -> void:
 		_view_container.remove_child(view)
 		view.queue_free()
 	
-	_manager = null
+	_managers.clear()
 	_views_by_class.clear()
 
 
+## @deprecated(use set_managers() instead)
 ## Sets the SettingsManager
 func set_manager(p_manager: SettingsManager) -> void:
+	set_managers([p_manager])
+
+
+## Sets the list of SettingsManagers to display
+func set_managers(p_managers: Array[SettingsManager]) ->  void:
 	clear()
-	_manager = p_manager
 	
-	for classname: String in _manager.get_inheritance_list():
-		var view: SettingsManagerClassBlock = UIDB.instance_component(SettingsManagerClassBlock)
-		
-		_views_by_class[classname] = view
-		_view_container.add_child(view)
-		
-		view.set_title(classname)
-		view.set_disabled(true)
-	
-	for child_manager_id: String in _manager.get_child_managers():
-		var child_manager: ChildManager = _manager.get_child_manager(child_manager_id)
-		var view: SettingsManagerClassBlock
-		
-		if child_manager.get_category() in _views_by_class:
-			view = _views_by_class[child_manager.get_category()]
-		else:
-			view = _views_by_class[_manager.get_inheritance_root()]
-		
-		view.show_child_manager(child_manager, child_manager_id)
-	
-	for module: SettingsModule in _manager.get_modules().values():
-		if module.get_data_type() in module_type_denylist:
+	for manager: SettingsManager in p_managers:
+		if not is_instance_valid(manager):
 			continue
 		
-		var view: SettingsManagerClassBlock
+		_managers.append(manager)
 		
-		match module.get_data_type():
-			Data.Type.SETTINGSMANAGER:
-				var manager_view: SettingsManagerBlockView = UIDB.instance_component(SettingsManagerBlockView)
-				
-				_view_container.add_child(manager_view)
-				manager_view.set_manager(module.get_getter().call())
+		for classname: String in manager.get_inheritance_list():
+			_create_class_block(classname)
+	
+		for child_manager_id: String in manager.get_child_managers():
+			var child_manager: ChildManager = manager.get_child_manager(child_manager_id)
+			var view: SettingsManagerClassBlock
 			
-			Data.Type.ACTION:
-				pass
+			if child_manager.get_category() in _views_by_class:
+				view = _views_by_class[child_manager.get_category()]
+			else:
+				view = _views_by_class[manager.get_inheritance_root()]
 			
-			_:
-				if module.get_visual_category() in _views_by_class:
-					view = _views_by_class[module.get_visual_category()]
-				else:
-					view = _views_by_class[_manager.get_inheritance_root()]
+			view.show_child_manager(child_manager)
+	
+		for module: SettingsModule in manager.get_modules().values():
+			if module_type_denylist.has(module.get_data_type()):
+				continue
+			
+			var view: SettingsManagerClassBlock
+			
+			match module.get_data_type():
+				Data.Type.SETTINGSMANAGER:
+					var manager_view: SettingsManagerBlockView = UIDB.instance_component(SettingsManagerBlockView)
+					
+					_view_container.add_child(manager_view)
+					manager_view.set_manager(module.get_getter().call())
 				
-				view.set_disabled(false)
-				view.show_module(module)
+				_:
+					if module.get_visual_category() in _views_by_class:
+						view = _views_by_class[module.get_visual_category()]
+					else:
+						view = _views_by_class[manager.get_inheritance_root()]
+					
+					if view.is_disabled():
+						view.set_disabled(false)
+					
+					view.show_module(module)
 
 
+## @deprecated(use get_managers() instead)
 ## Sets the SettingsManager
 func get_manager() -> SettingsManager:
-	return _manager
+	return _managers[0] if _managers else null
+
+
+## Returns all SettingsManager currenty displayed
+func get_managers() -> Array[SettingsManager]:
+	return _managers.duplicate()
+
+
+## Creates a SettingsManagerClassBlock for the given class
+func _create_class_block(p_classname: String) -> void:
+	if _views_by_class.has(p_classname):
+		return
+	
+	var view: SettingsManagerClassBlock = UIDB.instance_component(SettingsManagerClassBlock)
+	
+	_views_by_class[p_classname] = view
+	_view_container.add_child(view)
+	
+	view.set_title(p_classname)
+	view.set_disabled(true)

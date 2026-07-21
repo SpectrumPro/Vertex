@@ -7,7 +7,7 @@ class_name SettingsManagerTableView extends UIComponent
 
 
 ## Emitted when the selection is changed
-signal selection_changed(selected_managers: Array)
+signal selection_changed(selected_managers: Array[SettingsManager])
 
 
 ## Enum for ColumnDisplay
@@ -205,7 +205,7 @@ func _update_visable_columns() -> void:
 
 ## Called when the selection on the Table2 node is changed
 func _on_table_selection_changed() -> void:
-	var selected_managers: Array
+	var selected_managers: Array[SettingsManager]
 	
 	for row: Table2.Row in _table.get_selected_rows():
 		selected_managers.append(_managers.right(row))

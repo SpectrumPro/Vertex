@@ -8,7 +8,7 @@ class_name SettingsManagerMultiView extends UIComponent
 
 
 ## Emitted when the selection is changed
-signal selection_changed(selected_managers: Array)
+signal selection_changed(selected_managers: Array[SettingsManager])
 
 
 ## Emum for ViewMode
@@ -116,10 +116,10 @@ func is_any_selected() -> bool:
 
 
 ## Called when the selection changes in the TableView
-func _on_settings_manager_table_view_selection_changed(selected_managers: Array) -> void:
+func _on_settings_manager_table_view_selection_changed(selected_managers: Array[SettingsManager]) -> void:
 	if not selected_managers:
 		_block_view.clear()
 	else:
-		_block_view.set_manager(selected_managers[0])
+		_block_view.set_managers(selected_managers)
 	
 	selection_changed.emit(selected_managers)
