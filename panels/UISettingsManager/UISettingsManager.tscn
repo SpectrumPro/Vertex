@@ -35,8 +35,6 @@ size_flags_vertical = 3
 
 [node name="SettingsManagerView" parent="VBoxContainer/ScrollContainer" unique_id=1796821104 instance=ExtResource("5_x432d")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [connection signal="object_selected" from="VBoxContainer/PanelMenuBar/HBoxContainer/ComponentButton" to="." method="set_component"]
 

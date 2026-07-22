@@ -62,8 +62,6 @@ size_flags_vertical = 3
 
 [node name="SettingsManagerView" parent="VBoxContainer/Settings" unique_id=1414004198 instance=ExtResource("6_a0kig")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="Shortcuts" type="PanelContainer" parent="VBoxContainer" unique_id=1913479572 node_paths=PackedStringArray("_button_tree", "_action_tree", "_add_action_button", "_remove_action_button")]
 visible = false
