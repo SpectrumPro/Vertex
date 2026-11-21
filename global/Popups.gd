@@ -97,14 +97,25 @@ func USettingsModule(p_source: Node, p_modules: Variant) -> Promise:
 	return Interface.show_window_popup(UIPopupSettingsModule, p_source, modules)
 
 
-## Promps the user with a DataInput
-func show_data_input(p_source: Node, p_data_type: Data.Type, p_default: Variant, p_label: String) -> Promise:
+## Promps the user with a DataInput, p_data_type defines the type of DataInput to display
+## p_default will be the default value shown, must match the Data.Type
+## p_label is the text line above the DataInput
+## p_num_parameters allows for mutiple values to be returned in the form of Array[Variant]
+## if p_num_parameters == 0: the promise return type is Variant
+func show_data_input(
+	p_source: Node, 
+	p_data_type: Data.Type, 
+	p_default: Variant, 
+	p_label: String,
+	p_num_parameters: int = 0
+) -> Promise:
 	var promise: Promise = Interface.show_window_popup(UIPopupSettingsModule, p_source, [])
 	var module_view: UIPopupSettingsModule = promise.get_object_refernce()
 	var dummy_module: SettingsModule = SettingsModule.new(p_label, p_label, p_data_type, SettingsModule.Type.SETTING, promise.resolvev, func (): return p_default, [], p_source, null)
 	
-	module_view.set_module([dummy_module])
+	module_view.set_module([dummy_module], p_num_parameters)
 	module_view.focus()
+	
 	return promise
 
 

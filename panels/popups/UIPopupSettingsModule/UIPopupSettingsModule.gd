@@ -28,7 +28,7 @@ func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
 
 
 ## Sets the SettingsModules to be shown
-func set_module(p_modules: Array[SettingsModule]) -> void:
+func set_module(p_modules: Array[SettingsModule], p_virtual_parameters: int = 0) -> void:
 	if is_instance_valid(_current_data_input):
 		_current_data_input.queue_free()
 	
@@ -39,7 +39,7 @@ func set_module(p_modules: Array[SettingsModule]) -> void:
 	var new_data_input: DataInput = UIDB.instance_data_input(first_module.get_data_type())
 	
 	new_data_input.ready.connect(func ():
-		new_data_input.set_module(p_modules)
+		new_data_input.set_module(p_modules, p_virtual_parameters)
 		new_data_input.set_label_text(first_module.get_name())
 		new_data_input.set_show_label(true)
 		
@@ -48,7 +48,7 @@ func set_module(p_modules: Array[SettingsModule]) -> void:
 	)
 	
 	var title_text: PackedStringArray = []
-	var show_quantity: bool = p_modules.size() > 1
+	var show_quantity: bool = p_modules.size() > 1 or p_virtual_parameters
 	
 	if first_module.is_editable():
 		title_text.append("Edit" + ("" if show_quantity else ":"))

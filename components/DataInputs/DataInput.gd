@@ -29,6 +29,9 @@ var _module: SettingsModule
 ## All settings modules when multi editing
 var _modules: Set = Set.new(TYPE_OBJECT)
 
+## Number of virtual parameters to edit
+var _virtual_parameters: int = 0
+
 ## Currently value unsaved state
 var _unsaved: bool = false
 
@@ -56,6 +59,7 @@ func reset() -> void:
 	_unsaved = false
 	_module = null
 	_modules.clear()
+	_virtual_parameters = 0
 	
 	_reset()
 
@@ -68,7 +72,7 @@ func focus() -> void:
 
 ## Adds a SettingsModule to the list of moduled to multiedit
 func add_module(p_module: SettingsModule) -> bool:
-	if _modules.has(p_module):
+	if _modules.has(p_module) or _virtual_parameters:
 		return false
 	
 	_modules.add(p_module)
@@ -77,19 +81,29 @@ func add_module(p_module: SettingsModule) -> bool:
 	return true
 
 
-## Sets the SettingsMoudle to edit
-func set_module(p_modules: Array[SettingsModule]) -> bool:
+## Sets the SettingsMoudle(s) to edit
+## p_virtual_parameters allows for virtual multi module editing without needing more then one module
+## if p_virtual_parameters > 0: the returned datatype will be an Array[Variant]
+## with one item for each virtual module. p_modules.size() must equal 1 if p_virtual_parameters > 0
+func set_module(p_modules: Array[SettingsModule], p_virtual_parameters: int = 0) -> bool:
+	p_virtual_parameters = clamp(p_virtual_parameters, 0, INF)
+	
 	if not p_modules.size() or not is_instance_valid(p_modules[0]):
+		return false
+	
+	if p_modules.size() > 1 and p_virtual_parameters > 1:
 		return false
 	
 	reset()
 	_module = p_modules[0]
+	_virtual_parameters = p_virtual_parameters
 	
 	for module: Variant in p_modules:
-		if is_instance_valid(module) \
-			and not _modules.has(module) \
-			and Data.do_types_match_base(module.get_data_type(), _data_type) \
-		:
+		if (
+			is_instance_valid(module)
+			and not _modules.has(module)
+			and Data.do_types_match_base(module.get_data_type(), _data_type)
+		):
 			_modules.add(module)
 	
 	_module.subscribe(_module_value_changed)
@@ -124,15 +138,32 @@ func set_editable(p_editable: bool) -> void:
 
 ## Sets the value on the settings modules
 func set_value(p_values: Array[Variant] = [[]]) -> void:
-	if not _modules.size() or (p_values.size() != 1 and p_values.size() != _modules.size()):
+	if not _modules.size() or (p_values.size() != 1 and p_values.size() != get_num_modules()):
 		return
 	
 	var use_single: bool = p_values.size() == 1
 	
-	_handle_setter_return_value(_module.get_setter().callv(p_values[0]))
+	if _virtual_parameters:
+		if (not use_single) and p_values.size() != _virtual_parameters:
+			return
+		
+		var return_values: Array
+		
+		if use_single:
+			return_values.resize(_virtual_parameters)
+			return_values.fill(p_values[0])
+		else:
+			return_values = p_values
+		
+		_handle_setter_return_value(_module.get_setter().call(return_values))
 	
-	for index: int in range(1, _modules.size()):
-		_modules.get_at(index).get_setter().callv(p_values[0] if use_single else p_values[index])
+	else:
+		var base_value: Variant = p_values[0]
+		_handle_setter_return_value(_module.get_setter().callv(base_value))
+		
+		for index: int in range(1, _modules.size()):
+			var indexed_value: Variant = base_value if use_single else p_values[index]
+			_modules.get_at(index).get_setter().callv(indexed_value)
 
 
 ## Gets the SettingsMoudle
@@ -163,6 +194,12 @@ func get_sub_type() -> int:
 ## Gets the editable state
 func get_editable() -> bool:
 	return _editable
+
+
+## Returns the number of modules being edited
+## if _virtual_parameters > 0, _virtual_parameters will be returned
+func get_num_modules() -> int:
+	return _modules.size() if not _virtual_parameters else _virtual_parameters
 
 
 ## Handles the return value from the setter method, 

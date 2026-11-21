@@ -39,4 +39,4 @@ func _set_editable(p_editable: bool) -> void:
 
 ## Called when the text is submitted in the LineEdit
 func _on_line_edit_text_submitted(new_text: String) -> void:
-	set_value(Data.autofill_entrys(new_text, _modules.size(), TYPE_STRING, true))
+	set_value(Data.autofill_entrys(new_text, get_num_modules(), TYPE_STRING, true))
