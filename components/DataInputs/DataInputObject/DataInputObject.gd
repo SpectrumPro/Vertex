@@ -62,3 +62,11 @@ func _on_button_pressed() -> void:
 	Popups.ObjectSelector(self, _module.get_base_class(), _module.get_class_filter()).then(func (p_component: Object):
 		set_value([[p_component]])
 	)
+
+
+## Called when the settings button is pressed
+func _on_settings_pressed() -> void:
+	var object: Object = _module.get_getter().call()
+	
+	if is_instance_valid(object):
+		Interface.show_window_popup(UISettingsManager, self, object.get_settings())

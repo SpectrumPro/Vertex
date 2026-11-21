@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cb65th3fqydbk" path="res://modules/Vertex/components/DataInputs/DataInputObject/DataInputObject.gd" id="1_7s3cj"]
 [ext_resource type="StyleBox" uid="uid://cftl4b5dnt57b" path="res://modules/Vertex/assets/styles/ResolveBoxNoBG.tres" id="2_55hg5"]
+[ext_resource type="Texture2D" uid="uid://c6xnsmttojanx" path="res://modules/Vertex/assets/icons/Settings.svg" id="3_1prr1"]
 
 [node name="DataInputObject" type="PanelContainer" unique_id=471483440]
 custom_minimum_size = Vector2(0, 50)
@@ -40,4 +41,9 @@ grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/panel = ExtResource("2_55hg5")
 
+[node name="Settings" type="Button" parent="HBox" unique_id=1751473085]
+layout_mode = 2
+icon = ExtResource("3_1prr1")
+
 [connection signal="pressed" from="HBox/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="HBox/Settings" to="." method="_on_settings_pressed"]
