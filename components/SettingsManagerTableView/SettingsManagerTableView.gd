@@ -193,7 +193,11 @@ func is_module_visable(p_module: SettingsModule) -> bool:
 
 ## Updates the visable colulms using current ColumnDisplay
 func _update_visable_columns() -> void:
-	for column: Table2.Column in _column_users:
+	for column: Table2.Column in _column_users.duplicate():
+		if not is_instance_valid(column):
+			_column_users.erase(column)
+			continue
+		
 		for module: SettingsModule in _column_users[column].values():
 			var visable: bool = false
 			

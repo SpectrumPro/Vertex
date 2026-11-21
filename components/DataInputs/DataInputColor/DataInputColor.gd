@@ -42,7 +42,7 @@ func _set_editable(p_editable: bool) -> void:
 
 ## Called when the button is pressed down
 func _on_button_button_down() -> void:
-	_update_outline_feedback(_module.get_setter().call())
+	_handle_setter_return_value(_module.get_setter().call())
 
 
 ## Called when the color is changed on the color picker

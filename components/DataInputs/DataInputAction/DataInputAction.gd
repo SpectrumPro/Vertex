@@ -44,6 +44,6 @@ func _on_button_button_down() -> void:
 
 ## Called when the button is pressed up
 func _on_button_button_up() -> void:
-	for module: SettingsModule in _modules:
+	for module: SettingsModule in _modules.get_as_array():
 		if module.get_action_mode() == SettingsModule.ActionMode.HOLD and module.get_hold_release_callable().is_valid():
 			module.get_hold_release_callable().call()
