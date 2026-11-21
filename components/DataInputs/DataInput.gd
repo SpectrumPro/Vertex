@@ -129,7 +129,7 @@ func set_value(p_values: Array[Variant] = [[]]) -> void:
 	
 	var use_single: bool = p_values.size() == 1
 	
-	_update_outline_feedback(_module.get_setter().callv(p_values[0]))
+	_handle_setter_return_value(_module.get_setter().callv(p_values[0]))
 	
 	for index: int in range(1, _modules.size()):
 		_modules.get_at(index).get_setter().callv(p_values[0] if use_single else p_values[index])
@@ -165,8 +165,11 @@ func get_editable() -> bool:
 	return _editable
 
 
-## Updates the outline to match the return value of the setter
-func _update_outline_feedback(p_state: Variant) -> void:
+## Handles the return value from the setter method, 
+## updates outline based on a boolen return value. 
+## If the return type is a Promise, it will be awaited then this method will be called again
+## Sets the DataInputs input field back to the current value if setter fails
+func _handle_setter_return_value(p_state: Variant) -> void:
 	_unsaved = false
 	Interface.kill_fade(_outline, "modulate")
 	
@@ -177,10 +180,12 @@ func _update_outline_feedback(p_state: Variant) -> void:
 		
 		TYPE_BOOL when not p_state:
 			_outline.set_modulate(ThemeManager.Colors.Statuses.Error)
+			if _module.get_getter().is_valid():
+				_module_value_changed(_module.get_getter().call())
 		
 		TYPE_OBJECT when p_state is Promise:
 			_outline.set_modulate(ThemeManager.Colors.Statuses.Standby)
-			p_state.then(_update_outline_feedback)
+			p_state.then(_handle_setter_return_value)
 		
 		_:
 			_outline.set_modulate(ThemeManager.Colors.Statuses.Normal)
