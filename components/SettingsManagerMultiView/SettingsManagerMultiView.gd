@@ -66,12 +66,14 @@ func set_view_mode(p_view_mode: ViewMode) -> void:
 			_table_view.show()
 			_block_view.hide()
 			
+			_block_view.clear()
 			_table_view.set_column_display(SettingsManagerTableView.ColumnDisplay.ALL)
 		
 		ViewMode.COMBINED:
 			_table_view.show()
 			_block_view.show()
 			
+			_block_view.set_managers(_table_view.get_selected_managers())
 			_table_view.set_column_display(SettingsManagerTableView.ColumnDisplay.PRIMARY)
 
 
@@ -117,9 +119,10 @@ func is_any_selected() -> bool:
 
 ## Called when the selection changes in the TableView
 func _on_settings_manager_table_view_selection_changed(selected_managers: Array[SettingsManager]) -> void:
-	if not selected_managers:
-		_block_view.clear()
-	else:
-		_block_view.set_managers(selected_managers)
+	if _block_view.is_visible():
+		if not selected_managers:
+			_block_view.clear()
+		else:
+			_block_view.set_managers(selected_managers)
 	
 	selection_changed.emit(selected_managers)
