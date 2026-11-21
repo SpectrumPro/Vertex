@@ -8,7 +8,7 @@ class_name SettingsManagerBlockView extends UIComponent
 
 
 ## List of Data.Types that wont be displayed
-@export var module_type_denylist: Array[Data.Type] = [Data.Type.ACTION]
+@export var module_type_denylist: Array[Data.Type] = []
 
 ## The VBox for all SettingsManagerClassBlock
 @onready var _view_container: VBoxContainer = %ViewContainer

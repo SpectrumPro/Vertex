@@ -380,7 +380,7 @@ func deserialize(p_serialized_data: Dictionary, p_flags: Data.SerializationFlags
 		if window_uuid == "main":
 			get_window_node(self).deserialize(serialized_window)
 		else:
-			add_window(null, true).deserialize(serialized_window)
+			add_window(null, true, true).deserialize(serialized_window)
 
 
 ## Gets the WindowPopup for the window containing the p_source node
@@ -473,8 +473,10 @@ func hide(p_control: Control) -> void:
 	p_control.hide()
 
 
-## Adds a new window
-func add_window(p_base_panel: Script = null, p_no_default: bool = false) -> UIWindow:
+## Creates a new UIWindow node, p_base_panel defines a UIPanel to put in the window
+## if p_base_panel == null and p_no_default == false: the defauly UIPanel will be used
+## if p_auto_hide == true: the window will be hidden by default
+func add_window(p_base_panel: Script = null, p_no_default: bool = false, p_auto_hide: bool = false) -> UIWindow:
 	var new_window: UIWindow = UIWindow.new()
 	var uuid: String = UUID.v4()
 	var popups: Control = _window_popups_scene.instantiate()
@@ -486,6 +488,9 @@ func add_window(p_base_panel: Script = null, p_no_default: bool = false) -> UIWi
 	new_window.set_initial_position(Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_KEYBOARD_FOCUS)
 	new_window.set_window_popups(popups)
 	new_window.set_name("New Window")
+	
+	if p_auto_hide:
+		new_window.hide()
 	
 	add_child(new_window, true)
 	new_window.set_window_title(new_window.name)
