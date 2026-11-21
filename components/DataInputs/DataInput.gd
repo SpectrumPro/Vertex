@@ -123,7 +123,7 @@ func set_editable(p_editable: bool) -> void:
 
 
 ## Sets the value on the settings modules
-func set_value(p_values: Array[Variant] = [null]) -> void:
+func set_value(p_values: Array[Variant] = [[]]) -> void:
 	if not _modules.size() or (p_values.size() != 1 and p_values.size() != _modules.size()):
 		return
 	
