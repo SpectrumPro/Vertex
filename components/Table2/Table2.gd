@@ -1528,6 +1528,11 @@ class Column extends TableItem:
 		return _width
 	
 	
+	## Returns the title of this Column
+	func get_title() -> String:
+		return _title
+	
+	
 	## Returns the auto title width state
 	func get_auto_title_width() -> bool:
 		return _auto_title_width
