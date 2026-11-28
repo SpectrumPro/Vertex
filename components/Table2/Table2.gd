@@ -16,6 +16,12 @@ signal edit_requested(cells: Array[Cell])
 ## Default Column width
 const COLUMN_WIDTH: int = 100
 
+## Min width in pixels for columns
+const COLUMN_MIN_WIDTH: int = 20
+
+## Min width in pixels for columns auto title width
+const COLUMN_MIN_AUTO_WIDTH: int = COLUMN_WIDTH
+
 ## Default row height
 const ROW_HEIGHT: int = 40
 
@@ -1339,6 +1345,9 @@ class Column extends TableItem:
 	## The title of this Column
 	var _title: String
 	
+	## True if the colum width should be changed to fit the title
+	var _auto_title_width: bool = true
+	
 	## Border color for coloumn lines
 	var _border_color: Color = Color(0.29, 0.29, 0.29, 1.0)
 	
@@ -1385,6 +1394,8 @@ class Column extends TableItem:
 	
 	## Sets the width in pixels of this column
 	func set_width(p_width: int) -> Column:
+		p_width = clamp(p_width, COLUMN_MIN_WIDTH, INF)
+		
 		_table.set_column_width(self, p_width)
 		return self
 	
@@ -1393,7 +1404,16 @@ class Column extends TableItem:
 	func set_title(p_title: String) -> Column:
 		_title = p_title
 		
+		if _auto_title_width:
+			_match_width_to_title()
+		
 		_table.queue_redraw_table()
+		return self
+	
+	
+	## Sets the auto title width state. if true, width will change to fit the title
+	func set_auto_title_width(p_auto: bool) -> Column:
+		_auto_title_width = p_auto
 		return self
 	
 	
@@ -1436,6 +1456,11 @@ class Column extends TableItem:
 	## Gets the width of this Column
 	func get_width() -> int:
 		return _width
+	
+	
+	## Returns the auto title width state
+	func get_auto_title_width() -> bool:
+		return _auto_title_width
 	
 	
 	## Returns the border color
@@ -1571,6 +1596,19 @@ class Column extends TableItem:
 			_selected_cells.add(p_cell)
 		else:
 			_selected_cells.remove(p_cell)
+	
+	
+	## Sets the width of this column to match the width needed to draw the title
+	func _match_width_to_title() -> void:
+		var font: Font = _table.get_font()
+		var text_size: Vector2 = font.get_string_size(
+			_title,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			-1,
+			_table.get_font_size()
+		)
+		var width_margin: int = _table.get_font_margin().x * 2
+		set_width(max(text_size.x + width_margin, _table.COLUMN_MIN_AUTO_WIDTH))
 	
 	
 	## Clears both canvases
