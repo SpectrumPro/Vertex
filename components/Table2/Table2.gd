@@ -118,6 +118,10 @@ var _table_backgroud_theme: StyleBox = preload("uid://ivg5xu85gbgt")
 ## Set to store the queue of canvas items that need to be cleared
 var _canvas_clear_queue: Set = Set.new(TYPE_RID)
 
+## Stores the current column being resized when holding alt key
+## Saved here to avoid jumping columns when moving mouse fast
+var _active_mouse_resize_column: Column
+
 
 ## init
 func _init(p_uuid: String = UUID.v4(), ...p_args: Array[Variant]) -> void:
@@ -797,6 +801,9 @@ func _canvas_remove_clear_queue(p_item: RID) -> void:
 
 ## Called when the select box is moved
 func _on_select_box_selection_updated(p_selection: Rect2) -> void:
+	if Input.is_key_pressed(KEY_ALT):
+		return
+	
 	var control_pressed: bool = Input.is_key_pressed(KEY_CTRL)
 	var shift_pressed: bool = Input.is_key_pressed(KEY_SHIFT)
 	
@@ -845,28 +852,82 @@ func _on_canvas_resized() -> void:
 ## Called for all input events on the canvas
 func _on_canvas_gui_input(p_event: InputEvent) -> void:
 	if p_event is InputEventMouseMotion:
-		_hover_item_at_position(p_event.position)
+		_handle_mouse_motion(p_event)
 	
 	elif p_event is InputEventMouseButton and p_event.is_pressed():
-		match p_event.button_index:
-			MOUSE_BUTTON_LEFT:
-				_select_item_at_position(p_event.position)
-			MOUSE_BUTTON_RIGHT:
-				_on_mouse_button_right_down(p_event)
-			MOUSE_BUTTON_WHEEL_DOWN:
-				set_scroll(get_scroll() + Vector2(0, SCROLL_STEP.y))
-			MOUSE_BUTTON_WHEEL_UP:
-				set_scroll(get_scroll() - Vector2(0, SCROLL_STEP.y))
-			MOUSE_BUTTON_WHEEL_LEFT:
-				set_scroll(get_scroll() - Vector2(SCROLL_STEP.x, 0))
-			MOUSE_BUTTON_WHEEL_RIGHT:
-				set_scroll(get_scroll() + Vector2(SCROLL_STEP.y, 0))
-
-
-## Called when MOUSE_BUTTON_RIGHT is pressed
-func _on_mouse_button_right_down(p_event: InputEventMouseButton) -> void:
-	var item: TableItem = get_item_at_position(p_event.position)
+		_handle_mouse_button_down(p_event)
 	
+	elif p_event is InputEventMouseButton and p_event.is_released():
+		_handle_mouse_button_up(p_event)
+
+
+## Handles an InputEventMouseMotion event
+func _handle_mouse_motion(p_event: InputEventMouseMotion) -> void:
+	_hover_item_at_position(p_event.position)
+	
+	match p_event.button_mask:
+		MOUSE_BUTTON_MASK_LEFT when p_event.is_alt_pressed():
+			if not is_instance_valid(_active_mouse_resize_column):
+				_active_mouse_resize_column = get_column_at_position(p_event.position)
+			
+			if is_instance_valid(_active_mouse_resize_column):
+				_active_mouse_resize_column.set_width(
+					_active_mouse_resize_column.get_width() + p_event.relative.x
+				)
+		
+		MOUSE_BUTTON_MASK_RIGHT when p_event.is_alt_pressed():
+			_handle_right_click_reset(p_event)
+
+
+## Handles an InputEventMouseButton event, when mouse button is pressed
+func _handle_mouse_button_down(p_event: InputEventMouseButton) -> void:
+	match p_event.button_index:
+		MOUSE_BUTTON_LEFT when p_event.is_alt_pressed():
+			_active_mouse_resize_column = get_column_at_position(p_event.position)
+		
+		MOUSE_BUTTON_LEFT when not p_event.is_alt_pressed():
+			_select_item_at_position(p_event.position)
+		
+		MOUSE_BUTTON_RIGHT when p_event.is_alt_pressed():
+			_handle_right_click_reset(p_event)
+			
+		MOUSE_BUTTON_RIGHT when not p_event.is_alt_pressed():
+			_handle_right_click_edit(p_event)
+		
+		MOUSE_BUTTON_WHEEL_DOWN:
+			set_scroll(get_scroll() + Vector2(0, SCROLL_STEP.y))
+		
+		MOUSE_BUTTON_WHEEL_UP:
+			set_scroll(get_scroll() - Vector2(0, SCROLL_STEP.y))
+		
+		MOUSE_BUTTON_WHEEL_LEFT:
+			set_scroll(get_scroll() - Vector2(SCROLL_STEP.x, 0))
+		
+		MOUSE_BUTTON_WHEEL_RIGHT:
+			set_scroll(get_scroll() + Vector2(SCROLL_STEP.y, 0))
+
+
+## Handles an InputEventMouseButton event, when mouse button is released
+func _handle_mouse_button_up(p_event: InputEventMouseButton) -> void:
+	match p_event.button_index:
+		MOUSE_BUTTON_LEFT when p_event.is_alt_pressed():
+			_active_mouse_resize_column = null
+
+
+## Handles a right click event for resetting the size of a TableItem
+func _handle_right_click_reset(p_event: InputEventMouse) -> void:
+	var column: Column = get_column_at_position(p_event.position)
+	
+	if not is_instance_valid(column):
+		return
+	
+	column.reset_width()
+
+
+## Handles a right click event for edting the current selected Cells
+func _handle_right_click_edit(p_event: InputEventMouse) -> void:
+	var item: TableItem = get_item_at_position(p_event.position)
+		
 	if get_selection_size() == 1 and not Input.is_key_pressed(KEY_CTRL):
 		deselect_all()
 	
@@ -1384,6 +1445,15 @@ class Column extends TableItem:
 		
 		_draw_canvas = RenderingServer.canvas_item_create()
 		RenderingServer.canvas_item_set_parent(_draw_canvas, _clip_canvas)
+	
+	
+	## Resets the width of this Column. 
+	## if auto_title_width == true, the width will match the title width, else default colum width
+	func reset_width() -> void:
+		if _auto_title_width:
+			_match_width_to_title()
+		else:
+			set_width(_table.COLUMN_WIDTH)
 	
 	
 	## Sets the index of this column, moves the column to that index
